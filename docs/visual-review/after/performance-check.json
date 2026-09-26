@@ -1,0 +1,700 @@
+{
+  "capturedAt": "2026-09-26T21:34:52.042Z",
+  "scenario": "Chrome headless; home 390x844; CPU 4x; download1.6Mbps; upload750kbps; latência150ms; cache frio; três execuções após fim da suíte E2E; dados locais, sem medição INP nem p75 de campo",
+  "medianLcpMs": 2464,
+  "samples": [
+    {
+      "run": 1,
+      "lcp": 2464,
+      "cls": 0.0008938826504159086,
+      "lcpElement": "IMG",
+      "lcpUrl": "https://localhost:8000/images/editorial/hero-480.avif",
+      "resources": [
+        {
+          "name": "https://localhost:8000/assets/app-5fKr5E2d.js",
+          "bytes": 102855,
+          "duration": 2681.1999999997206
+        },
+        {
+          "name": "https://localhost:8000/assets/_plugin-vue_export-helper-CYuT11Pz.js",
+          "bytes": 75933,
+          "duration": 2348.4000000003725
+        },
+        {
+          "name": "https://localhost:8000/assets/site-DskPVBs7.js",
+          "bytes": 8624,
+          "duration": 300
+        },
+        {
+          "name": "https://localhost:8000/assets/app-BxejBft_.css",
+          "bytes": 38620,
+          "duration": 1386.1000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/HomePage-DuCBvbvS.js",
+          "bytes": 8347,
+          "duration": 732.2000000001863
+        },
+        {
+          "name": "https://localhost:8000/assets/HomePage-C8WYuHlw.css",
+          "bytes": 910,
+          "duration": 177
+        },
+        {
+          "name": "https://localhost:8000/assets/HomeValue-BAdCZjQx.js",
+          "bytes": 38192,
+          "duration": 1552.8000000002794
+        },
+        {
+          "name": "https://localhost:8000/assets/HomeValue-DVz1AA8T.css",
+          "bytes": 15189,
+          "duration": 479.39999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/PhotoAsset-DcxNjpt8.js",
+          "bytes": 1292,
+          "duration": 732.5
+        },
+        {
+          "name": "https://localhost:8000/assets/PhotoAsset-CWbQY-58.css",
+          "bytes": 527,
+          "duration": 210
+        },
+        {
+          "name": "https://localhost:8000/assets/BiaChatDemo-nZjSC82Z.js",
+          "bytes": 1861,
+          "duration": 956
+        },
+        {
+          "name": "https://localhost:8000/assets/BiaChatDemo-Z-bX54Qo.css",
+          "bytes": 1266,
+          "duration": 220.59999999962747
+        },
+        {
+          "name": "https://localhost:8000/assets/useFormProof-KthDQ4Xe.js",
+          "bytes": 7134,
+          "duration": 1120.6000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/useFormProof-YFNY3exT.css",
+          "bytes": 410,
+          "duration": 490.59999999962747
+        },
+        {
+          "name": "https://localhost:8000/assets/pow.worker-BG2OTBr-.js",
+          "bytes": 3642,
+          "duration": 1223.5
+        },
+        {
+          "name": "https://localhost:8000/assets/ArticleCard-Cff_4u4R.js",
+          "bytes": 1817,
+          "duration": 1342.2999999998137
+        },
+        {
+          "name": "https://localhost:8000/assets/ArticleCard-BCno1MbR.css",
+          "bytes": 1184,
+          "duration": 231.5
+        },
+        {
+          "name": "https://localhost:8000/assets/FaqAccordion-DuH11vNt.js",
+          "bytes": 13607,
+          "duration": 1671
+        },
+        {
+          "name": "https://localhost:8000/assets/FaqAccordion-BFCGdadM.css",
+          "bytes": 453,
+          "duration": 328.39999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/RichText-BnQNyLJT.js",
+          "bytes": 1578,
+          "duration": 1565.2999999998137
+        },
+        {
+          "name": "https://localhost:8000/assets/RichText-D9fktyUK.css",
+          "bytes": 358,
+          "duration": 365.29999999981374
+        },
+        {
+          "name": "https://localhost:8000/assets/InstitutionalCta-CtfqCrUJ.js",
+          "bytes": 1064,
+          "duration": 1592.1999999997206
+        },
+        {
+          "name": "https://localhost:8000/assets/InstitutionalCta-CwU_NtxN.css",
+          "bytes": 876,
+          "duration": 387.8000000002794
+        },
+        {
+          "name": "https://localhost:8000/assets/CtaBand-DWY6FUh7.js",
+          "bytes": 1473,
+          "duration": 1809.1000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/CtaBand-DH4sxZi0.css",
+          "bytes": 703,
+          "duration": 445.10000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/AvailabilityNotice-Dy6KzCNz.js",
+          "bytes": 876,
+          "duration": 1853.3999999999069
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "bytes": 5533,
+          "duration": 2174.600000000093
+        },
+        {
+          "name": "https://localhost:8000/images/editorial/hero-480.avif",
+          "bytes": 8026,
+          "duration": 2179
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "bytes": 623,
+          "duration": 2317.5999999996275
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "bytes": 5533,
+          "duration": 2143.7000000001863
+        },
+        {
+          "name": "https://localhost:8000/assets/inter-latin-wght-normal-Dx4kXJAl.woff2",
+          "bytes": 48556,
+          "duration": 1285.5
+        },
+        {
+          "name": "https://localhost:8000/assets/sora-latin-wght-normal-DdqRvwsR.woff2",
+          "bytes": 33952,
+          "duration": 1094.2999999998137
+        },
+        {
+          "name": "https://localhost:8000/images/editorial/planning-480.avif",
+          "bytes": 7444,
+          "duration": 1050.1000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/useSeo-BbCxd-dG.js",
+          "bytes": 2153,
+          "duration": 203.10000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/_virtual_mf-articles-CyPDBuyx.js",
+          "bytes": 30517,
+          "duration": 426.20000000018626
+        },
+        {
+          "name": "https://localhost:8000/assets/hal-ai-logo-CQ895MjO.js",
+          "bytes": 346,
+          "duration": 172.29999999981374
+        },
+        {
+          "name": "https://localhost:8000/assets/formularios-DFzCxbvD.js",
+          "bytes": 8244,
+          "duration": 281
+        },
+        {
+          "name": "https://localhost:8000/assets/api-CmI_Dv4H.js",
+          "bytes": 1930,
+          "duration": 220.20000000018626
+        },
+        {
+          "name": "https://localhost:8000/assets/useCollectionStatus-fpfTFGPa.js",
+          "bytes": 525,
+          "duration": 193.5
+        },
+        {
+          "name": "https://localhost:8000/assets/phone-B7qeUasO.js",
+          "bytes": 815,
+          "duration": 332.70000000018626
+        },
+        {
+          "name": "https://localhost:8000/assets/form-helpers-D_Fv5fL7.js",
+          "bytes": 2303,
+          "duration": 375.39999999990687
+        },
+        {
+          "name": "https://localhost:8000/favicon.svg",
+          "bytes": 578,
+          "duration": 267.89999999990687
+        },
+        {
+          "name": "https://localhost:8000/api/public-config",
+          "bytes": 1478,
+          "duration": 162.5
+        }
+      ],
+      "navigation": [
+        {
+          "domContentLoaded": 597.5,
+          "load": 3005.7000000001863,
+          "bytes": 63161
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "lcp": 2348,
+      "cls": 0.0008938826504159086,
+      "lcpElement": "IMG",
+      "lcpUrl": "https://localhost:8000/images/editorial/hero-480.avif",
+      "resources": [
+        {
+          "name": "https://localhost:8000/assets/app-5fKr5E2d.js",
+          "bytes": 102855,
+          "duration": 2662.8000000002794
+        },
+        {
+          "name": "https://localhost:8000/assets/_plugin-vue_export-helper-CYuT11Pz.js",
+          "bytes": 75933,
+          "duration": 2652.100000000093
+        },
+        {
+          "name": "https://localhost:8000/assets/site-DskPVBs7.js",
+          "bytes": 8624,
+          "duration": 708.0999999996275
+        },
+        {
+          "name": "https://localhost:8000/assets/app-BxejBft_.css",
+          "bytes": 38620,
+          "duration": 729.5
+        },
+        {
+          "name": "https://localhost:8000/assets/HomePage-DuCBvbvS.js",
+          "bytes": 8347,
+          "duration": 803
+        },
+        {
+          "name": "https://localhost:8000/assets/HomePage-C8WYuHlw.css",
+          "bytes": 910,
+          "duration": 173.29999999981374
+        },
+        {
+          "name": "https://localhost:8000/assets/HomeValue-BAdCZjQx.js",
+          "bytes": 38192,
+          "duration": 1318.3000000002794
+        },
+        {
+          "name": "https://localhost:8000/assets/HomeValue-DVz1AA8T.css",
+          "bytes": 15189,
+          "duration": 568.6999999997206
+        },
+        {
+          "name": "https://localhost:8000/assets/PhotoAsset-DcxNjpt8.js",
+          "bytes": 1292,
+          "duration": 770.7000000001863
+        },
+        {
+          "name": "https://localhost:8000/assets/PhotoAsset-CWbQY-58.css",
+          "bytes": 527,
+          "duration": 177.5
+        },
+        {
+          "name": "https://localhost:8000/assets/BiaChatDemo-nZjSC82Z.js",
+          "bytes": 1861,
+          "duration": 790.5
+        },
+        {
+          "name": "https://localhost:8000/assets/BiaChatDemo-Z-bX54Qo.css",
+          "bytes": 1266,
+          "duration": 234.89999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/useFormProof-KthDQ4Xe.js",
+          "bytes": 7134,
+          "duration": 961.8999999999069
+        },
+        {
+          "name": "https://localhost:8000/assets/useFormProof-YFNY3exT.css",
+          "bytes": 410,
+          "duration": 355.20000000018626
+        },
+        {
+          "name": "https://localhost:8000/assets/pow.worker-BG2OTBr-.js",
+          "bytes": 3642,
+          "duration": 1058.1999999997206
+        },
+        {
+          "name": "https://localhost:8000/assets/ArticleCard-Cff_4u4R.js",
+          "bytes": 1817,
+          "duration": 1185.2999999998137
+        },
+        {
+          "name": "https://localhost:8000/assets/ArticleCard-BCno1MbR.css",
+          "bytes": 1184,
+          "duration": 224.29999999981374
+        },
+        {
+          "name": "https://localhost:8000/assets/FaqAccordion-DuH11vNt.js",
+          "bytes": 13607,
+          "duration": 1559.1000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/FaqAccordion-BFCGdadM.css",
+          "bytes": 453,
+          "duration": 405.3000000002794
+        },
+        {
+          "name": "https://localhost:8000/assets/RichText-BnQNyLJT.js",
+          "bytes": 1578,
+          "duration": 1408.6000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/RichText-D9fktyUK.css",
+          "bytes": 358,
+          "duration": 418.1999999997206
+        },
+        {
+          "name": "https://localhost:8000/assets/InstitutionalCta-CtfqCrUJ.js",
+          "bytes": 1064,
+          "duration": 1632.3999999999069
+        },
+        {
+          "name": "https://localhost:8000/assets/InstitutionalCta-CwU_NtxN.css",
+          "bytes": 876,
+          "duration": 522.9000000003725
+        },
+        {
+          "name": "https://localhost:8000/assets/CtaBand-DWY6FUh7.js",
+          "bytes": 1473,
+          "duration": 1781.6000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/CtaBand-DH4sxZi0.css",
+          "bytes": 703,
+          "duration": 574.8000000002794
+        },
+        {
+          "name": "https://localhost:8000/assets/AvailabilityNotice-Dy6KzCNz.js",
+          "bytes": 876,
+          "duration": 1810.3999999999069
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "bytes": 5533,
+          "duration": 2071.3000000002794
+        },
+        {
+          "name": "https://localhost:8000/images/editorial/hero-480.avif",
+          "bytes": 8026,
+          "duration": 2066.2999999998137
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "bytes": 623,
+          "duration": 1953.6999999997206
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "bytes": 5533,
+          "duration": 1859.6000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/inter-latin-wght-normal-Dx4kXJAl.woff2",
+          "bytes": 48556,
+          "duration": 1285.5999999996275
+        },
+        {
+          "name": "https://localhost:8000/assets/sora-latin-wght-normal-DdqRvwsR.woff2",
+          "bytes": 33952,
+          "duration": 999.5
+        },
+        {
+          "name": "https://localhost:8000/images/editorial/planning-480.avif",
+          "bytes": 7444,
+          "duration": 1424.2000000001863
+        },
+        {
+          "name": "https://localhost:8000/assets/useSeo-BbCxd-dG.js",
+          "bytes": 2153,
+          "duration": 169.5
+        },
+        {
+          "name": "https://localhost:8000/assets/_virtual_mf-articles-CyPDBuyx.js",
+          "bytes": 30517,
+          "duration": 421.5
+        },
+        {
+          "name": "https://localhost:8000/assets/hal-ai-logo-CQ895MjO.js",
+          "bytes": 346,
+          "duration": 173
+        },
+        {
+          "name": "https://localhost:8000/assets/formularios-DFzCxbvD.js",
+          "bytes": 8244,
+          "duration": 275.10000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/api-CmI_Dv4H.js",
+          "bytes": 1930,
+          "duration": 215
+        },
+        {
+          "name": "https://localhost:8000/assets/useCollectionStatus-fpfTFGPa.js",
+          "bytes": 525,
+          "duration": 193.60000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/phone-B7qeUasO.js",
+          "bytes": 815,
+          "duration": 325.5
+        },
+        {
+          "name": "https://localhost:8000/assets/form-helpers-D_Fv5fL7.js",
+          "bytes": 2303,
+          "duration": 353.10000000009313
+        },
+        {
+          "name": "https://localhost:8000/favicon.svg",
+          "bytes": 578,
+          "duration": 351.10000000009313
+        },
+        {
+          "name": "https://localhost:8000/api/public-config",
+          "bytes": 1478,
+          "duration": 163.60000000009313
+        }
+      ],
+      "navigation": [
+        {
+          "domContentLoaded": 703.5,
+          "load": 2982.2999999998137,
+          "bytes": 63161
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "lcp": 2592,
+      "cls": 0.0008938826504159086,
+      "lcpElement": "IMG",
+      "lcpUrl": "https://localhost:8000/images/editorial/hero-480.avif",
+      "resources": [
+        {
+          "name": "https://localhost:8000/assets/app-5fKr5E2d.js",
+          "bytes": 102855,
+          "duration": 2671.899999999907
+        },
+        {
+          "name": "https://localhost:8000/assets/_plugin-vue_export-helper-CYuT11Pz.js",
+          "bytes": 75933,
+          "duration": 2182
+        },
+        {
+          "name": "https://localhost:8000/assets/site-DskPVBs7.js",
+          "bytes": 8624,
+          "duration": 808.5
+        },
+        {
+          "name": "https://localhost:8000/assets/app-BxejBft_.css",
+          "bytes": 38620,
+          "duration": 898.1000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/HomePage-DuCBvbvS.js",
+          "bytes": 8347,
+          "duration": 791.7000000001863
+        },
+        {
+          "name": "https://localhost:8000/assets/HomePage-C8WYuHlw.css",
+          "bytes": 910,
+          "duration": 379.8000000002794
+        },
+        {
+          "name": "https://localhost:8000/assets/HomeValue-BAdCZjQx.js",
+          "bytes": 38192,
+          "duration": 1397.1000000000931
+        },
+        {
+          "name": "https://localhost:8000/assets/HomeValue-DVz1AA8T.css",
+          "bytes": 15189,
+          "duration": 864
+        },
+        {
+          "name": "https://localhost:8000/assets/PhotoAsset-DcxNjpt8.js",
+          "bytes": 1292,
+          "duration": 991.7999999998137
+        },
+        {
+          "name": "https://localhost:8000/assets/PhotoAsset-CWbQY-58.css",
+          "bytes": 527,
+          "duration": 210.89999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/BiaChatDemo-nZjSC82Z.js",
+          "bytes": 1861,
+          "duration": 1011
+        },
+        {
+          "name": "https://localhost:8000/assets/BiaChatDemo-Z-bX54Qo.css",
+          "bytes": 1266,
+          "duration": 401.89999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/useFormProof-KthDQ4Xe.js",
+          "bytes": 7134,
+          "duration": 1234
+        },
+        {
+          "name": "https://localhost:8000/assets/useFormProof-YFNY3exT.css",
+          "bytes": 410,
+          "duration": 192.20000000018626
+        },
+        {
+          "name": "https://localhost:8000/assets/pow.worker-BG2OTBr-.js",
+          "bytes": 3642,
+          "duration": 1502.7000000001863
+        },
+        {
+          "name": "https://localhost:8000/assets/ArticleCard-Cff_4u4R.js",
+          "bytes": 1817,
+          "duration": 1607.3000000002794
+        },
+        {
+          "name": "https://localhost:8000/assets/ArticleCard-BCno1MbR.css",
+          "bytes": 1184,
+          "duration": 219.60000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/FaqAccordion-DuH11vNt.js",
+          "bytes": 13607,
+          "duration": 2033.5
+        },
+        {
+          "name": "https://localhost:8000/assets/FaqAccordion-BFCGdadM.css",
+          "bytes": 453,
+          "duration": 166.6999999997206
+        },
+        {
+          "name": "https://localhost:8000/assets/RichText-BnQNyLJT.js",
+          "bytes": 1578,
+          "duration": 1846
+        },
+        {
+          "name": "https://localhost:8000/assets/RichText-D9fktyUK.css",
+          "bytes": 358,
+          "duration": 324.10000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/InstitutionalCta-CtfqCrUJ.js",
+          "bytes": 1064,
+          "duration": 2069.2000000001863
+        },
+        {
+          "name": "https://localhost:8000/assets/InstitutionalCta-CwU_NtxN.css",
+          "bytes": 876,
+          "duration": 353.10000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/CtaBand-DWY6FUh7.js",
+          "bytes": 1473,
+          "duration": 2218.7999999998137
+        },
+        {
+          "name": "https://localhost:8000/assets/CtaBand-DH4sxZi0.css",
+          "bytes": 703,
+          "duration": 179.39999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/AvailabilityNotice-Dy6KzCNz.js",
+          "bytes": 876,
+          "duration": 2211.5
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "bytes": 5533,
+          "duration": 2398.1999999997206
+        },
+        {
+          "name": "https://localhost:8000/images/editorial/hero-480.avif",
+          "bytes": 8026,
+          "duration": 2293.5
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "bytes": 623,
+          "duration": 2330.2999999998137
+        },
+        {
+          "name": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "bytes": 5533,
+          "duration": 2159
+        },
+        {
+          "name": "https://localhost:8000/assets/inter-latin-wght-normal-Dx4kXJAl.woff2",
+          "bytes": 48556,
+          "duration": 1370.2999999998137
+        },
+        {
+          "name": "https://localhost:8000/assets/sora-latin-wght-normal-DdqRvwsR.woff2",
+          "bytes": 33952,
+          "duration": 1106.7000000001863
+        },
+        {
+          "name": "https://localhost:8000/images/editorial/planning-480.avif",
+          "bytes": 7444,
+          "duration": 1459.7000000001863
+        },
+        {
+          "name": "https://localhost:8000/assets/useSeo-BbCxd-dG.js",
+          "bytes": 2153,
+          "duration": 176.39999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/_virtual_mf-articles-CyPDBuyx.js",
+          "bytes": 30517,
+          "duration": 421.89999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/hal-ai-logo-CQ895MjO.js",
+          "bytes": 346,
+          "duration": 168.10000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/formularios-DFzCxbvD.js",
+          "bytes": 8244,
+          "duration": 275.89999999990687
+        },
+        {
+          "name": "https://localhost:8000/assets/api-CmI_Dv4H.js",
+          "bytes": 1930,
+          "duration": 214.60000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/useCollectionStatus-fpfTFGPa.js",
+          "bytes": 525,
+          "duration": 193.09999999962747
+        },
+        {
+          "name": "https://localhost:8000/assets/phone-B7qeUasO.js",
+          "bytes": 815,
+          "duration": 325.60000000009313
+        },
+        {
+          "name": "https://localhost:8000/assets/form-helpers-D_Fv5fL7.js",
+          "bytes": 2303,
+          "duration": 352.60000000009313
+        },
+        {
+          "name": "https://localhost:8000/favicon.svg",
+          "bytes": 578,
+          "duration": 350
+        },
+        {
+          "name": "https://localhost:8000/api/public-config",
+          "bytes": 1478,
+          "duration": 161.8000000002794
+        }
+      ],
+      "navigation": [
+        {
+          "domContentLoaded": 529.7999999998137,
+          "load": 2997.2999999998137,
+          "bytes": 63161
+        }
+      ]
+    }
+  ]
+}

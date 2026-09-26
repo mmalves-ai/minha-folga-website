@@ -1,0 +1,130 @@
+revision:
+  version: 5
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+banner:
+  title: Cookies e medição de uso
+  text: Usamos apenas o essencial para o site funcionar. Com a sua permissão, também contamos de forma agregada o uso do site (visitas às páginas, leitura de conteúdos, buscas na ajuda, cliques, erros e recebimento do cadastro, início de atendimento e uso da demonstração da Bia), sem cookies e sem identificar você. Essa escolha não autoriza mensagens nem consulta de margem.
+  policyLink: Política de cookies
+  accept: Aceitar opcionais
+  reject: Recusar opcionais
+  configure: Configurar
+dialog:
+  title: Preferências de cookies
+  intro: Escolha o que o site pode usar além do essencial. Você pode mudar de ideia quando quiser, pelo rodapé ou pela Política de cookies.
+  introWithoutOptional: Não há medição opcional para escolher aqui. Os avisos do navegador são ativados separadamente, somente se você pedir.
+  essential:
+    title: Essenciais
+    status: Sempre ativos
+    itemsLabel: Tecnologias essenciais em uso
+    text: Mantêm a sessão segura depois que você abre o link seguro de Preferências enviado pela Bia, protegem a área interna da equipe e guardam esta escolha. Sem eles, essas funções não funcionam.
+    textWithoutOptional: Mantêm a sessão segura depois que você abre o link seguro de Preferências enviado pela Bia e protegem a área interna da equipe. Só são criados quando você usa essas funções.
+  measurement:
+    title: Medição agregada de uso
+    status: Opcional
+    label: Permitir a medição agregada de uso
+    text: Conta, por dia, visitas às páginas do site, leitura de conteúdos, buscas na ajuda (sem o que você digitou), cliques para cadastro, início, erros e recebimento do formulário, início do atendimento e uso da demonstração e do canal da Bia. Não contamos quais campos deram erro nem os dados preenchidos. Não usa cookies, não guarda identificador e não envia nada a plataformas de anúncios.
+  messagesNote: As escolhas de cookies não autorizam mensagens. Os avisos do WhatsApp seguem o cadastro. Os avisos neste aparelho dependem de uma ativação separada e da permissão do navegador.
+  webchatNote: "O chat do site, operado pela plataforma Hal-AI, não faz parte destas escolhas: ele só é carregado quando você clica para conversar e confirma o aviso sobre o tratamento. A Política de cookies explica o que ele usa."
+  save: Salvar escolhas
+  cancel: Cancelar
+  close: Fechar
+  ok: Entendi
+  policyLink: Ler a Política de cookies
+  preferencesLink: Gerenciar comunicações
+technologies:
+  - id: mf_contact
+    name: mf_contact
+    kind: Cookie
+    category: essential
+    when: always
+    provider: Minha Folga (próprio do site)
+    purpose: Mantém a sua sessão depois que você abre o link seguro de Preferências enviado pela Bia. Permite ver e alterar suas escolhas de comunicação sem expor seus dados a outras pessoas.
+    content: Somente um identificador aleatório, sem nome, número ou outro dado seu em claro. No servidor, um resumo criptográfico desse identificador fica associado à sua sessão e, por ela, ao seu cadastro.
+    duration: 30 minutos, ou até você sair da sessão em Preferências.
+    details: Criado somente ao abrir o link seguro de Preferências. HttpOnly, Secure, SameSite=Strict, restrito a /api.
+  - id: mf_admin
+    name: mf_admin
+    kind: Cookie
+    category: essential
+    when: always
+    provider: Minha Folga (próprio do site)
+    purpose: Mantém a sessão da equipe autorizada na área interna, com verificação em duas etapas.
+    content: Somente um identificador aleatório de sessão, sem nome, e-mail ou outro dado em claro. No servidor, um resumo criptográfico dele fica associado à conta da pessoa da equipe.
+    duration: Até a pessoa da equipe sair ou a sessão expirar no servidor.
+    details: Criado somente para quem entra na área interna; visitantes do site não recebem este cookie. HttpOnly, Secure, SameSite=Strict, restrito a /api/admin.
+  - id: mf_cookie_choice
+    name: mf_cookie_choice
+    kind: Armazenamento local do navegador
+    category: essential
+    when: analytics
+    provider: Minha Folga (próprio do site)
+    purpose: Guarda a sua escolha sobre a medição opcional, para não perguntar de novo a cada página.
+    content: 'Versão da política, a escolha (sim ou não) e a data. Exemplo: {"version":"1.0","measurement":false,"savedAt":"2026-09-25"}.'
+    duration: Até você mudar a escolha ou limpar os dados do navegador. Quando esta política muda de versão, perguntamos de novo.
+    details: Fica somente no seu navegador e não é enviado ao servidor.
+  - id: medicao-agregada
+    name: Contagem agregada de visitas
+    kind: Envio ao servidor do próprio site (sem cookie)
+    category: measurement
+    when: analytics
+    provider: Minha Folga (próprio do site)
+    purpose: Contar, por dia, visitas às páginas, leitura de conteúdos, buscas na ajuda, cliques para cadastro, início, erros e recebimento do formulário, início do atendimento e uso da demonstração e do canal da Bia, para entender o que ajuda as pessoas. A lista completa dos eventos está em “Tecnologias opcionais”.
+    content: "Somente o nome do evento e, em alguns deles, um valor de uma lista fixa do site: a página, o conteúdo lido, a página do cadastro ou o exemplo da Bia (por exemplo, “article_read” e “o-que-e-cet”). Sem cookies, identificadores, texto digitado ou dados do formulário."
+    duration: O servidor guarda apenas totais diários, que não identificam ninguém.
+    details: Enviado ao endereço /api/events somente se você permitir. Nada é compartilhado com plataformas de anúncios.
+  - id: mf_browser_notifications
+    name: mf_browser_notifications
+    kind: Armazenamento local do navegador
+    category: essential
+    when: always
+    provider: Minha Folga (próprio do site)
+    purpose: Permite reconhecer e cancelar a inscrição de avisos deste aparelho, depois que você pede para ativá-los.
+    content: Identificador aleatório da inscrição e credencial que permite apenas cancelar essa inscrição. Não contém os dados do formulário de cadastro nem histórico de navegação.
+    duration: Até você desativar os avisos neste aparelho ou limpar os dados do navegador.
+    details: Criado somente após ativação voluntária dos avisos e confirmação do servidor. Não é autorização para medição de uso. O navegador também mantém a permissão e a inscrição técnica do seu serviço de notificações.
+measurementStatus:
+  enabled_md: "Se você permitir, pelo aviso ou pelo painel de cookies, contamos de forma agregada os eventos listados abaixo. Cada envio contém apenas o nome do evento e, em alguns deles, um valor de uma lista fixa do site, nunca o que você digitou, sem cookies nem identificadores; o servidor guarda somente totais diários. Base legal: consentimento (art. 7º, I). Você pode recusar ou mudar de ideia a qualquer momento, sem prejuízo para o uso do site."
+  eventsTitle: O que é contado, com a sua permissão
+  eventsDimension: Valor enviado junto
+  disabled_md: "**Nesta versão do site, a medição de uso está desativada.** Nenhum evento de navegação é enviado e não há tecnologia opcional a aceitar ou recusar. Se a medição agregada for ativada no futuro, ela dependerá da sua escolha e este aviso e a [Política de cookies](/cookies) serão atualizados antes."
+events:
+  - name: page_section_view
+    label: Visita a uma página do site.
+    dimension: A página visitada, por exemplo a Central de ajuda.
+  - name: article_read
+    label: Leitura de um conteúdo da central editorial até o fim do texto.
+    dimension: O conteúdo lido, por exemplo “o-que-e-cet”.
+  - name: help_search
+    label: Busca feita na Central de ajuda, contada quando você para de digitar.
+    dimension: Nenhum. O texto da busca nunca é enviado.
+  - name: help_search_empty
+    label: Busca na Central de ajuda que não encontrou resposta.
+    dimension: Nenhum. O texto da busca nunca é enviado.
+  - name: waitlist_start
+    label: Início do preenchimento do cadastro de interesse.
+    dimension: A página em que está o formulário, por exemplo “avise-me”.
+  - name: waitlist_cta_click
+    label: Clique no convite para iniciar o cadastro, sem contar cliques duplos.
+    dimension: A página do convite, por exemplo “home” ou “avise-me”.
+  - name: waitlist_error
+    label: Erro exibido no cadastro, contado uma vez por página e origem.
+    dimension: A página do formulário. Nenhum campo, valor ou mensagem de erro é enviado.
+  - name: waitlist_confirmed
+    label: Recebimento confirmado pelo servidor, contado uma vez por página e origem. Inclui cadastros repetidos.
+    dimension: A página do formulário. Não informa se o cadastro já existia.
+  - name: support_form_start
+    label: Início do preenchimento do formulário de atendimento.
+    dimension: Nenhum.
+  - name: bia_demo_tab
+    label: Troca de exemplo na demonstração da Bia.
+    dimension: O exemplo escolhido, por exemplo “cet”.
+  - name: bia_channel_click
+    label: Clique para conversar com a Bia, no chat do site ou no WhatsApp oficial.
+    dimension: A página em que está o botão.
+webchatStatus:
+  enabled_md: "**O chat do site está ativo nesta versão.** Ele só é carregado depois que você clica para conversar e confirma o aviso sobre o tratamento; se você não abrir, nada dele chega ao seu navegador. Depois de aberto, o chat da Hal-AI pode usar cookies ou armazenamento próprios no seu navegador para manter a conversa."
+  pendingLabel: tecnologias que o chat da Hal-AI grava no navegador, com finalidade e duração
+  disabled_md: "**Nesta versão do site, o chat está desativado.** Nada da Hal-AI é carregado no seu navegador. Se o chat for ativado, ele só será carregado depois que você clicar para conversar, e esta informação será atualizada antes, com o que ele grava no navegador."

@@ -1,0 +1,132 @@
+# Direção confirmada em 26/09/2026: jornada digital e ágil, IA para condições adequadas ao perfil,
+# possibilidade de aliviar consignado existente e fila por ordem de cadastro/disponibilidade.
+# /bia — experiência da Bia (seções 6.4, 6.12 e 7, com a decisão D1 de docs/DECISOES.md: a Bia é da
+# plataforma Hal-AI e atende no chat do site e no WhatsApp oficial; pode fazer o cadastro com os mesmos
+# dados do formulário, com consentimento). Demonstração sempre rotulada; o botão de conversa só aparece
+# com o canal real provisionado (sem confirmação ou protocolo fictícios).
+# Os painéis "hoje" descrevem a fase PRE_LAUNCH: revisar junto com a mudança de fase.
+revision:
+  version: 5
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Bia, nossa assistente de IA | Minha Folga
+  description: 'Conheça a Bia: nossa assistente de IA para explicar o crédito de um jeito simples e ajudar você a comparar opções.'
+
+breadcrumb: Bia
+
+hero:
+  badge: Assistente de inteligência artificial
+  title: Crédito explicado sem complicação.
+  lead: A Bia é nossa assistente de inteligência artificial. Ela vai ajudar você a entender as opções, comparar parcelas e decidir com mais clareza — tudo pelo celular.
+  # Chat do site (preferencial): abre o aviso de tratamento do chat. Só WhatsApp: abre o WhatsApp oficial.
+  webchatCta: Conversar com a Bia no site
+  channelCta: Conversar com a Bia
+  channelHint: (abre o WhatsApp em uma nova aba)
+  demoCta: { label: Ver exemplos de conversa, to: '#demonstracao' }
+  humanCta: { label: Preciso de ajuda, to: /atendimento }
+  channelPending: Em breve, você poderá conversar com a Bia. Conheça os exemplos abaixo.
+  opening:
+    title: Como a Bia começa a conversa
+    messages:
+      - { from: bia, text: 'Oi! Eu sou a Bia, assistente de IA da Minha Folga. Nossa operação de crédito está em preparação. Posso explicar o consignado e ajudar você a entrar na fila para a abertura. Ainda não consulto margem nem busco propostas. O que você quer entender?' }
+      - { from: person, text: 'Já tenho consignado. Dá para reduzir minha parcela?' }
+      - { from: bia, text: 'Pode haver uma alternativa, mas depende do contrato que você tem, das condições disponíveis e de análise. Além da parcela, compare prazo, CET e total a pagar. Uma parcela menor pode aliviar o mês e ainda assim aumentar o custo total. Quer entender o que comparar?' }
+
+demo:
+  eyebrow: Na prática
+  title: Sua dúvida vira uma conversa.
+  text: Veja como a Bia explica o que importa para o seu bolso.
+  usesTitle: Ela vai ajudar você a
+  uses:
+    - title: Buscar um novo empréstimo
+      text: Entender as opções disponíveis para o seu perfil na abertura.
+    - title: Avaliar uma parcela menor
+      text: Comparar uma alternativa com o consignado que você já paga.
+    - title: Escolher com clareza
+      text: Olhar parcela, prazo e custo total juntos.
+
+panels:
+  today:
+    title: O que ela faz hoje
+    # Sem canal provisionado (biaChannel), a Bia ainda não atende ninguém: o painel abre com este
+    # aviso e a lista passa a descrever o que ela faz nesta fase depois que o canal for ativado.
+    channelPendingIntro: 'O canal da Bia ainda não está ativo. Por enquanto, ela aparece só nos exemplos desta página. Quando o canal for ativado, nesta fase ela:'
+    # Canais ativos (a lista abaixo vale para todos eles).
+    channelsIntro:
+      both: 'Ela atende no chat deste site e no WhatsApp oficial da Minha Folga, pela plataforma Hal-AI. Nesta fase, ela:'
+      webchat: 'Ela atende no chat deste site, pela plataforma Hal-AI. Nesta fase, ela:'
+      whatsapp: 'Ela atende no WhatsApp oficial da Minha Folga, pela plataforma Hal-AI. Nesta fase, ela:'
+    items:
+      - { text: 'Explica o consignado, o desconto em folha, o CET, o prazo e o total a pagar, com base em conteúdo aprovado.' }
+      - { text: 'Ajuda você a se cadastrar na fila de abertura, com os mesmos dados do formulário do site e a sua autorização. A fila segue a ordem de cadastro e a disponibilidade de crédito.', requires: waitlist }
+      - { text: Registra suas preferências de comunicação e o pedido para sair da lista. }
+      - { text: Envia um link seguro para você ver e mudar suas escolhas na página Preferências. }
+      - { text: 'Diz quando não tem confirmação de uma informação, sem inventar regras.' }
+      - { text: Encaminha para o atendimento o que precisa de uma pessoa., requires: humanSupport }
+    notTitle: Ainda não
+    not: Consulta margem, confirma elegibilidade, mostra propostas ou calcula condições.
+  later:
+    title: Quando o crédito estiver disponível
+    items:
+      - Com as integrações ativas, ajudará a buscar condições adequadas ao seu perfil entre as opções oficiais disponíveis, em uma jornada digital pensada para ser ágil.
+      - Poderá mostrar somente propostas válidas recebidas das ferramentas oficiais, inclusive para avaliar a possibilidade de aliviar uma parcela de consignado privado existente.
+      - Consultas de dados e margem só acontecerão após a sua autorização específica e com a integração habilitada.
+      - Não calcula preço por conta própria. Apresenta o cálculo oficial, com parcela, prazo, CET e total a pagar, sem garantir menor taxa ou economia.
+      - Assinatura e movimentação de dinheiro nunca acontecem pelo chat. A Bia encaminha para o fluxo formal e seguro.
+
+capabilities:
+  eyebrow: Capacidades por fase
+  title: O que muda em cada fase da operação.
+  text: As capacidades da Bia acompanham a fase da operação de crédito. O bloqueio vale também no servidor, e não apenas nesta página.
+  caption: Capacidades da Bia por fase da operação de crédito
+  capabilityHeader: Capacidade
+  preLaunchHeader: Estruturação (pré-lançamento)
+  laterHeader: Piloto ou operação aberta
+  currentLabel: Fase atual
+  phaseLabel: 'Fase vigente:'
+  operationsLabel: 'Operações de crédito:'
+  operationsOn: habilitadas na configuração do servidor
+  operationsOff: desativadas na configuração do servidor
+  rows:
+    - { capability: Explicar conceitos e cadastro, preLaunch: 'Sim, com base aprovada', later: Sim }
+    - { capability: Registrar preferências e descadastro, preLaunch: Sim, later: Sim }
+    - { capability: Confirmar elegibilidade financeira, preLaunch: Não, later: Somente resultado autorizado do parceiro }
+    - { capability: Consultar dados e margem, preLaunch: Não, later: Após autorização específica e integração habilitada }
+    - { capability: Calcular preço por conta própria, preLaunch: Não, later: 'Não; apresentar cálculo oficial' }
+    - { capability: Mostrar proposta, preLaunch: Não, later: Somente proposta válida recebida da ferramenta }
+    # `laterKind: forward` — a Bia não faz, apenas encaminha (ícone de encaminhamento, não de "sim").
+    - { capability: Assinar ou movimentar dinheiro no chat, preLaunch: Não, later: 'Encaminhar fluxo formal seguro, sem comando livre do modelo', laterKind: forward }
+
+trust:
+  eyebrow: Transparência
+  title: Uma conversa em que você entende o próximo passo.
+  identity:
+    title: Você sabe com quem conversa
+    text: A Bia sempre se apresenta como inteligência artificial.
+  privacy:
+    title: Seus dados, com cuidado
+    # Dados que a ferramenta upsert_customer registra: os mesmos campos do formulário (docs/DECISOES.md, D1).
+    text: A conversa é operada pela Hal-AI. Para cadastrar seu interesse, a Bia pede sua autorização e os mesmos dados do formulário do site.
+    sensitive: Nunca envie senhas, códigos ou dados bancários.
+    link: { label: Leia o Aviso de Privacidade, to: /privacidade }
+  human:
+    title: Ajuda quando precisar
+    # Publicado somente com equipe e canal de retorno reais (channels.humanSupport).
+    handoff: Se a resposta exigir uma pessoa, a Bia encaminha para o atendimento.
+    text: Você também pode enviar sua dúvida pelo atendimento.
+    link: { label: Ir para o atendimento, to: /atendimento }
+
+closing:
+  title: Seu próximo passo pode ser mais simples.
+  # Texto conforme o canal ativo (chat do site tem preferência sobre o WhatsApp).
+  liveTextWebchat: Converse com a Bia no chat deste site. Ela se identifica como IA e nunca pede senhas nem dados bancários.
+  liveText: Converse com a Bia pelo WhatsApp oficial da Minha Folga. Ela se identifica como IA e nunca pede senhas nem dados bancários.
+  pendingText: Entre na fila para conhecer as opções na abertura. A Bia vai ajudar você a entender cada escolha.
+  contentCta:
+    label: Quero entrar na fila
+    to: /avise-me#formulario
+  humanCta: { label: Falar com o atendimento, to: /atendimento }

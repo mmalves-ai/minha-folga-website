@@ -1,0 +1,262 @@
+# Base aprovada de perguntas frequentes. É a mesma base usada pela central /ajuda, pelos resumos
+# da home e do produto e pela ferramenta `get_approved_faq` da Bia (backend lê este arquivo).
+# As respostas refletem a fase financeira PRE_LAUNCH; mudança de fase exige revisão desta base.
+# Versão 2: decisão D1 (docs/DECISOES.md) — cadastro com CPF e empregador, sem código de confirmação;
+# WhatsApp oficial, chat do site e Bia na plataforma Hal-AI; saída pela Bia ou pelo pedido em /preferencias.
+revision:
+  version: 4
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+categories:
+  - { id: sobre, label: Sobre a Minha Folga }
+  - { id: consignado, label: Consignado }
+  - { id: cadastro, label: Cadastro e avisos }
+  - { id: bia, label: Bia }
+  - { id: dados, label: Dados e segurança }
+
+# `showOn` indica os resumos em que a pergunta aparece (home, consignado).
+items:
+  - id: por-que-cadastrar-agora
+    category: cadastro
+    showOn: [ home ]
+    question: Por que entrar na fila agora? O que muda se eu esperar?
+    answer_md: O crédito disponível na abertura será limitado. Quem se cadastra antes entra antes na ordem de chamada, conforme a disponibilidade e os critérios de análise. Se o valor se esgotar, será preciso aguardar. O cadastro é gratuito e não reserva dinheiro.
+    related:
+      - { label: Quero entrar na fila, to: '/avise-me#formulario' }
+  - id: novo-emprestimo
+    category: consignado
+    showOn:
+      - home
+      - consignado
+    question: Posso pedir um empréstimo novo?
+    answer_md: Sim, essa também é a proposta da Minha Folga. Na abertura, vamos buscar opções de consignado privado para quem trabalha com carteira assinada, mesmo que ainda não tenha empréstimo. Valor e condições dependerão da análise do seu perfil e da disponibilidade.
+    related:
+      - label: Quero entrar na fila
+        to: /avise-me#formulario
+
+  - id: reduzir-consignado-atual
+    category: consignado
+    showOn: [ home, consignado ]
+    question: Já tenho consignado privado. Posso diminuir minha parcela?
+    answer_md: "Essa é uma das possibilidades. Na abertura, vamos avaliar se há uma alternativa para aliviar sua parcela. Depende da análise e das opções disponíveis. Compare também o prazo e o total a pagar: parcela menor não garante custo menor."
+    related:
+      - { label: Conheça a proposta, to: /consignado-privado }
+      - { label: Parcela menor e custo total, to: /conteudos/parcela-menor-e-custo-total }
+
+  - id: diferencial-minha-folga
+    category: sobre
+    showOn: [ home ]
+    question: O que a Minha Folga vai fazer por mim?
+    answer_md: Uma experiência 100% digital, com IA para buscar a melhor opção entre as propostas disponíveis para o seu perfil. Para um novo empréstimo ou para avaliar uma parcela menor. A Bia vai explicar as condições para você escolher com clareza.
+    related:
+      - { label: Como vai funcionar, to: /como-funciona }
+      - { label: Conheça a Bia, to: /bia }
+
+  - id: ja-libera-emprestimos
+    category: consignado
+    showOn: [ home, consignado ]
+    question: A Minha Folga já está liberando empréstimos?
+    answer_md: Estamos chegando! Por enquanto, cadastre-se para a fila de abertura. As chamadas seguirão a ordem de cadastro e a disponibilidade. A contratação dependerá de análise.
+    related:
+      - { label: Conheça a abertura, to: /lancamento }
+      - { label: Quero entrar na fila, to: /avise-me }
+
+  - id: quem-podera-solicitar
+    category: consignado
+    showOn: [ consignado ]
+    question: Quem poderá solicitar?
+    answer_md: Nossa proposta é para quem trabalha com carteira assinada. Os vínculos atendidos e as condições serão confirmados na análise, conforme as opções disponíveis.
+    related:
+      - { label: Consignado privado, to: /consignado-privado }
+
+  - id: mei-aplicativo
+    category: consignado
+    showOn: [ consignado ]
+    question: Sou MEI ou trabalho por aplicativo. Posso participar?
+    answer_md: Ter um MEI ou trabalhar por aplicativo, por si só, não dá acesso ao consignado. Se você também tiver um emprego com carteira assinada, poderá ser analisado na abertura.
+    related:
+      - { label: Para quem estamos preparando, to: '/consignado-privado#para-quem' }
+
+  - id: cadastro-garante-aprovacao
+    category: cadastro
+    showOn: [ home, consignado ]
+    question: Cadastrar meu interesse garante aprovação ou taxa?
+    answer_md: Não. O cadastro organiza a fila de chamada. O crédito depende de análise e disponibilidade, sem valor ou taxa reservados.
+    related:
+      - { label: Como vai funcionar, to: /como-funciona }
+
+  - id: o-que-a-bia-faz
+    category: bia
+    showOn: []
+    question: O que a Bia faz?
+    answer_md: A Bia é nossa assistente de IA. Ela vai ajudar você a entender as opções, comparar parcela e custo total e escolher com clareza. Veja os exemplos de conversa na página da Bia.
+    related:
+      - { label: Conheça a Bia, to: /bia }
+
+  - id: preciso-pagar
+    category: dados
+    showOn: [ home ]
+    question: Preciso pagar para entrar na lista ou liberar crédito?
+    answer_md: Não cobramos para entrar na lista e não pedimos depósito antecipado para liberar empréstimo. Desconfie de pedidos desse tipo.
+    related:
+      - { label: Como se proteger de golpes, to: /seguranca }
+
+  - id: parcela-menor-total
+    category: consignado
+    showOn: [ consignado ]
+    question: Uma parcela menor significa pagar menos no total?
+    answer_md: Nem sempre. Prazo maior e outros componentes podem aumentar o total pago. Compare prazo, CET e total a pagar antes de decidir.
+    related:
+      - { label: Parcela menor e custo total, to: /conteudos/parcela-menor-e-custo-total }
+      - { label: O que é CET, to: /conteudos/o-que-e-cet }
+
+  - id: quando-disponivel
+    category: consignado
+    showOn: [ consignado ]
+    question: Quando o crédito estará disponível?
+    answer_md: Em breve. Entre na fila para receber o aviso de abertura pelo WhatsApp informado. Ainda não há uma data de liberação anunciada.
+    related:
+      - { label: Conheça a abertura, to: /lancamento }
+
+  - id: como-saio-da-lista
+    category: cadastro
+    showOn: []
+    # Seção 6.8, ajustada pela decisão D1: saída pela Bia ou pelo pedido de saída em /preferencias.
+    question: Como faço para sair da lista?
+    answer_md: Use a página Preferências para pedir a saída. Você também pode pedir à Bia pelos canais oficiais ou usar o link seguro que ela enviar para mudar suas escolhas.
+    related:
+      - { label: Pedir para sair da lista, to: /preferencias }
+      - { label: Conheça a Bia, to: /bia }
+
+  # Perguntas complementares (além das nove da seção 6.8). Respostas em texto simples, sem links no
+  # corpo: a mesma base é usada pela Bia (get_approved_faq); os links ficam em `related`.
+
+  # Sobre a Minha Folga ------------------------------------------------------------------------------
+  - id: o-que-e-a-minha-folga
+    category: sobre
+    showOn: []
+    question: O que é a Minha Folga?
+    answer_md: Estamos chegando com crédito 100% digital para quem tem carteira assinada. Nossa IA vai buscar opções de novo empréstimo e alternativas para aliviar parcelas de consignado. A Bia ajuda você a entender e escolher.
+    related:
+      - { label: Conheça a Minha Folga, to: /sobre }
+      - { label: Nossas soluções, to: /solucoes }
+
+  - id: quem-concede-o-credito
+    category: sobre
+    showOn: []
+    question: A Minha Folga concede o crédito?
+    answer_md: Na abertura, cada proposta mostrará a instituição responsável pelo empréstimo, os custos e as condições. Você confere tudo antes de decidir.
+    related:
+      - { label: Consignado privado, to: /consignado-privado }
+      - { label: Conheça a abertura, to: /lancamento }
+
+  - id: como-produzimos-conteudos
+    category: sobre
+    showOn: []
+    question: Como são produzidos os conteúdos educativos?
+    answer_md: Usamos fontes oficiais, como o Banco Central, para explicar o crédito de forma simples. As fontes e a situação da revisão aparecem em cada artigo.
+    related:
+      - { label: Conteúdos para decidir, to: /conteudos }
+
+  # Consignado ------------------------------------------------------------------------------------------
+  - id: o-que-e-cet
+    category: consignado
+    showOn: []
+    question: O que é CET?
+    answer_md: "É o Custo Efetivo Total: reúne juros e outros custos do empréstimo. Use o CET, junto com prazo e total a pagar, para comparar propostas."
+    related:
+      - { label: O que é CET e por que olhar além da taxa, to: /conteudos/o-que-e-cet }
+
+  - id: mudanca-de-emprego
+    category: consignado
+    showOn: []
+    question: O que acontece com o consignado se eu mudar de emprego ou for demitido?
+    answer_md: A dívida não desaparece com a mudança de vínculo. A forma de continuidade do pagamento depende do contrato e das regras aplicáveis. Nesses casos, procure o canal oficial da instituição que concedeu o crédito.
+    related:
+      - { label: Como funciona o desconto em folha, to: /conteudos/como-funciona-desconto-em-folha }
+      - { label: Como funciona, to: /como-funciona }
+
+  # Cadastro e avisos ---------------------------------------------------------------------------------
+  - id: numero-confirmado
+    category: cadastro
+    showOn: []
+    question: Vou receber um código para confirmar meu WhatsApp?
+    answer_md: Não enviamos código de confirmação. Seu número fica confirmado quando você conversa com a Bia pelo WhatsApp oficial. Nunca repasse códigos recebidos por mensagem.
+    related:
+      - { label: Quero entrar na fila, to: /avise-me }
+      - { label: Segurança, to: /seguranca }
+
+  - id: por-que-cpf
+    category: cadastro
+    showOn: []
+    question: Por que vocês pedem CPF e dados do emprego no cadastro?
+    answer_md: Esses dados ajudam a identificar seu cadastro e preparar a futura análise. Agora não fazemos consultas de crédito. Qualquer consulta futura dependerá da sua autorização.
+    related:
+      - { label: Aviso de Privacidade, to: /privacidade }
+      - { label: Como vai funcionar, to: /como-funciona }
+
+  - id: escolher-comunicacoes
+    category: cadastro
+    showOn: []
+    question: Posso escolher o que quero receber?
+    answer_md: Sim. O aviso de abertura da operação de crédito e os conteúdos e novidades da Minha Folga são escolhas separadas. Receber conteúdos e novidades é opcional e não é condição para o cadastro. Você pode mudar essas escolhas quando quiser.
+    related:
+      - { label: Gerenciar preferências, to: /preferencias }
+
+  # Bia -----------------------------------------------------------------------------------------------------
+  - id: bia-e-pessoa
+    category: bia
+    showOn: []
+    question: A Bia é uma pessoa?
+    answer_md: Não. A Bia é uma assistente de inteligência artificial e se identifica assim em todas as conversas. Quando uma dúvida exigir atendimento humano, você pode usar os canais informados na página Atendimento.
+    related:
+      - { label: Atendimento, to: /atendimento }
+      - { label: Conheça a Bia, to: /bia }
+
+  - id: bia-consulta-margem
+    category: bia
+    showOn: []
+    question: A Bia consulta minha margem ou pede meu CPF?
+    answer_md: Por enquanto, não há consulta de margem. A Bia só pede seu CPF se você quiser fazer o cadastro pelos canais oficiais, com sua autorização. Nunca pede senhas ou dados bancários.
+    related:
+      - { label: O que a Bia faz hoje, to: /bia }
+
+  # Dados e segurança ----------------------------------------------------------------------------------
+  - id: quais-dados-no-cadastro
+    category: dados
+    showOn: []
+    question: Quais dados vocês pedem no cadastro?
+    answer_md: Nome completo, CPF, WhatsApp com DDD, nome do empregador, tipo de vínculo, tempo no emprego atual, faixa de salário líquido (com a opção “prefiro não informar”), cidade e UF, e-mail se você quiser informar e a confirmação de que você tem 18 anos ou mais. Se quiser, você também pode contar o que gostaria de entender melhor. Não pedimos senhas, fotos de documentos ou dados bancários.
+    related:
+      - { label: Aviso de Privacidade, to: /privacidade }
+      - { label: Quero entrar na fila, to: /avise-me }
+
+  - id: canais-oficiais
+    category: dados
+    showOn: []
+    question: Como reconheço os canais oficiais da Minha Folga?
+    answer_md: Confira as páginas Atendimento e Segurança. Use apenas o formulário deste site e os canais listados lá. Nunca pague adiantado para liberar empréstimo.
+    related:
+      - { label: Segurança, to: /seguranca }
+      - { label: Atendimento, to: /atendimento }
+
+  - id: suspeita-de-golpe
+    category: dados
+    showOn: []
+    question: Recebi uma mensagem suspeita em nome da Minha Folga. O que faço?
+    answer_md: Não informe senhas, códigos ou dados bancários e não faça pagamentos. Confira se o contato usa um dos canais oficiais listados na página Segurança e relate o caso pelo atendimento, escolhendo o assunto “Segurança ou suspeita de golpe”.
+    related:
+      - { label: Relatar uma suspeita, to: '/atendimento?assunto=seguranca' }
+      - { label: Como se proteger, to: /seguranca }
+
+  - id: uso-dos-dados
+    category: dados
+    showOn: []
+    question: Como vocês usam os meus dados?
+    answer_md: Usamos seus dados para organizar o cadastro e enviar as comunicações que você escolher. Uma futura consulta de crédito depende da sua autorização. Saiba mais no Aviso de Privacidade.
+    related:
+      - { label: Aviso de Privacidade, to: /privacidade }
+      - { label: Gerenciar preferências, to: /preferencias }

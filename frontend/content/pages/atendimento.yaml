@@ -1,0 +1,79 @@
+# /atendimento — canais reais, horários, formulário com protocolo (seções 6.14 e 7).
+# Canais, horários e prazos vêm SOMENTE da configuração pública validada (sem dados ilustrativos).
+revision:
+  version: 3
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Fale com a Minha Folga
+  description: Fale com a Minha Folga pelos canais oficiais, veja os horários de atendimento humano e envie sua solicitação com protocolo para acompanhar a resposta.
+
+hero:
+  breadcrumb: Atendimento
+  title: Vamos conversar.
+  lead: Tem uma dúvida ou precisa de ajuda? Envie sua mensagem ou escolha um dos canais abaixo.
+
+channels:
+  title: Canais oficiais
+  intro: Fale com a gente pelos canais desta página.
+  email:
+    label: E-mail de atendimento
+    text: Para dúvidas e solicitações.
+  phone:
+    label: Telefone de atendimento
+  webchat:
+    label: Chat com a Bia no site
+    text: Tire dúvidas com a Bia, nossa assistente de inteligência artificial, aqui no site. Ela sempre se identifica como IA.
+    note: O chat só carrega depois que você pedir para abrir.
+    aiBadge: Atendimento por IA
+  whatsapp:
+    label: WhatsApp oficial
+    bia: Neste canal, quem responde é a Bia, nossa assistente de inteligência artificial. Ela sempre se identifica como IA.
+    handoff: Se a resposta exigir uma pessoa, a Bia encaminha para o atendimento.
+    human: Número oficial da Minha Folga.
+    cta: Abrir conversa no WhatsApp
+    newTab: (abre em nova aba)
+    aiBadge: Atendimento por IA
+  hours:
+    label: Horário de atendimento humano
+  responseTime:
+    label: Prazo de resposta
+  form:
+    label: Formulário com protocolo
+    text: Registre sua solicitação aqui e acompanhe o andamento por um link seguro.
+    cta: Ir para o formulário
+
+form:
+  title: Envie sua solicitação
+  intro: Conte como podemos ajudar. Você receberá um protocolo e um link para acompanhar a resposta.
+
+tracking:
+  title: Guarde seu link de acompanhamento.
+  intro: Depois do envio, salve o link mostrado na tela. É por ele que você acompanha sua solicitação.
+  steps:
+    - title: Você recebe um protocolo
+      text: Ele aparece assim que a solicitação é registrada.
+    - title: Guarde o link seguro
+      text: O link de acompanhamento é mostrado uma única vez. Sem ele, o protocolo sozinho não abre informações.
+    - title: Consulte o andamento
+      text: 'Pelo link, você vê a situação e as respostas da equipe.'
+  statusesTitle: Situações possíveis
+  statuses:
+    - { label: Recebida, text: Registrada e na fila do atendimento. }
+    - { label: Em andamento, text: A equipe está cuidando da solicitação. }
+    - { label: Respondida, text: A equipe enviou uma resposta. }
+    - { label: Encerrada, text: A solicitação foi concluída. }
+  trackLink: { label: Acompanhar uma solicitação, to: /atendimento/acompanhar }
+
+before:
+  title: Antes de enviar
+  # A orientação exata “Não envie CPF, documentos, senhas ou dados bancários.” fica junto do campo Mensagem.
+  items:
+    - A Minha Folga não pede senhas nem depósito antecipado para liberar empréstimo.
+    - Para sair das comunicações, use a página de Preferências. Não é preciso abrir uma solicitação.
+    - Em caso de suspeita de golpe, escolha o assunto “Segurança ou suspeita de golpe”.
+  help: { label: Ver respostas na Central de ajuda, to: /ajuda }
+  security: { label: Como reconhecer os canais oficiais, to: /seguranca }

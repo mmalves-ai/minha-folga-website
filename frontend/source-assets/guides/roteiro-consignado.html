@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Antes de escolher seu consignado — Minha Folga</title>
+    <style>
+      @font-face { font-family: Inter; src: url('../../src/assets/fonts/inter-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; }
+      @font-face { font-family: Sora; src: url('../../src/assets/fonts/sora-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; }
+      @page { size: A4; margin: 0; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 210mm; color: #172e28; background: #f8f6f0; }
+      body { font: 10.25pt/1.45 Inter, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .sheet { width: 210mm; min-height: 297mm; padding: 11mm 15mm 8mm; }
+      .brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5mm; }
+      .brand img { display: block; width: 46mm; height: auto; }
+      .edition { text-align: right; font-size: 8.5pt; line-height: 1.55; color: #50615a; }
+      .edition strong { display: block; font-size: 9pt; color: #123f35; }
+      .eyebrow { margin: 0 0 2.5mm; text-transform: uppercase; font-size: 8.5pt; letter-spacing: .1em; font-weight: 700; color: #50615a; }
+      h1, h2 { font-family: Sora, sans-serif; color: #123f35; }
+      h1 { margin: 0; max-width: 155mm; font-size: 25pt; line-height: 1.12; letter-spacing: -.045em; font-weight: 650; }
+      .lead { margin: 3mm 0 4mm; max-width: 161mm; font-size: 11pt; }
+      h2 { margin: 0; font-size: 12.5pt; line-height: 1.35; letter-spacing: -.025em; }
+      .section-heading { display: flex; align-items: center; gap: 3mm; margin: 0 0 2.5mm; }
+      .number { display: inline-grid; place-items: center; width: 7mm; height: 7mm; border-radius: 50%; background: #123f35; color: white; font-size: 9pt; font-weight: 700; flex: 0 0 auto; }
+      .checklist { padding: 4mm; margin-bottom: 4mm; background: #ddece2; border-radius: 4mm; }
+      .checklist ul { padding: 0; margin: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm 5mm; }
+      .checklist li { position: relative; padding-left: 6mm; font-size: 9.5pt; line-height: 1.45; }
+      .checklist li::before { content: ''; position: absolute; left: 0; top: .8mm; width: 3.5mm; height: 3.5mm; border: 1.1pt solid #123f35; border-radius: .5mm; }
+      .intro { margin: 0 0 2.5mm; font-size: 9.5pt; }
+      table { width: 100%; table-layout: fixed; border-spacing: 0; border: 1px solid #aabcb1; border-radius: 3mm; overflow: hidden; background: white; font-size: 9.5pt; }
+      th, td { padding: 2mm 3mm; text-align: left; vertical-align: middle; }
+      thead th { background: #123f35; color: #fff; font-size: 9pt; font-weight: 600; }
+      thead th:first-child { width: 48%; }
+      tbody th { font-weight: 600; background: #f1f5ef; }
+      tbody th span { display: block; margin-top: .6mm; font-weight: 400; font-size: 8.25pt; color: #50615a; }
+      tbody tr + tr th, tbody tr + tr td { border-top: 1px solid #c7d2cc; }
+      tbody td { border-left: 1px solid #c7d2cc; }
+      tbody td::after { content: ''; display: block; height: 5.5mm; border-bottom: 1px solid #bdc7c1; }
+      .cet { margin: 2.5mm 0 3.5mm; color: #50615a; font-size: 8.75pt; line-height: 1.45; }
+      .question { padding: 3mm 4mm; border-left: 1.5mm solid #e78163; background: white; border-radius: 0 3mm 3mm 0; }
+      .question h2 { margin-bottom: 1.5mm; font-size: 11.25pt; }
+      .question p { margin: 0; font-size: 9.5pt; }
+      footer { margin-top: 3.5mm; padding-top: 2.5mm; border-top: 1px solid #c7d2cc; font-size: 8pt; line-height: 1.5; color: #50615a; }
+      footer p { margin: 0 0 1.5mm; }
+      footer a { color: #123f35; text-decoration: underline; text-underline-offset: 2px; }
+      .footer-bottom { display: flex; align-items: baseline; justify-content: space-between; gap: 5mm; }
+      .footer-bottom span { white-space: nowrap; font-size: 7.5pt; }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <header class="brand">
+        <img src="../../public/brand/minha-folga-logo.svg" alt="Minha Folga" />
+        <div class="edition"><strong>Guia de bolso</strong>Salve. Compare. Decida.</div>
+      </header>
+      <p class="eyebrow">Clareza antes de contratar</p>
+      <h1>Antes de escolher<br />seu consignado.</h1>
+      <p class="lead">Uma parcela é só uma parte da decisão. Use este roteiro para enxergar a proposta inteira.</p>
+      <section class="checklist" aria-labelledby="checklist-title">
+        <div class="section-heading"><span class="number" aria-hidden="true">1</span><h2 id="checklist-title">Confira antes de dar o próximo passo</h2></div>
+        <ul>
+          <li>Entendi como o desconto em folha afeta o dinheiro que sobra no mês.</li>
+          <li>Conferi se a parcela cabe no orçamento junto das despesas essenciais.</li>
+          <li>Sei qual instituição concede o crédito e conferi seus canais oficiais.</li>
+          <li>Li as condições e pedi explicação para tudo o que não ficou claro.</li>
+        </ul>
+      </section>
+      <section aria-labelledby="compare-title">
+        <div class="section-heading"><span class="number" aria-hidden="true">2</span><h2 id="compare-title">Coloque duas propostas lado a lado</h2></div>
+        <p class="intro">Preencha com os dados informados por cada instituição. Compare a mesma quantia e o mesmo prazo sempre que possível.</p>
+        <table aria-label="Tabela para comparar duas propostas de consignado">
+          <thead><tr><th scope="col">O que conferir</th><th scope="col">Proposta A</th><th scope="col">Proposta B</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Valor líquido recebido<span>O dinheiro que de fato chega até você</span></th><td></td><td></td></tr>
+            <tr><th scope="row">Valor da parcela<span>O compromisso no seu orçamento</span></th><td></td><td></td></tr>
+            <tr><th scope="row">Quantidade de parcelas / prazo<span>Por quanto tempo você vai pagar</span></th><td></td><td></td></tr>
+            <tr><th scope="row">CET anual (% ao ano)<span>Use a mesma periodicidade nas duas propostas</span></th><td></td><td></td></tr>
+            <tr><th scope="row">Total a pagar<span>Peça o valor completo à instituição</span></th><td></td><td></td></tr>
+            <tr><th scope="row">Instituição responsável<span>Quem concede o crédito</span></th><td></td><td></td></tr>
+          </tbody>
+        </table>
+        <p class="cet"><strong>CET é o Custo Efetivo Total:</strong> uma taxa que reúne juros e demais custos da operação. Ele ajuda a comparar propostas e não é uma cobrança a somar ao valor das parcelas.</p>
+      </section>
+      <section class="question" aria-labelledby="question-title">
+        <h2 id="question-title">Faltou uma informação? Pergunte antes de decidir.</h2>
+        <p>“Pode me mostrar o CET, o total a pagar e explicar as condições desta proposta?” Guarde as respostas junto das propostas para consultar com calma.</p>
+      </section>
+      <footer>
+        <p>Fontes: Banco Central do Brasil — <a href="https://www.bcb.gov.br/meubc/faqs/p/quais-cuidados-devo-tomar-antes-de-contratar-um-emprestimo-consignado">cuidados com o consignado</a> e <a href="https://www.bcb.gov.br/meubc/faqs/p/cuidados-na-hora-de-contratar-uma-operacao-de-credito">cuidados ao contratar crédito e CET</a>.</p>
+        <div class="footer-bottom"><p>Conteúdo educativo. Não é proposta nem análise de crédito.<br />Minha Folga em estruturação.</p><span>Setembro de 2026 · 1 / 1</span></div>
+      </footer>
+    </main>
+  </body>
+</html>

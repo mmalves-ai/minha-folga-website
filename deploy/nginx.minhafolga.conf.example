@@ -1,0 +1,312 @@
+# =====================================================================================================
+# Minha Folga — virtual host Nginx (EXEMPLO; não é arquivo pronto para colar)
+#
+# Contém SOMENTE os server blocks de minhafolga.com.br e www.minhafolga.com.br e três definições de nível
+# http com nomes exclusivos (log_format minhafolga_privado, map $minhafolga_log_uri e map $minhafolga_hsts).
+# Não cria default_server, não altera nginx.conf, listeners, certificados nem vhosts de outros sites.
+#
+# Antes de instalar, substitua TODOS os marcadores e valide (docs/DEPLOY_SHARED_SERVER.md, 5.6):
+#   <MINHAFOLGA_APP_ROOT>         raiz exclusiva, ex.: /srv/minhafolga (sem barra final)
+#   PORTA                         porta da API (PORT de config/.env.production), ex.: 3107
+#   <CERTIFICADO_FULLCHAIN>       certificado que cobre minhafolga.com.br e www.minhafolga.com.br
+#   <CHAVE_PRIVADA>               chave do certificado (fora da raiz da aplicação, legível só pelo Nginx)
+#   <DIRETORIO_DE_LOGS_MINHAFOLGA> pasta EXCLUSIVA dos registros deste vhost, criada pelo administrador,
+#                                 ex.: /var/log/nginx/minhafolga (0750, sem acesso de outros usuários).
+#                                 Fica fora do padrão de rotação da hospedagem (ex.: /var/log/nginx/*.log):
+#                                 a retenção é a de deploy/logrotate.minhafolga-web.conf.example
+#   <DIRETORIO_ACME>              webroot do desafio HTTP-01, se a emissão do certificado usar um
+#
+#   grep -nE '<[A-Z_]+>|PORTA' minhafolga.conf     # não pode sobrar nenhum marcador fora de comentários
+#   sudo nginx -t && sudo nginx -s reload          # pelo administrador, segundo o procedimento da hospedagem
+#
+# SERVIDOR PADRÃO (leia antes de instalar): sem "default_server" explícito, o Nginx usa como padrão de cada
+# endereço:porta o PRIMEIRO server incluído que escuta nela. Se este arquivo for incluído antes dos outros
+# sites (ex.: sites-enabled/ em ordem alfabética), ou for o único a escutar em [::]:443, pedidos de outros
+# domínios sem vhost próprio recebem o certificado e o 301 da Minha Folga. Por isso:
+#   - o administrador confirma que 80 e 443 (e [::]:80/[::]:443, se usados) já têm um padrão explícito, ou que
+#     este arquivo é incluído depois do atual primeiro servidor dessas portas (scripts/preflight.sh mostra);
+#   - use as linhas "listen [::]" SOMENTE se os demais sites do servidor também escutam em IPv6;
+#   - depois do reload, scripts/smoke.sh (grupo "Domínio") confere que outro domínio não cai aqui.
+#
+# Mapa de URLs (as mesmas regras de frontend/scripts/static-server.mjs):
+#   /                  → index.html
+#   /sobre             → sobre.html (HTML pré-renderizado, estilo "flat", sem barra final)
+#   /conteudos/o-que-e-cet → conteudos/o-que-e-cet.html
+#   /admin e as rotas administrativas conhecidas (painel, leads, leads/<id>, atendimentos, atendimentos/<id>,
+#                        privacidade, auditoria, notificacoes, usuarios, conta) → admin.html (único fallback de aplicação)
+#   /api, /api/*       → 127.0.0.1:PORTA preservando o prefixo /api; erros sempre em JSON
+#   /assets/*          → arquivos com hash, cache longo imutável
+#   demais URLs        → 404.html com status 404; *.html direto, /index, /404 e dotfiles → 404
+# =====================================================================================================
+
+# ---- Definições de nível http (este arquivo é incluído dentro do bloco http {} da hospedagem) ---------
+# Nomes exclusivos da Minha Folga. Se a homologação estiver no MESMO Nginx, não repita estas três definições
+# no arquivo dela (o Nginx recusa nomes duplicados): elas valem para os dois.
+
+# Registro de acesso com dados mínimos: IP, data e hora com fuso, host, método, caminho SEM query string,
+# protocolo, status, bytes, duração e user-agent. Sem referer, cookies ou parâmetros (a query string pode trazer
+# dados pessoais). É o que o Aviso de Privacidade descreve; mudar este formato exige revisar o aviso.
+map $request_uri $minhafolga_log_uri {
+    "~^(?<minhafolga_caminho>[^?]*)" $minhafolga_caminho;
+    default                            "-";
+}
+log_format minhafolga_privado '$remote_addr [$time_iso8601] "$host" "$request_method $minhafolga_log_uri $server_protocol" '
+                              '$status $body_bytes_sent $request_time "$http_user_agent"';
+
+# HSTS por domínio, num lugar só: vazio = cabeçalho não enviado. Habilite SOMENTE depois de validar HTTPS de
+# www e da raiz (certificado, renovação, redirecionamentos). Comece com max-age=300, confira e depois aumente.
+# includeSubDomains/preload só com decisão explícita, pois afetam todos os subdomínios.
+map $host $minhafolga_hsts {
+    default "";
+    # www.minhafolga.com.br "max-age=300";
+    # minhafolga.com.br     "max-age=300";
+}
+
+# HTTP → HTTPS no domínio www (raiz e www).
+server {
+    listen 80;
+    # Somente se os demais vhosts deste servidor também escutam em [::] (ver "SERVIDOR PADRÃO" acima).
+    listen [::]:80;
+    server_name minhafolga.com.br www.minhafolga.com.br;
+
+    access_log <DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log minhafolga_privado;
+    error_log  <DIRETORIO_DE_LOGS_MINHAFOLGA>/error.log warn;
+    server_tokens off;
+
+    # Somente se o certificado for emitido por desafio HTTP-01 com webroot próprio (senão, apague).
+    location ^~ /.well-known/acme-challenge/ {
+        root <DIRETORIO_ACME>;
+        default_type text/plain;
+        try_files $uri =404;
+    }
+
+    location / {
+        return 301 https://www.minhafolga.com.br$request_uri;
+    }
+}
+
+# Domínio raiz em HTTPS → www (301).
+server {
+    listen 443 ssl;
+    # Somente se os demais vhosts deste servidor também escutam em [::]:443 (ver "SERVIDOR PADRÃO" acima).
+    listen [::]:443 ssl;
+    # Nginx >= 1.25.1. Em versões anteriores, remova esta linha e use "listen 443 ssl http2;".
+    http2 on;
+    server_name minhafolga.com.br;
+
+    ssl_certificate     <CERTIFICADO_FULLCHAIN>;
+    ssl_certificate_key <CHAVE_PRIVADA>;
+    # Protocolos e cifras: herdados da configuração principal da hospedagem (não alterados aqui).
+
+    access_log <DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log minhafolga_privado;
+    error_log  <DIRETORIO_DE_LOGS_MINHAFOLGA>/error.log warn;
+    server_tokens off;
+
+    # HSTS também no domínio raiz (entrada digitada mais comum); controlado por $minhafolga_hsts.
+    add_header Strict-Transport-Security $minhafolga_hsts always;
+
+    return 301 https://www.minhafolga.com.br$request_uri;
+}
+
+# Site principal: https://www.minhafolga.com.br
+server {
+    listen 443 ssl;
+    # Somente se os demais vhosts deste servidor também escutam em [::]:443 (ver "SERVIDOR PADRÃO" acima).
+    listen [::]:443 ssl;
+    http2 on;
+    server_name www.minhafolga.com.br;
+
+    ssl_certificate     <CERTIFICADO_FULLCHAIN>;
+    ssl_certificate_key <CHAVE_PRIVADA>;
+
+    # Document root: SOMENTE o build público da release atual (nunca a raiz, backend/, config/ ou var/).
+    root <MINHAFOLGA_APP_ROOT>/current/frontend/dist;
+    index index.html;
+    # current é link simbólico: se a hospedagem usa disable_symlinks, o valor compatível é if_not_owner
+    # (link e destino pertencem ao mesmo usuário). Não relaxe a política global por causa da Minha Folga.
+    autoindex off;
+    charset utf-8;
+    server_tokens off;
+
+    access_log <DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log minhafolga_privado;
+    error_log  <DIRETORIO_DE_LOGS_MINHAFOLGA>/error.log warn;
+
+    # A API aceita JSON de até 16 KB; o proxy recusa antes corpos maiores (sem exceções: não há webhooks, D1).
+    client_max_body_size 32k;
+    client_body_timeout 15s;
+
+    gzip on;
+    gzip_vary on;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_types text/css text/plain text/xml application/xml application/json application/javascript
+               text/javascript image/svg+xml application/manifest+json;
+
+    # ---- Cabeçalhos de segurança do site ----------------------------------------------------------
+    # ATENÇÃO (Nginx): um add_header dentro de location substitui TODOS os herdados daqui. Por isso as
+    # páginas usam "expires" (não é add_header) e /assets/ e /api repetem os cabeçalhos necessários.
+    #
+    # CSP conferida contra o HTML gerado (frontend/dist): scripts só de /assets (module), nenhum <script>
+    # inline executável (JSON-LD não executa), nenhum <style> inline, nenhum atributo style no HTML
+    # (o menu móvel usa o atributo hidden), CSS usa data: em imagens.
+    # Chat do site (widget da Hal-AI, decisão D1 — docs/DECISOES.md): DESLIGADO por padrão, e então esta
+    # CSP não libera nenhuma origem externa. PLACEHOLDER (widget ainda não provisionado): ao habilitar
+    # channels.webchat, acrescente a origem do widget — a mesma de channels.webchat.scriptUrl — em
+    #   script-src 'self' https://<origem-do-widget-hal-ai>
+    #   connect-src 'self' https://<origem-do-widget-hal-ai>   (+ wss://… se o chat usar WebSocket)
+    #   frame-src https://<origem-do-widget-hal-ai>            (no lugar de 'none', se o widget usar iframe)
+    # e, só se o widget exigir, em style-src, img-src e font-src. Confirme a lista exata com a Hal-AI; nunca
+    # use curinga (*) nem 'unsafe-inline'/'unsafe-eval' em script-src (scripts/smoke.sh recusa). A revisão
+    # local faz o mesmo com frontend/scripts/static-server.mjs --webchat-origin. Microfone/câmera na
+    # Permissions-Policy: só se o widget pedir.
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    # HSTS: controlado por $minhafolga_hsts (definição no início do arquivo). Vazio = não enviado.
+    add_header Strict-Transport-Security $minhafolga_hsts always;
+
+    # Página 404 do build, servida com status 404 (nunca a home).
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+        expires -1;
+    }
+    location = /404 {
+        return 404;
+    }
+    # index.html é a home: /index não é outra URL dela.
+    location = /index {
+        return 404;
+    }
+
+    # Home.
+    location = / {
+        try_files /index.html =404;
+        expires -1;    # Cache-Control: no-cache — HTML sempre revalidado
+    }
+
+    # Páginas pré-renderizadas e arquivos públicos (robots.txt, sitemap.xml, favicons, brand/).
+    location / {
+        try_files $uri $uri.html =404;
+        expires -1;
+    }
+
+    # Área administrativa: fallback de aplicação SOMENTE nas rotas conhecidas (frontend/src/router/routes.ts;
+    # ao criar rota administrativa, acrescente-a aqui, no modelo Apache e em frontend/scripts/static-server.mjs).
+    # Qualquer outro caminho sob /admin/ recebe 404. A autorização é sempre da API.
+    location = /admin {
+        try_files /admin.html =404;
+        expires -1;
+    }
+    location ~ "^/admin/(painel|leads|leads/[A-Za-z0-9_-]{1,64}|atendimentos|atendimentos/[A-Za-z0-9_-]{1,64}|privacidade|auditoria|notificacoes|usuarios|conta)$" {
+        try_files /admin.html =404;
+        expires -1;
+    }
+
+    # Assets com hash no nome: cache longo imutável. Os assets da release anterior são copiados para a
+    # nova na publicação e no rollback (scripts/deploy.sh, scripts/rollback.sh), para abas abertas
+    # continuarem funcionando.
+    location ^~ /assets/ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Cross-Origin-Resource-Policy "same-origin" always;
+        add_header Strict-Transport-Security $minhafolga_hsts always;
+        access_log off;
+    }
+
+    # Dotfiles (.env, .vite/, .git, .minhafolga-*): nunca públicos.
+    location ~ /\. {
+        return 404;
+    }
+
+    # URL canônica é sem ".html" e sem barra final.
+    location ~ \.html$ {
+        internal;
+    }
+    location ~ ^/.+/$ {
+        # $request_uri (não decodificado) evita injeção de cabeçalho; o primeiro caractere não pode ser
+        # "/" nem "\" para impedir redirecionamento aberto ("//outro-site/").
+        if ($request_uri ~ "^(/[^/\x5c?][^?]*?)/+(\?.*)?$") {
+            return 301 $1$2;
+        }
+        return 404;
+    }
+
+    # ---- API Node (processo minhafolga-api) --------------------------------------------------------
+    # proxy_pass SEM URI: o caminho segue inteiro, com o prefixo /api que o backend espera.
+    location ^~ /api/ {
+        proxy_pass http://127.0.0.1:PORTA;
+
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+        proxy_set_header Host $host;
+        # Valores definidos pelo proxy (não repassa X-Forwarded-For enviado pelo cliente). A API confia
+        # apenas no proxy local (TRUST_PROXY=loopback). Com CDN/balanceador na frente, ajuste à topologia real.
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+
+        proxy_connect_timeout 5s;
+        proxy_send_timeout 30s;
+        proxy_read_timeout 30s;
+        proxy_redirect off;
+        # Nunca reenviar um POST (cadastro, atendimento) para outra tentativa.
+        proxy_next_upstream off;
+        proxy_intercept_errors off;
+        # Sem compressão nas respostas da API (evita BREACH em respostas com tokens).
+        gzip off;
+
+        # A API envia os próprios cabeçalhos de segurança (helmet). Este add_header também interrompe a
+        # herança dos cabeçalhos do site e garante nosniff nas respostas de erro geradas pelo proxy.
+        proxy_hide_header X-Content-Type-Options;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Strict-Transport-Security $minhafolga_hsts always;
+
+        # Erros gerados pelo Nginx em /api também saem em JSON (nunca HTML).
+        error_page 413 = @minhafolga_api_413;
+        error_page 502 503 504 = @minhafolga_api_indisponivel;
+    }
+    location = /api {
+        proxy_pass http://127.0.0.1:PORTA;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_hide_header X-Content-Type-Options;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Strict-Transport-Security $minhafolga_hsts always;
+        error_page 502 503 504 = @minhafolga_api_indisponivel;
+    }
+    location @minhafolga_api_indisponivel {
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Strict-Transport-Security $minhafolga_hsts always;
+        add_header Retry-After "30" always;
+        return 503 '{"error":{"code":"service_unavailable","message":"Não foi possível concluir. Tente novamente em instantes."}}';
+    }
+    location @minhafolga_api_413 {
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Strict-Transport-Security $minhafolga_hsts always;
+        return 413 '{"error":{"code":"payload_too_large","message":"O conteúdo enviado é maior que o permitido."}}';
+    }
+}
+
+# -----------------------------------------------------------------------------------------------------
+# HOMOLOGAÇÃO (outro arquivo, outro domínio, outra raiz, porta, banco e instância): copie SOMENTE o server do
+# site principal (as definições de nível http do início valem para os dois, se for o mesmo Nginx) trocando
+# server_name, certificados, root (<RAIZ_HOMOLOGACAO>/current/frontend/dist), PORTA (a da homologação) e
+# <DIRETORIO_DE_LOGS_MINHAFOLGA> por uma pasta própria (ex.: /var/log/nginx/minhafolga-homolog), e acrescente
+# no server:
+#     auth_basic "Minha Folga - homologação";
+#     auth_basic_user_file <ARQUIVO_HTPASSWD_LEGIVEL_PELO_NGINX>;
+#     add_header X-Robots-Tag "noindex, nofollow" always;   # repita também em /assets/ e na API
+# O build de homologação (build.sh --staging) já gera robots.txt "Disallow: /" e noindex, mas robots.txt não
+# é controle de acesso: o basic auth é obrigatório.
+# -----------------------------------------------------------------------------------------------------

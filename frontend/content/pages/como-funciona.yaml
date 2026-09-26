@@ -1,0 +1,141 @@
+# Direção confirmada em 26/09/2026: jornada digital e ágil, IA para condições adequadas ao perfil,
+# possibilidade de aliviar consignado existente e fila por ordem de cadastro/disponibilidade.
+# /como-funciona — jornada explicada (seções 6.5 e 6.12). As etapas (fase e título) vêm de
+# content/site.yaml → journey; aqui ficam os detalhes de cada uma, na mesma ordem.
+# Atualizar os passos com o fluxo homologado antes da abertura da operação.
+# Decisão D1 (docs/DECISOES.md): cadastro com CPF e dados do emprego, sem código de confirmação.
+revision:
+  version: 4
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Como funciona | Minha Folga
+  description: "Cadastre-se, receba a chamada na abertura e compare opções de crédito com ajuda da IA. Conheça os passos da Minha Folga."
+
+breadcrumb: Como funciona
+
+hero:
+  eyebrow: Como funciona
+  title: Do seu cadastro à sua escolha.
+  lead: "Em breve, buscar um novo empréstimo ou avaliar uma parcela menor será mais simples: tudo pelo celular, com ajuda da IA e a decisão nas suas mãos."
+  # Usado quando o servidor não recebe cadastros (collection.waitlistEnabled = false).
+  leadWaitlistClosed: Estamos chegando com uma experiência digital para buscar crédito e comparar opções. Veja como vai funcionar.
+  nowTitle: O que você já pode fazer
+  now:
+    - { icon: home, label: Conhecer a Minha Folga, to: /sobre }
+    - { icon: compass, label: Tirar dúvidas na central de ajuda, to: /ajuda }
+    - { icon: calendar, label: Entrar na fila de interessados, to: /avise-me, requires: waitlist }
+    - { icon: calendar, label: Acompanhar a abertura financeira, to: /lancamento, requires: noWaitlist }
+
+steps:
+  eyebrow: A jornada
+  title: Quatro etapas, cada uma com seu propósito.
+  text: O cadastro é o primeiro passo. A fila segue a ordem de cadastro e os convites dependem da disponibilidade de crédito. A busca de condições e a contratação vêm depois da abertura.
+  textWaitlistClosed: O cadastro de interesse ainda não está aberto. As demais etapas dependem da abertura da operação de crédito e, em qualquer momento, da sua decisão.
+  labels:
+    goal: Objetivo
+    info: Informação necessária
+    result: Resultado esperado
+    notYet: O que não acontece ainda
+  stepLabel: Etapa
+  # Selo da etapa: disponível (cadastro aberto), em preparação (cadastro fechado) ou posterior.
+  statusNow: Disponível agora
+  statusPreparing: Cadastro em preparação
+  statusLater: Depois da abertura da operação
+  items:
+    - goal: Entrar na fila de interessados, organizada pela ordem de cadastro, para receber o aviso conforme a disponibilidade de crédito.
+      info: 'Nome completo, CPF, WhatsApp com DDD, nome do empregador, tipo de vínculo, tempo no emprego atual, faixa de salário líquido (ou “prefiro não informar”), cidade e UF, e-mail se quiser e a confirmação de que você tem 18 anos ou mais. Não pedimos senhas, fotos de documentos ou dados bancários.'
+      result: Seu interesse entra na fila pela ordem de cadastro, com as comunicações que você escolheu. O site não envia código de confirmação; o seu número fica confirmado quando você conversa com a Bia pelo WhatsApp oficial. Você pode mudar as preferências ou cancelar os avisos quando quiser.
+      notYet: Não há consulta de margem, score ou dados do empregador. O cadastro não confirma elegibilidade, não reserva condições e não é uma solicitação de crédito.
+      link: { label: Quero entrar na fila, to: /avise-me }
+    - goal: Verificar se há crédito disponível para o seu perfil e usar IA para buscar condições adequadas entre as propostas oficiais, se você quiser seguir.
+      info: Os dados pedidos pela instituição responsável, informados no fluxo oficial, e a sua autorização específica para as consultas necessárias.
+      result: A instituição responsável faz a análise. Com as integrações ativas, a IA ajuda a buscar e organizar as condições disponíveis para o seu perfil. Se houver proposta, você verá as informações oficiais.
+      notYet: Nesta fase não há análise, consulta ou proposta. Nenhuma consulta será feita sem a sua autorização específica.
+    - goal: Entender a proposta e, se você já tem consignado privado, avaliar a possibilidade de reduzir a parcela.
+      info: As condições oficiais da proposta, como instituição responsável, valor que você recebe, parcela, prazo, CET e total a pagar.
+      result: Você compara a nova parcela com a atual, quando houver contrato existente, junto com prazo, CET e total a pagar. Uma parcela menor pode aliviar o mês, mas alongar o prazo pode aumentar o custo total. A Bia ajuda a explicar as condições oficiais.
+      notYet: Ainda não há propostas para comparar. A Bia não calcula preço por conta própria nem completa informações que faltem.
+      link: { label: O que é CET e por que olhar além da taxa, to: /conteudos/o-que-e-cet }
+    - goal: Decidir, no seu tempo, se a contratação faz sentido para você.
+      info: O contrato e os documentos da operação, disponíveis para leitura antes do aceite.
+      result: Se a proposta for aprovada e você aceitar, a formalização acontece pelo fluxo digital oficial da instituição responsável. A proposta é ter uma jornada ágil, com cada etapa explicada. Você também pode simplesmente não contratar.
+      notYet: Nenhuma contratação, assinatura ou liberação de dinheiro acontece nesta fase. Não pedimos depósito antecipado para liberar empréstimo.
+
+understand:
+  eyebrow: Antes de contratar
+  title: Desconto em folha, custos e contrato.
+  text: Um resumo para entender o que muda no seu salário e no seu compromisso.
+  blocks:
+    - id: desconto-em-folha
+      title: Como funciona o desconto em folha
+      body_md: |
+        No consignado, a parcela é **descontada do seu salário**, na folha de pagamento, conforme o contrato e as regras aplicáveis. A elegibilidade, os limites e a contratação dependem do vínculo, da análise e do produto oferecido pela instituição responsável.
+
+        O desconto é a forma de pagamento de uma dívida. Antes de contratar, observe quanto sobra no mês depois da parcela e considere seus demais compromissos.
+      link: { label: Como funciona o desconto em folha, to: /conteudos/como-funciona-desconto-em-folha }
+    - id: custos
+      title: 'Custos: CET e total a pagar'
+      body_md: |
+        A taxa de juros é só uma parte do custo. O **Custo Efetivo Total (CET)** reúne os juros e os demais encargos e despesas considerados na operação.
+
+        Compare também o valor que você recebe, o número de parcelas, o prazo e o **total a pagar**. Uma parcela menor, com prazo maior, pode aumentar o total pago.
+      link: { label: Parcela menor e custo total, to: /conteudos/parcela-menor-e-custo-total }
+    - id: contrato
+      title: O que o contrato significa
+      body_md: |
+        O contrato é um compromisso até a última parcela. Em caso de **demissão** ou saída da empresa, a dívida não é extinta automaticamente: a forma de continuidade do pagamento precisa ser verificada no contrato e nas regras aplicáveis.
+
+        A situação de cada pessoa depende do contrato e das regras aplicáveis. Diante de uma mudança no vínculo de trabalho, procure o canal oficial da instituição responsável.
+      link: { label: O que observar antes de contratar crédito, to: /conteudos/antes-de-contratar-credito }
+  readLabel: 'Leia:'
+  disclaimer: Este resumo é educativo e não substitui o contrato. Valem as condições do contrato firmado com a instituição responsável.
+
+roles:
+  eyebrow: Responsabilidades
+  title: Quem faz o quê.
+  text: Cada parte tem um papel diferente. Saber quem responde por cada etapa ajuda você a procurar o canal certo.
+  items:
+    - icon: user
+      title: Você
+      text: Decide se quer seguir, autoriza ou não as consultas necessárias e lê o contrato antes de aceitar. Receber uma proposta não cria obrigação de contratar.
+    - icon: chat
+      title: Minha Folga
+      text: Organiza o cadastro e a fila, explica os termos e prepara uma jornada digital com IA para buscar condições adequadas ao perfil. Nesta fase, não oferece nem concede crédito; a busca real de propostas depende das integrações e da abertura.
+    - icon: shield
+      title: Instituição responsável
+      text: Faz a análise, define as condições e concede o crédito. Ela será identificada em cada proposta, com os seus canais oficiais.
+    - icon: layers
+      title: Empresa empregadora
+      text: Faz o desconto das parcelas na folha de pagamento, conforme o contrato e as regras aplicáveis.
+  decision: Você pode parar em qualquer etapa. Se algo não estiver claro, interrompa o processo e procure atendimento.
+
+next:
+  title: Continue por aqui
+  items:
+    - { icon: layers, label: Consignado privado, to: /consignado-privado, text: 'Conceito, público previsto, o que observar e dúvidas do produto.' }
+    - { icon: chat, label: 'Bia, nossa IA', to: /bia, text: 'Exemplos de conversa, o que ela faz hoje e os seus limites.' }
+    - { icon: compass, label: Central de ajuda, to: /ajuda, text: 'Todas as perguntas frequentes, organizadas por assunto.' }
+simple:
+  title: Quatro passos, sem complicação.
+  steps:
+    - title: Cadastre-se na fila
+      text: Informe seus dados e os do trabalho. O cadastro é gratuito e não obriga você a contratar.
+      closedTitle: Acompanhe a abertura
+      closedText: O cadastro estará disponível em breve. Enquanto isso, conheça a proposta da Minha Folga.
+    - title: Receba a chamada
+      text: Na abertura, as chamadas seguirão a ordem de cadastro, conforme a disponibilidade de crédito.
+    - title: Conheça as opções
+      text: Com sua autorização, a IA vai buscar propostas para o seu perfil. A Bia ajuda a comparar o valor, a parcela, o prazo e o custo total.
+    - title: Decida com clareza
+      text: "Novo crédito ou uma alternativa para a parcela atual: você escolhe se a proposta faz sentido. A contratação depende de análise e aprovação."
+  titleCompare: O que olhar antes de escolher?
+  textCompare: Quanto você recebe, quanto paga por mês e quanto paga no total. Uma parcela menor pode ajudar agora, mas um prazo maior pode aumentar o custo do empréstimo.
+  compareLink:
+    label: Ver o guia para comparar
+    to: /guias/roteiro-consignado.pdf
+  closingTitle: Seu primeiro passo pode ser hoje.
+  closingText: A disponibilidade de crédito será limitada. Entre na fila para receber a chamada na abertura.

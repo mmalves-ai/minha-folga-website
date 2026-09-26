@@ -1,0 +1,259 @@
+# =====================================================================================================
+# Minha Folga — virtual host Apache 2.4 (EXEMPLO; não é arquivo pronto para colar)
+#
+# Equivalente a deploy/nginx.minhafolga.conf.example. Contém SOMENTE os VirtualHost de minhafolga.com.br e
+# www.minhafolga.com.br. Não altera apache2.conf/httpd.conf, Listen, módulos, certificados nem vhosts de
+# outros sites. Diretivas globais (ServerTokens, TraceEnable, SSLProtocol) ficam como a hospedagem definiu.
+#
+# Módulos necessários (confirme com o administrador; habilitar módulo é decisão da hospedagem):
+#   mod_ssl, mod_rewrite, mod_headers, mod_proxy, mod_proxy_http, mod_alias, mod_dir, mod_mime
+#   opcional: mod_deflate (compressão). Conferir: apachectl -M | grep -E 'ssl|rewrite|headers|proxy'
+#
+# Antes de instalar, substitua TODOS os marcadores e valide (docs/DEPLOY_SHARED_SERVER.md, passo 4):
+#   <MINHAFOLGA_APP_ROOT>         raiz exclusiva, ex.: /srv/minhafolga (sem barra final)
+#   PORTA                         porta da API (PORT de config/.env.production), ex.: 3107
+#   <CERTIFICADO_FULLCHAIN>       certificado que cobre minhafolga.com.br e www.minhafolga.com.br
+#   <CHAVE_PRIVADA>               chave do certificado (fora da raiz da aplicação, legível só pelo Apache)
+#   <DIRETORIO_DE_LOGS_MINHAFOLGA> pasta EXCLUSIVA dos registros deste vhost, criada pelo administrador,
+#                                 ex.: /var/log/apache2/minhafolga (0750, sem acesso de outros usuários).
+#                                 Fica fora do padrão de rotação da hospedagem (ex.: /var/log/apache2/*.log):
+#                                 a retenção é a de deploy/logrotate.minhafolga-web.conf.example
+#   <DIRETORIO_ACME>              webroot do desafio HTTP-01, se a emissão do certificado usar um
+#
+#   grep -nE '<[A-Z_]+>|PORTA' minhafolga.conf       # não pode sobrar nenhum marcador fora de comentários
+#   sudo apachectl configtest && sudo apachectl -k graceful   # pelo administrador, segundo a hospedagem
+#
+# SERVIDOR PADRÃO (leia antes de instalar): no Apache, o PRIMEIRO VirtualHost carregado para um
+# endereço:porta é o padrão dele. Se este arquivo for carregado antes dos outros sites (ex.: sites-enabled/
+# em ordem alfabética), pedidos de outros domínios sem vhost próprio recebem o certificado e o 301 da
+# Minha Folga. O administrador confirma com "apachectl -S" que o "default server" de *:80 e *:443 continua
+# sendo o da hospedagem depois de incluir este arquivo; scripts/smoke.sh (grupo "Domínio") confere de fora.
+#
+# Registros de acesso: formato próprio com dados mínimos (IP, data e hora com fuso, host, método, caminho
+# SEM query string, protocolo, status, bytes, duração em µs e user-agent); sem referer, cookies ou parâmetros (a
+# query string pode trazer dados pessoais). É o que o Aviso de Privacidade descreve; mudar este formato exige
+# revisar o aviso.
+#
+# Mapa de URLs (as mesmas regras de frontend/scripts/static-server.mjs e do exemplo Nginx):
+#   /                  → index.html
+#   /sobre             → sobre.html (HTML pré-renderizado, estilo "flat", sem barra final)
+#   /admin e as rotas administrativas conhecidas (painel, leads, leads/<id>, atendimentos, atendimentos/<id>,
+#                        privacidade, auditoria, notificacoes, usuarios, conta) → admin.html (único fallback de aplicação)
+#   /api, /api/*       → 127.0.0.1:PORTA preservando o prefixo /api; erros sempre em JSON
+#   /assets/*          → arquivos com hash, cache longo imutável
+#   demais URLs        → 404.html com status 404; *.html direto, /index, /404, pastas e dotfiles → 404
+# =====================================================================================================
+
+# HTTP → HTTPS no domínio www (raiz e www).
+<VirtualHost *:80>
+    ServerName minhafolga.com.br
+    ServerAlias www.minhafolga.com.br
+
+    ErrorLog  <DIRETORIO_DE_LOGS_MINHAFOLGA>/error.log
+    CustomLog <DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log "%a [%{%Y-%m-%dT%H:%M:%S%z}t] \"%v\" \"%<m %U %H\" %>s %B %D \"%{User-Agent}i\""
+    ServerSignature Off
+
+    # Somente se o certificado for emitido por desafio HTTP-01 com webroot próprio (senão, apague).
+    Alias /.well-known/acme-challenge/ "<DIRETORIO_ACME>/.well-known/acme-challenge/"
+    <Directory "<DIRETORIO_ACME>/.well-known/acme-challenge">
+        Options None
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
+    RewriteRule ^ https://www.minhafolga.com.br%{REQUEST_URI} [R=301,L]
+</VirtualHost>
+
+# Domínio raiz em HTTPS → www (301, preserva caminho e query string).
+<VirtualHost *:443>
+    ServerName minhafolga.com.br
+
+    SSLEngine on
+    SSLCertificateFile    <CERTIFICADO_FULLCHAIN>
+    SSLCertificateKeyFile <CHAVE_PRIVADA>
+    # Protocolos e cifras: herdados da configuração principal da hospedagem (não alterados aqui).
+
+    ErrorLog  <DIRETORIO_DE_LOGS_MINHAFOLGA>/error.log
+    CustomLog <DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log "%a [%{%Y-%m-%dT%H:%M:%S%z}t] \"%v\" \"%<m %U %H\" %>s %B %D \"%{User-Agent}i\""
+    ServerSignature Off
+
+    # HSTS também no domínio raiz (entrada digitada mais comum). Habilite junto com o do www (abaixo).
+    # Header always set Strict-Transport-Security "max-age=300"
+
+    Redirect permanent / https://www.minhafolga.com.br/
+</VirtualHost>
+
+# Site principal: https://www.minhafolga.com.br
+<VirtualHost *:443>
+    ServerName www.minhafolga.com.br
+
+    SSLEngine on
+    SSLCertificateFile    <CERTIFICADO_FULLCHAIN>
+    SSLCertificateKeyFile <CHAVE_PRIVADA>
+    # HTTP/2 somente se o mod_http2 já estiver habilitado pela hospedagem.
+    <IfModule mod_http2.c>
+        Protocols h2 http/1.1
+    </IfModule>
+
+    ErrorLog  <DIRETORIO_DE_LOGS_MINHAFOLGA>/error.log
+    CustomLog <DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log "%a [%{%Y-%m-%dT%H:%M:%S%z}t] \"%v\" \"%<m %U %H\" %>s %B %D \"%{User-Agent}i\""
+    ServerSignature Off
+
+    # Document root: SOMENTE o build público da release atual (nunca a raiz, backend/, config/ ou var/).
+    DocumentRoot "<MINHAFOLGA_APP_ROOT>/current/frontend/dist"
+    AddDefaultCharset utf-8
+    # Corpo máximo: 32 KB (a API aceita JSON de até 16 KB; não há webhooks, decisão D1). Além deste limite, a
+    # regra de Content-Length abaixo responde 413 em JSON.
+    LimitRequestBody 32768
+
+    # HSTS no nível do VirtualHost: vale para páginas, assets, página 404, redirecionamentos e respostas da
+    # API. Habilite SOMENTE depois de validar HTTPS de www e da raiz (certificado, renovação,
+    # redirecionamentos). Comece com max-age curto (300), confira e depois aumente.
+    # includeSubDomains/preload só com decisão explícita, pois afetam todos os subdomínios.
+    # Header always set Strict-Transport-Security "max-age=300"
+
+    # Raiz da aplicação: nada é servido daqui; o link "current" (mesmo dono) pode ser seguido.
+    <Directory "<MINHAFOLGA_APP_ROOT>">
+        Options SymLinksIfOwnerMatch
+        AllowOverride None
+        Require all denied
+    </Directory>
+
+    <Directory "<MINHAFOLGA_APP_ROOT>/current/frontend/dist">
+        Options SymLinksIfOwnerMatch
+        AllowOverride None
+        Require all granted
+        DirectoryIndex index.html
+        # Pastas sem barra final não são redirecionadas (as regras abaixo decidem: .html ou 404).
+        DirectorySlash Off
+
+        # ---- Cabeçalhos de segurança do site (arquivos estáticos e página 404) ---------------------
+        # CSP conferida contra o HTML gerado (frontend/dist): scripts só de /assets (module), nenhum
+        # <script> inline executável (JSON-LD não executa), nenhum <style> inline, nenhum atributo style
+        # no HTML (o menu móvel usa o atributo hidden), CSS usa data: em imagens.
+        # Chat do site (widget da Hal-AI, decisão D1 — docs/DECISOES.md): DESLIGADO por padrão, e então
+        # esta CSP não libera nenhuma origem externa. PLACEHOLDER (widget ainda não provisionado): ao
+        # habilitar channels.webchat, acrescente a origem do widget — a mesma de channels.webchat.scriptUrl — em
+        #   script-src 'self' https://<origem-do-widget-hal-ai>
+        #   connect-src 'self' https://<origem-do-widget-hal-ai>   (+ wss://… se o chat usar WebSocket)
+        #   frame-src https://<origem-do-widget-hal-ai>            (no lugar de 'none', se o widget usar iframe)
+        # e, só se o widget exigir, em style-src, img-src e font-src. Confirme a lista exata com a Hal-AI;
+        # nunca use curinga (*) nem 'unsafe-inline'/'unsafe-eval' em script-src (scripts/smoke.sh recusa).
+        # A revisão local faz o mesmo com frontend/scripts/static-server.mjs --webchat-origin.
+        # Microfone/câmera na Permissions-Policy: só se o widget pedir.
+        Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        Header always set X-Content-Type-Options "nosniff"
+        Header always set X-Frame-Options "DENY"
+        Header always set Referrer-Policy "strict-origin-when-cross-origin"
+        Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
+        Header always set Cross-Origin-Opener-Policy "same-origin"
+        # HSTS: no nível do VirtualHost (acima), para alcançar também a API e os redirecionamentos.
+
+        # HTML e demais arquivos: sempre revalidados.
+        Header always set Cache-Control "no-cache"
+    </Directory>
+
+    # Assets com hash no nome: cache longo imutável. Os assets da release anterior são copiados para a
+    # nova na publicação e no rollback (scripts/deploy.sh, scripts/rollback.sh), para abas abertas
+    # continuarem funcionando.
+    <Directory "<MINHAFOLGA_APP_ROOT>/current/frontend/dist/assets">
+        Header always set Cache-Control "public, max-age=31536000, immutable"
+        Header always set Cross-Origin-Resource-Policy "same-origin"
+    </Directory>
+
+    <IfModule mod_deflate.c>
+        AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/xml application/javascript text/javascript image/svg+xml application/manifest+json
+        # Sem compressão nas respostas da API (evita BREACH em respostas com tokens).
+        SetEnvIf Request_URI "^/api(/|$)" no-gzip
+    </IfModule>
+
+    # Página 404 do build, servida com status 404 (nunca a home).
+    ErrorDocument 404 /404.html
+
+    RewriteEngine On
+    # Corpo declarado acima do limite → 413 em JSON antes de chegar à API (pedidos "chunked", sem
+    # Content-Length, são limitados pela própria API).
+    RewriteCond expr "%{HTTP:Content-Length} -gt 32768"
+    RewriteRule "^/api(/|$)" - [R=413,L]
+    # API e corpos de erro do proxy: fora das regras do frontend.
+    RewriteRule "^/(api|__minhafolga)(/|$)" - [L]
+    # Dotfiles (.env, .vite/, .git, .minhafolga-*): nunca públicos.
+    RewriteRule "(^|/)\." - [R=404,L]
+    # URL canônica é sem ".html": pedido direto de *.html (inclusive index.html e 404.html) → 404.
+    # REDIRECT_STATUS vazio: a regra não se aplica à subrequisição interna do ErrorDocument (/404.html),
+    # senão o Apache entra em recursão e devolve a página de erro padrão dele, sem CSP.
+    RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    RewriteCond %{THE_REQUEST} "^\S+\s[^?\s]*\.html[?\s]" [NC]
+    RewriteRule "\.html$" - [R=404,L]
+    RewriteRule "^/404$" - [R=404,L]
+    # index.html é a home: /index não é outra URL dela.
+    RewriteRule "^/index$" - [R=404,L]
+    # Área administrativa: fallback de aplicação SOMENTE nas rotas conhecidas (frontend/src/router/routes.ts;
+    # ao criar rota administrativa, acrescente-a aqui, no modelo Nginx e em frontend/scripts/static-server.mjs).
+    # Qualquer outro caminho sob /admin/ recebe 404. A autorização é sempre da API.
+    RewriteRule "^/admin/(painel|leads|leads/[A-Za-z0-9_-]{1,64}|atendimentos|atendimentos/[A-Za-z0-9_-]{1,64}|privacidade|auditoria|notificacoes|usuarios|conta)$" /admin.html [L]
+    # Barra final → 301 sem barra. O primeiro caractere não pode ser "/" nem "\" (redirecionamento aberto).
+    RewriteRule "^/([^/\\].*?)/+$" /$1 [R=301,L]
+    # Home.
+    RewriteRule "^/$" /index.html [L]
+    # Páginas pré-renderizadas: /sobre → sobre.html quando não existe arquivo com o nome exato.
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
+    RewriteRule "^/(.+)$" /$1.html [L]
+    # Pastas (brand/, assets/, conteudos/ ...) não são páginas.
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+    RewriteRule "^/." - [R=404,L]
+
+    # ---- API Node (minhafolga-api) --------------------------------------------------------------------
+    # O caminho segue inteiro, com o prefixo /api que o backend espera.
+    ProxyRequests Off
+    ProxyPreserveHost On
+    ProxyPass        "/api/" "http://127.0.0.1:PORTA/api/" connectiontimeout=5 timeout=30 retry=0
+    ProxyPassReverse "/api/" "http://127.0.0.1:PORTA/api/"
+    ProxyPassMatch   "^/api$" "http://127.0.0.1:PORTA/api" connectiontimeout=5 timeout=30 retry=0
+
+    <LocationMatch "^/api(/|$)">
+        # O mod_proxy acrescenta X-Forwarded-For ao que o cliente enviou; removemos o do cliente antes
+        # (fase fixups, que roda antes do proxy), para a API receber só o IP visto pelo Apache. Sem "early":
+        # em <LocationMatch> o modo early é ignorado e o valor do cliente seguiria para a API.
+        # A API confia apenas no proxy local (TRUST_PROXY=loopback). Com CDN/balanceador na frente, ajuste à
+        # topologia real.
+        RequestHeader unset X-Forwarded-For
+        RequestHeader set X-Forwarded-Proto "https"
+        # A API envia os próprios cabeçalhos de segurança (helmet); nada de cache intermediário.
+        # Erros gerados pelo Apache em /api também saem em JSON (nunca HTML).
+        ErrorDocument 413 /__minhafolga/erros/api-413.json
+        ErrorDocument 502 /__minhafolga/erros/api-503.json
+        ErrorDocument 503 /__minhafolga/erros/api-503.json
+        ErrorDocument 504 /__minhafolga/erros/api-503.json
+    </LocationMatch>
+
+    # Corpos JSON desses erros: arquivos da própria release (deploy/http-errors/), liberados para leitura
+    # do servidor web por scripts/deploy.sh prepare.
+    Alias /__minhafolga/erros/ "<MINHAFOLGA_APP_ROOT>/current/deploy/http-errors/"
+    <Directory "<MINHAFOLGA_APP_ROOT>/current/deploy/http-errors">
+        Options None
+        AllowOverride None
+        Require all granted
+        ForceType application/json
+        Header always set Cache-Control "no-store"
+        Header always set X-Content-Type-Options "nosniff"
+    </Directory>
+</VirtualHost>
+
+# -----------------------------------------------------------------------------------------------------
+# HOMOLOGAÇÃO (outro arquivo, outro domínio, outra raiz, porta, banco e instância): copie o VirtualHost do
+# site principal trocando ServerName, certificados, caminhos (<RAIZ_HOMOLOGACAO>), PORTA (a da homologação) e
+# <DIRETORIO_DE_LOGS_MINHAFOLGA> por uma pasta própria (ex.: /var/log/apache2/minhafolga-homolog), e acrescente:
+#     <Location "/">
+#         AuthType Basic
+#         AuthName "Minha Folga - homologação"
+#         AuthUserFile <ARQUIVO_HTPASSWD_LEGIVEL_PELO_APACHE>
+#         Require valid-user
+#     </Location>
+#     Header always set X-Robots-Tag "noindex, nofollow"
+# O build de homologação (build.sh --staging) já gera robots.txt "Disallow: /" e noindex, mas robots.txt
+# não é controle de acesso: o basic auth é obrigatório.
+# -----------------------------------------------------------------------------------------------------

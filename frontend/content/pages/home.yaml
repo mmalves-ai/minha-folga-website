@@ -1,0 +1,141 @@
+revision:
+  version: 4
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+meta:
+  title: Minha Folga | Crédito para seus planos. Folga para seu mês.
+  description: "Em breve: crédito novo ou uma oportunidade de aliviar suas parcelas, com IA a seu favor. Cadastre-se grátis na fila da Minha Folga."
+hero:
+  eyebrow: A próxima conversa sobre seu dinheiro pode ser mais clara.
+  title: Seu salário merece uma folga. Sua escolha, mais inteligência.
+  text: Informação clara e inteligência artificial para você entender melhor suas escolhas. Conheça a Minha Folga, converse com a Bia e acompanhe nossa proposta de crédito consignado para quem trabalha com carteira assinada.
+  primary:
+    label: Conheça nossas soluções
+    to: /solucoes
+  secondary:
+    label: Conhecer a Bia
+    to: /bia
+value:
+  eyebrow: Nossa proposta
+  title: Clareza em cada etapa da sua escolha.
+  about: A Minha Folga combina linguagem simples, tecnologia e respeito ao seu tempo para tornar a conversa sobre crédito mais compreensível.
+  principlesLabel: Nossos princípios
+  principles:
+    - Clareza antes da contratação
+    - Tecnologia com responsabilidade
+    - Respeito ao seu tempo e aos seus dados
+  aboutLink:
+    label: Conheça a Minha Folga
+    to: /sobre
+  benefits:
+    - icon: chat
+      title: Tire dúvidas com a Bia
+      text: Entenda desconto em folha, prazo e custo total.
+      link:
+        label: Conheça a Bia
+        to: /bia
+    - icon: calendar
+      title: Receba o aviso de abertura
+      text: Saiba quando a análise de propostas estiver disponível.
+      link:
+        label: Cadastre seu interesse
+        to: /avise-me
+        requires: waitlist
+      linkWaitlistClosed:
+        label: Acompanhe a abertura financeira
+        to: /lancamento
+    - icon: clock
+      title: Decida no seu tempo
+      text: Cadastro sem obrigação de contratar. Enquanto isso, os conteúdos ajudam você a comparar com calma.
+      link:
+        label: Explore os conteúdos
+        to: /conteudos
+solution:
+  eyebrow: Nossa solução de crédito
+  title: Consignado privado, com a situação sempre clara.
+  text: Estamos preparando uma experiência de consignado privado para trabalhadores com vínculo formal elegível. A contratação ainda não está disponível. Enquanto a operação é estruturada, você pode entender como a modalidade funciona e receber o aviso de abertura.
+  link:
+    label: Conheça o consignado privado
+    to: /consignado-privado
+  nowTitle: O que já está disponível
+  now:
+    - text: Conteúdos para entender CET, prazo e total a pagar
+    - text: Exemplos de conversa com a Bia
+      requires: noBiaChannel
+    - text: Conversa com a Bia no chat do site
+      requires: webchat
+    - text: Conversa com a Bia pelo WhatsApp
+      requires: biaWhatsapp
+    - text: Cadastro de interesse para o aviso de abertura
+      requires: waitlist
+    - text: Central de ajuda com as dúvidas mais comuns
+  laterTitle: O que depende da abertura
+  later:
+    - Análise de propostas para os perfis atendidos
+    - Consultas de dados e margem, somente com a sua autorização
+    - Condições apresentadas com CET e total a pagar
+    - Contratação, somente após aprovação e a sua decisão
+  supportTitle: Serviços de apoio
+  supportText: A Bia e os conteúdos ajudam você a entender o crédito antes de qualquer decisão. Não são produtos financeiros.
+  support:
+    - label: Bia, nossa IA
+      to: /bia
+    - label: Conteúdos para decidir
+      to: /conteudos
+bia:
+  eyebrow: Bia, assistente de IA
+  title: IA que explica. Você que decide.
+  text: A Bia transforma termos difíceis em uma conversa simples. Quando as propostas estiverem disponíveis, ela ajudará você a entender valores, prazo e custo total com base nas informações oficiais da operação.
+  identity: A Bia se identifica como inteligência artificial em todas as conversas.
+  trust: Se a resposta exigir uma pessoa, a Bia encaminha para o atendimento.
+  webchatCta: Conversar com a Bia no site
+  channelCta: Conversar com a Bia
+  channelHint: (abre o WhatsApp em uma nova aba)
+  fallbackCta:
+    label: Conheça como a Bia vai ajudar
+    to: /bia
+journey:
+  eyebrow: Como vai funcionar
+  title: Do interesse à decisão, cada etapa explicada.
+  text: Hoje você pode tirar dúvidas e cadastrar seu interesse. A análise e a contratação só acontecem quando a operação abrir, e sempre dependem da sua decisão.
+  textWaitlistClosed: Hoje você pode conhecer a Minha Folga e tirar dúvidas. O cadastro de interesse ainda não está aberto. A análise e a contratação só acontecem quando a operação abrir, e sempre dependem da sua decisão.
+  link:
+    label: Entenda o consignado
+    to: /como-funciona
+launch:
+  eyebrow: Abertura financeira
+  title: Estamos preparando os próximos passos.
+  text: Vamos avisar quando houver uma atualização relevante. Você pode sair da lista quando quiser.
+  currentLabel: Marco atual
+  nextLabel: Próximos marcos
+  updatedLabel: Atualizado em
+  note: O andamento é atualizado manualmente, com base em evidências. Sem datas previstas nem percentuais.
+  link:
+    label: Acompanhe a abertura financeira
+    to: /lancamento
+  status:
+    pending: Pendente
+    in_progress: Em andamento
+    done: Concluído
+articles:
+  eyebrow: Conteúdos
+  title: Informação para comparar com calma.
+  text: Artigos em linguagem simples sobre os termos que fazem diferença numa proposta de crédito.
+  link:
+    label: Ver todos os conteúdos
+    to: /conteudos
+faq:
+  eyebrow: Perguntas frequentes
+  title: Dúvidas que aparecem logo no começo.
+  text: Crédito novo, parcelas e cadastro. Tire suas dúvidas.
+  link:
+    label: Ir para a central de ajuda
+    to: /ajuda
+closing:
+  title: A Minha Folga vem aí. Entre na fila.
+  text: Crédito para seus planos ou uma chance de aliviar as parcelas. Cadastre-se para receber a novidade.
+  primary:
+    label: Quero entrar na fila
+    to: /avise-me#formulario

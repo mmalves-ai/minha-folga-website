@@ -1,0 +1,53 @@
+# Minha Folga — retenção dos registros do SERVIDOR WEB (EXEMPLO; instalado pelo ADMINISTRADOR da hospedagem)
+#
+# Os modelos de vhost (deploy/nginx.minhafolga.conf.example e deploy/apache.minhafolga.conf.example) gravam
+# em <DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log e error.log, numa pasta exclusiva (ex.: /var/log/nginx/minhafolga)
+# que o padrão de rotação da hospedagem (ex.: /var/log/nginx/*.log) não alcança. Esta regra é a única que
+# rotaciona esses arquivos — não os inclua em outra regra (o logrotate recusa arquivo em duas regras).
+#
+# Retenção:
+#   access.log  6 meses (Marco Civil da Internet, art. 15: registros de acesso a aplicações — IP, data e hora —
+#               sob sigilo, em ambiente controlado, por 6 meses) e depois apagado. 185 dias cobrem o maior
+#               intervalo de 6 meses do calendário (184 dias) mais o dia da rotação.
+#   error.log   30 dias. Em falhas do proxy (API parada, corpo grande) o servidor web registra a linha da
+#               requisição, que pode trazer a query string; por isso a retenção é curta.
+#
+# Acesso restrito: a pasta fica 0750 com dono root e grupo de administração da hospedagem (ex.: adm); nenhum
+# usuário de site, nem o da Minha Folga, precisa ler estes arquivos. Consulta só por quem a hospedagem autorizar.
+#
+# Instalação (substitua <DIRETORIO_DE_LOGS_MINHAFOLGA>; na homologação, uma cópia com a pasta dela):
+#   sudo install -d -m 0750 -o root -g adm <DIRETORIO_DE_LOGS_MINHAFOLGA>
+#   sudo cp logrotate.minhafolga-web.conf /etc/logrotate.d/minhafolga-web     # ou o mecanismo da hospedagem
+#   sudo logrotate -d /etc/logrotate.d/minhafolga-web                         # simulação, sem alterar nada
+#
+# copytruncate: o servidor web continua gravando no mesmo arquivo e nenhum sinal é enviado ao Nginx/Apache
+# compartilhado. Se a hospedagem preferir reabrir os logs (nginx -s reopen / apachectl -k graceful), troque
+# copytruncate por "create 0640 root adm" + postrotate com o comando que ela já usa na própria rotação.
+
+<DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log {
+    daily
+    rotate 185
+    maxage 185
+    dateext
+    dateformat -%Y%m%d
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    nomail
+}
+
+<DIRETORIO_DE_LOGS_MINHAFOLGA>/error.log {
+    daily
+    rotate 30
+    maxage 30
+    dateext
+    dateformat -%Y%m%d
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    nomail
+}

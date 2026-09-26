@@ -1,0 +1,203 @@
+{
+  "capturedAt": "2026-09-26T23:03:51.094Z",
+  "origin": "https://localhost:8000",
+  "results": [
+    {
+      "name": "/ CTA fixo não disputa o primeiro hero",
+      "passed": true,
+      "detail": {
+        "cookie": false
+      }
+    },
+    {
+      "name": "/ CTA fixo aparece depois do hero",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "/ contato e CTA fixo sem sobreposição",
+      "passed": true,
+      "detail": {
+        "cta": {
+          "top": 769,
+          "bottom": 844,
+          "left": 0,
+          "right": 390
+        },
+        "contact": null,
+        "contactVisible": false
+      }
+    },
+    {
+      "name": "/ CTA fixo recolhido com menu aberto",
+      "passed": true,
+      "detail": {
+        "menuOpen": true
+      }
+    },
+    {
+      "name": "/ CTA fixo recolhido quando formulário entra na tela sem foco",
+      "passed": true,
+      "detail": {
+        "active": "BUTTON"
+      }
+    },
+    {
+      "name": "/ CTA fixo leva e dá foco ao cadastro",
+      "passed": true,
+      "detail": {
+        "url": "/",
+        "focus": "fullName",
+        "visible": true
+      }
+    },
+    {
+      "name": "/ CTA fixo recolhido no formulário",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "/ CTA fixo não disputa entrada de texto/viewport reduzida",
+      "passed": true,
+      "detail": {
+        "activeName": "fullName",
+        "simulation": "Foco e viewport reduzida; não é teclado físico de aparelho."
+      }
+    },
+    {
+      "name": "/ CTA fixo não sobrepõe diálogo de cookies",
+      "passed": true,
+      "detail": {
+        "dialogOpen": true,
+        "trigger": "evento de QA; analytics desligado oculta botão/banner"
+      }
+    },
+    {
+      "name": "/avise-me CTA fixo não disputa o primeiro hero",
+      "passed": true,
+      "detail": {
+        "cookie": false
+      }
+    },
+    {
+      "name": "/avise-me CTA fixo aparece depois do hero",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "/avise-me contato e CTA fixo sem sobreposição",
+      "passed": true,
+      "detail": {
+        "cta": {
+          "top": 769,
+          "bottom": 844,
+          "left": 0,
+          "right": 390
+        },
+        "contact": null,
+        "contactVisible": false
+      }
+    },
+    {
+      "name": "/avise-me CTA fixo recolhido com menu aberto",
+      "passed": true,
+      "detail": {
+        "menuOpen": true
+      }
+    },
+    {
+      "name": "/avise-me CTA fixo recolhido quando formulário entra na tela sem foco",
+      "passed": true,
+      "detail": {
+        "active": "BUTTON"
+      }
+    },
+    {
+      "name": "/avise-me CTA fixo leva e dá foco ao cadastro",
+      "passed": true,
+      "detail": {
+        "url": "/avise-me",
+        "focus": "fullName",
+        "visible": true
+      }
+    },
+    {
+      "name": "/avise-me CTA fixo recolhido no formulário",
+      "passed": true,
+      "detail": {}
+    },
+    {
+      "name": "/avise-me CTA fixo não disputa entrada de texto/viewport reduzida",
+      "passed": true,
+      "detail": {
+        "activeName": "fullName",
+        "simulation": "Foco e viewport reduzida; não é teclado físico de aparelho."
+      }
+    },
+    {
+      "name": "/avise-me CTA fixo não sobrepõe diálogo de cookies",
+      "passed": true,
+      "detail": {
+        "dialogOpen": true,
+        "trigger": "evento de QA; analytics desligado oculta botão/banner"
+      }
+    },
+    {
+      "name": "/ CTA hero leva ao formulário",
+      "passed": true,
+      "detail": {
+        "url": "/avise-me#formulario",
+        "focus": "fullName",
+        "visible": true
+      }
+    },
+    {
+      "name": "/avise-me CTA hero leva ao formulário",
+      "passed": true,
+      "detail": {
+        "url": "/avise-me",
+        "focus": "fullName",
+        "visible": true
+      }
+    },
+    {
+      "name": "Âncora direta dá foco ao formulário",
+      "passed": true,
+      "detail": {
+        "url": "/avise-me#formulario",
+        "focus": "fullName",
+        "visible": true
+      }
+    },
+    {
+      "name": "Opt-in está disponível sem pedir permissão ao carregar",
+      "passed": true,
+      "detail": {
+        "permissionRequests": 0,
+        "button": true
+      }
+    },
+    {
+      "name": "Preferências oferece gerenciamento de avisos",
+      "passed": true,
+      "detail": {
+        "url": "https://localhost:8000/preferencias#avisos-navegador",
+        "permissionRequests": 0
+      }
+    },
+    {
+      "name": "Permissão só é solicitada por clique explícito; recusa respeitada",
+      "passed": true,
+      "detail": {
+        "permissionRequests": 1,
+        "text": "Avisos neste aparelho\n\nOs avisos estão bloqueados. Para ativar, mude a permissão de notificações deste site no seu navegador.\n\nOs avisos estão bloqueados neste navegador. Você pode mudar isso nas permissões do site.",
+        "fixture": "requestPermission retorna denied; não inscreve nem envia push real."
+      }
+    }
+  ],
+  "serviceWorkerCertificateProbe": {
+    "success": false,
+    "name": "SecurityError",
+    "message": "Failed to register a ServiceWorker for scope ('https://localhost:8000/') with script ('https://localhost:8000/notifications-sw.js'): An SSL certificate error occurred when fetching the script."
+  }
+}

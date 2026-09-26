@@ -1,0 +1,206 @@
+{
+  "capturedAt": "2026-09-26T21:07:56.901Z",
+  "origin": "https://localhost:8000",
+  "captures": [
+    {
+      "name": "home",
+      "path": "/",
+      "mode": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "title": "Minha Folga | Mais clareza para suas escolhas",
+      "h1": "Seu salário merece uma folga. Sua escolha, mais inteligência.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "bodyWords": 1205,
+      "errors": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "mode": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "title": "Quero ser avisado da abertura do consignado | Minha Folga",
+      "h1": "Seu salário merece uma folga. Sua escolha, mais inteligência.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "bodyWords": 1031,
+      "errors": []
+    },
+    {
+      "name": "bia",
+      "path": "/bia",
+      "mode": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "title": "Bia, nossa assistente de IA | Minha Folga",
+      "h1": "Conheça a Bia. Inteligência artificial para uma conversa mais clara.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "bodyWords": 1130,
+      "errors": []
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "mode": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Minha Folga | Mais clareza para suas escolhas",
+      "h1": "Seu salário merece uma folga. Sua escolha, mais inteligência.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "bodyWords": 1197,
+      "errors": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "mode": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Quero ser avisado da abertura do consignado | Minha Folga",
+      "h1": "Seu salário merece uma folga. Sua escolha, mais inteligência.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "bodyWords": 1023,
+      "errors": []
+    },
+    {
+      "name": "bia",
+      "path": "/bia",
+      "mode": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Bia, nossa assistente de IA | Minha Folga",
+      "h1": "Conheça a Bia. Inteligência artificial para uma conversa mais clara.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "bodyWords": 1157,
+      "errors": []
+    }
+  ]
+}

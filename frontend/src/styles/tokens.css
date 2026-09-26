@@ -1,0 +1,62 @@
+/* Tokens da marca Minha Folga (seção 3 do briefing) + tokens derivados para acessibilidade. */
+:root {
+  --mf-forest: #123f35;
+  --mf-forest-hover: #0b3028;
+  --mf-cream: #f8f6f0;
+  --mf-paper: #ffffff;
+  --mf-mint: #ddece2;
+  --mf-coral: #e78163;
+  --mf-lilac: #e8e4f2;
+  --mf-ink: #172e28;
+  --mf-muted: #50615a;
+  --mf-border: #c7d2cc;
+  --mf-error: #9c2f26;
+  --mf-radius-control: 12px;
+  --mf-radius-card: 24px;
+  --mf-radius-panel: 36px;
+  --mf-shadow: 0 18px 60px rgb(18 63 53 / 8%);
+
+  /* Derivados. Borda de controles com contraste ≥ 3:1 sobre paper e cream (WCAG 1.4.11);
+     --mf-border fica para divisórias decorativas. */
+  --mf-control-border: #6b7c75;
+  --mf-focus: #123f35;
+  --mf-focus-on-dark: #f8f6f0;
+  --mf-mint-strong: #c5ddcd;
+  --mf-forest-soft: #1d5446;
+  --mf-cream-on-dark-muted: #cfdcd5;
+  --mf-success-bg: #ddece2;
+  --mf-error-bg: #f9e9e6;
+  --mf-shadow-soft: 0 8px 28px rgb(18 63 53 / 7%);
+
+  --mf-font-heading: 'Sora', system-ui, sans-serif;
+  --mf-font-body: 'Inter', system-ui, sans-serif;
+
+  --mf-space-1: 8px;
+  --mf-space-2: 12px;
+  --mf-space-3: 16px;
+  --mf-space-4: 24px;
+  --mf-space-5: 32px;
+  --mf-space-6: 48px;
+  --mf-space-7: 64px;
+  --mf-space-8: 96px;
+
+  --mf-container: 1200px;
+  --mf-gutter: 32px;
+  --mf-header-height: 76px;
+
+  --mf-duration: 200ms;
+  --mf-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --mf-gutter: 20px;
+    --mf-header-height: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mf-duration: 0ms;
+  }
+}

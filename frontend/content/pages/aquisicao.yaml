@@ -1,0 +1,169 @@
+# Experiência simples: oportunidade, dois públicos e IA. Cadastro D1 completo preservado.
+revision:
+  version: 3
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+hero:
+  eyebrow: Em breve · Para quem tem carteira assinada
+  titleStart: Seu salário
+  titleEnd: merece
+  titleAccentStart: uma folga.
+  titleAccentEnd: ""
+  acquisitionTitle: Crédito para seus planos.
+  acquisitionTitleAccent: Folga para seu mês.
+  lead: Precisa de um empréstimo ou quer aliviar as parcelas? Nossa IA vai buscar as melhores opções disponíveis para você. Tudo pelo celular.
+  acquisitionLead: Precisa de um empréstimo ou quer aliviar as parcelas? Nossa IA vai buscar as melhores opções disponíveis para você. Tudo pelo celular.
+  primaryCta: Quero entrar na fila
+  closedCta: Conhecer a novidade
+  biaCta: Como a IA vai me ajudar
+  whyNow: O dinheiro disponível para emprestar é limitado. Quem se cadastra antes entra antes na fila.
+  note: Cadastro grátis. Crédito e redução de parcelas sujeitos à análise.
+  photoAlt: Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.
+  caption: Sua vida, seus planos.
+  captionAccent: "Uma nova aliada: a IA."
+  photoCredit: Imagem ilustrativa gerada por IA.
+  valuesLabel: Uma oportunidade para você
+  values:
+    - icon: phone
+      text: 100% digital
+    - icon: spark
+      text: IA a seu favor
+    - icon: list
+      text: Cadastro grátis
+value:
+  eyebrow: Qual folga você procura?
+  title: Um novo empréstimo.
+  titleEnd: Ou menos peso nas parcelas.
+  intro: A Minha Folga está chegando para ajudar nas duas situações.
+  closedCta: Conhecer a novidade
+  photoCredit: Cenas ilustrativas geradas por IA.
+  opportunities:
+    - id: novo-credito
+      photo: planning
+      alt: Homem usando o celular e organizando seus planos à mesa. Cena ilustrativa gerada por IA.
+      tag: Para o que você precisa
+      title: Quero um empréstimo novo.
+      text: Uma necessidade para resolver. Um plano para realizar. Nossa IA vai buscar opções de crédito para você.
+      link: Quero essa oportunidade
+      icon: home
+    - id: aliviar-parcelas
+      photo: aliviar-parcelas
+      alt: Trabalhadora organizando as contas em casa. Cena ilustrativa gerada por IA.
+      tag: Para respirar no fim do mês
+      title: Quero aliviar minhas parcelas.
+      text: Já tem consignado? Vamos buscar uma alternativa para reduzir o peso das parcelas no seu salário.
+      link: Quero buscar minha folga
+      icon: hand
+  note: Você conhece as condições antes de decidir. A possibilidade de crédito ou redução depende da análise.
+bia:
+  eyebrow: IA a seu favor
+  title: Mais inteligência
+  titleMiddle: ""
+  titleAccent: para o seu dinheiro.
+  lead: Você conta o que precisa. Nossa IA vai buscar a melhor opção disponível para o seu perfil.
+  support: E a Bia explica tudo em palavras simples. A decisão é sempre sua.
+  webchatCta: Tirar uma dúvida com a Bia
+  whatsappCta: Conversar com a Bia
+  whatsappHint: no WhatsApp, em nova aba
+  fallbackCta: Conheça a Bia
+  pending: É assim que vai funcionar quando abrirmos.
+  technology:
+    label: "IA de suporte:"
+    name: Hal-AI
+  demo:
+    title: Uma dúvida. Uma explicação clara.
+    label: Exemplo de conversa
+    note: Demonstração educativa. Nenhuma mensagem foi enviada. Não é uma proposta de crédito.
+    messages:
+      - from: person
+        text: Meu consignado está pesando. Dá para diminuir a parcela?
+      - from: bia
+        text: Pode haver uma alternativa. Na abertura, será preciso analisar o seu caso e as condições disponíveis para saber se é possível reduzir a parcela.
+      - from: person
+        text: E se a parcela baixar, é sempre melhor?
+      - from: bia
+        text: A parcela menor pode dar uma folga no mês. Mas um prazo maior pode aumentar o total pago. Por isso, compare também o prazo, o CET e o total a pagar.
+  flowTitle: Da sua necessidade à sua escolha
+  flow:
+    - icon: user
+      title: Você conta
+      text: Crédito novo ou parcelas menores.
+    - icon: spark
+      title: A IA busca
+      text: Compara as opções para você.
+    - icon: chat
+      title: A Bia explica
+      text: Quanto custa e como funciona.
+    - icon: check-circle
+      title: Você decide
+      text: Escolhe o que faz sentido.
+steps:
+  eyebrow: Seu caminho até a oportunidade
+  title: O primeiro passo já pode ser seu.
+  titleClosed: Veja o caminho que estamos preparando.
+  link: Entenda a proposta
+  first:
+    tag: O primeiro passo
+    tagClosed: Em preparação
+    title: Entre na fila.
+    text: Conclua seu cadastro com seus dados e os do trabalho. A ordem de cadastro será usada nas chamadas para a abertura.
+    textClosed: Quando o cadastro estiver disponível, informe seus dados e os do trabalho para a fila de chamada.
+  second:
+    tag: Quando houver disponibilidade
+    title: Receba a chamada.
+    text: Na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e o valor disponível para emprestar. Acompanhe pelo WhatsApp informado.
+  third:
+    tag: A decisão continua sua
+    title: Compare e decida.
+    text: Após a análise, confira se a proposta alivia a parcela e como ficam prazo, CET e total a pagar. Contrate só se fizer sentido para você.
+  note: O cadastro não é uma solicitação nem uma aprovação de crédito.
+signup:
+  eyebrow: Sua oportunidade começa aqui
+  title: Cadastre-se agora.
+  titleAccent: A gente avisa você.
+  titleClosed: Estamos chegando.
+  titleAccentClosed: Acompanhe a novidade.
+  leadClosed: Em breve você poderá se cadastrar por aqui.
+  lead: Entre na fila para crédito novo ou para buscar parcelas mais leves. Receba o aviso no WhatsApp.
+  reasons:
+    - Cadastro grátis
+    - Aviso no WhatsApp
+    - Sem obrigação de contratar
+  privacy: CPF e dados do trabalho ajudam a identificar seu cadastro.
+  privacyLink: Como cuidamos dos seus dados
+  note: O cadastro não garante aprovação nem reserva dinheiro.
+trust:
+  title: Minha Folga. Perto de você.
+  cnpjLabel: CNPJ
+  pendingIdentity: Tecnologia para buscar crédito. Gente para ajudar.
+  aboutLink: Conheça a Minha Folga
+  supportLink: Atendimento
+landing:
+  faq:
+    eyebrow: Tudo às claras
+    title: Respostas rápidas.
+    titleEnd: Sem complicação.
+    text: O que você precisa saber para dar o primeiro passo.
+    link: Ver todas as perguntas
+  closing:
+    primaryCta: Quero entrar na fila
+    closedCta: Acompanhar a preparação
+    note: A fila organiza as chamadas. O cadastro não reserva dinheiro nem garante aprovação.
+reason:
+  eyebrow: Em breve. E com limite.
+  title: Entre antes na fila.
+  titleAccent: A Minha Folga está chegando.
+  text: O valor disponível para emprestar é limitado. As chamadas seguirão a ordem de cadastro, conforme a disponibilidade.
+  cta: Quero entrar na fila agora
+  closedCta: Acompanhar a preparação
+  note: Grátis e sem obrigação de contratar.
+  question: Deixar para depois faz diferença.
+  answer: Outros cadastros podem entrar antes do seu. Se o valor disponível acabar, será preciso esperar uma nova oportunidade.
+  guide: ""
+  guideCta: ""
+mobileCta:
+  label: Quero me cadastrar
+  text: Em breve. Entre na fila.
+  note: Cadastro grátis

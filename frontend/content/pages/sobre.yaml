@@ -1,0 +1,81 @@
+# Direção confirmada em 26/09/2026: jornada digital e ágil, IA para condições adequadas ao perfil,
+# possibilidade de aliviar consignado existente e fila por ordem de cadastro/disponibilidade.
+# /sobre — apresentação da empresa (seção 6.10). Sem história, sócios, fotos ou números:
+# a página se sustenta em propósito, princípios e identidade legal real (configuração pública).
+revision:
+  version: 3
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Sobre a Minha Folga | Propósito e princípios
+  description: "Conheça a Minha Folga: novo crédito e possibilidades de aliviar parcelas, em uma experiência digital com ajuda da IA. Em breve."
+
+breadcrumb: A Minha Folga
+
+hero:
+  eyebrow: A Minha Folga
+  title: Mais espaço para os seus planos.
+  lead: A Minha Folga está chegando para quem trabalha com carteira assinada e quer um novo empréstimo ou uma parcela mais leve. Uma experiência 100% digital, com IA para buscar opções e a Bia para explicar.
+  promiseLabel: Nossa promessa
+
+way:
+  title: O crédito começa pelo que você precisa.
+  text: Um plano para tirar do papel. Uma conta para organizar. Uma parcela que pesa no mês. Vamos buscar as opções disponíveis para o seu perfil e ajudar você a entender a proposta antes de decidir.
+
+principles:
+  eyebrow: O que importa para você
+  title: Simples de usar. Claro para escolher.
+  items:
+    - title: Tudo pelo celular.
+      text: Uma jornada digital, pensada para poupar seu tempo.
+    - title: IA que ajuda de verdade.
+      text: Busca de opções para o seu perfil e explicações sem complicação.
+    - title: A escolha continua sua.
+      text: Você compara as condições e contrata se fizer sentido para você.
+
+status:
+  title: Estamos chegando.
+  text: A abertura terá crédito limitado. As chamadas seguirão a ordem de cadastro, conforme a disponibilidade. A contratação dependerá de análise.
+  link:
+    label: Conheça a abertura
+    to: /lancamento
+
+identity:
+  eyebrow: Identificação
+  title: Dados da empresa
+  text: Conheça a empresa responsável pela Minha Folga e nossos canais.
+  labels:
+    tradeName: Nome fantasia
+    legalName: Razão social
+    cnpj: CNPJ
+    address: Endereço
+    support: Canais de atendimento
+    hours: Horário do atendimento humano
+    privacy: Privacidade e dados pessoais
+    officer: Encarregado pelo tratamento de dados
+  whatsappLabel: WhatsApp oficial
+  pending:
+    legalName: razão social
+    cnpj: CNPJ
+    address: endereço
+    support: canal de atendimento
+    hours: horário de atendimento
+    privacy: canal de privacidade
+    officer: encarregado de dados
+  moreTitle: Saiba mais
+  more:
+    - { icon: chat, label: Atendimento, to: /atendimento, text: 'Canais, horários e formulário com protocolo.' }
+    - { icon: shield, label: Segurança, to: /seguranca, text: Canais oficiais e como se proteger de golpes. }
+    - { icon: lock, label: Privacidade, to: /privacidade, text: Como tratamos seus dados e como exercer seus direitos. }
+
+closing:
+  title: Quer fazer parte desde o começo?
+  text: Cadastre-se para receber a chamada quando houver disponibilidade para o seu perfil.
+  # Sem canal da Bia provisionado (biaChannel), não há conversa real a oferecer, só os exemplos.
+  textNoBiaChannel: Cadastre-se para receber a chamada quando houver disponibilidade para o seu perfil.
+  primary:
+    label: Quero entrar na fila
+    to: /avise-me#formulario

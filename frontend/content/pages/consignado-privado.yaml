@@ -1,0 +1,156 @@
+# Direção confirmada em 26/09/2026: jornada digital e ágil, IA para condições adequadas ao perfil,
+# possibilidade de aliviar consignado existente e fila por ordem de cadastro/disponibilidade.
+# /consignado-privado — página de produto (seções 2, 6.5, 6.8 e 6.11). Produto em estruturação:
+# sem taxas, simulação, consulta de margem ou "contrate agora". Redução de parcela é possibilidade futura;
+# portabilidade e outras modalidades dependem de definição e integração da operação.
+# Decisão D1 (docs/DECISOES.md): o cadastro pede CPF e dados do emprego, sem consulta de margem ou score.
+# Revisar junto com a mudança de fase financeira (conteúdo + servidor + Bia).
+revision:
+  version: 4
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Consignado privado | Crédito para os seus planos
+  description: Consignado para um novo empréstimo ou para avaliar uma parcela mais leve. Em breve na Minha Folga, com jornada digital e ajuda da IA.
+
+breadcrumbs:
+  - { label: Soluções, to: /solucoes }
+  - { label: Consignado privado, to: /consignado-privado }
+
+hero:
+  title: Uma folga para o que você precisa.
+  lead: Um novo empréstimo para seus planos. Ou uma oportunidade de aliviar o consignado que você já paga. Estamos chegando com uma experiência 100% digital para quem tem carteira assinada.
+  # Usado quando o servidor não recebe cadastros (collection.waitlistEnabled = false).
+  leadWaitlistClosed: Em breve, novo crédito e possibilidades de aliviar parcelas, com uma experiência 100% digital para quem tem carteira assinada.
+  primary: { label: Quero entrar na fila, to: /avise-me#formulario }
+  primaryClosed: { label: Acompanhar preparação, to: /lancamento }
+  secondary: { label: Veja como funciona, to: '#jornada' }
+  tocTitle: Nesta página
+
+toc:
+  - { label: O que é, to: '#o-que-e' }
+  - { label: Para quem estamos preparando, to: '#para-quem' }
+  - { label: O que observar, to: '#o-que-observar' }
+  - { label: Como será a jornada, to: '#jornada' }
+  - { label: Como a Bia ajuda, to: '#bia' }
+  - { label: Dúvidas do produto, to: '#duvidas' }
+  - { label: Receba o aviso, to: '#receba-o-aviso' }
+
+what:
+  title: Como funciona o consignado?
+  body_md: |-
+    As parcelas são descontadas do salário a cada mês. Antes de contratar, você confere o valor que vai receber, a parcela, o prazo e o custo total. As condições dependem da análise do seu perfil.
+  readLabel: 'Leia:'
+  articleLink: { label: Como funciona o desconto em folha, to: /conteudos/como-funciona-desconto-em-folha }
+  flowTitle: Para o seu momento
+  flow:
+    - title: Precisa de um novo empréstimo?
+      text: Vamos buscar opções para o seu perfil, para você comparar e escolher na abertura.
+    - title: Já tem uma parcela pesada?
+      text: Vamos avaliar se há uma alternativa para aliviar o que sai do seu salário.
+  portability:
+    title: "Parcela menor: veja o conjunto."
+    text: "Uma parcela menor pode aliviar o mês, mas um prazo maior pode aumentar o total pago. Compare as condições antes de decidir."
+    link: { label: Parcela menor e custo total, to: /conteudos/parcela-menor-e-custo-total }
+
+audience:
+  title: Trabalha com carteira assinada?
+  text: Essa é a proposta inicial da Minha Folga. O acesso ao crédito dependerá do seu vínculo e da análise na abertura.
+  profilesLabel: Tipos de vínculo e situação prevista
+  profiles:
+    - title: Carteira assinada (CLT)
+      status: Público da proposta inicial
+      tone: included
+      text: Trabalhadores com vínculo formal elegível ao Crédito do Trabalhador.
+    - title: Empregado doméstico registrado
+      status: Depende do produto do parceiro
+      tone: depends
+      text: Poderá ser atendido quando o produto da instituição parceira contemplar esse vínculo.
+    - title: Trabalhador rural registrado
+      status: Depende do produto do parceiro
+      tone: depends
+      text: Poderá ser atendido quando o produto da instituição parceira contemplar esse vínculo.
+    - title: Empregado de MEI
+      status: Pode ter vínculo elegível
+      tone: depends
+      text: Quem trabalha registrado para um MEI pode ter vínculo elegível. A confirmação acontece na análise.
+    - title: Titular de MEI, autônomo ou motorista de aplicativo
+      status: Não é automaticamente elegível
+      tone: not_automatic
+      text: Essas atividades, por si só, não confirmam elegibilidade. Se você também tiver um vínculo de emprego elegível, ele poderá ser analisado quando a operação estiver disponível.
+  compare:
+    today:
+      stage: Hoje, no cadastro
+      title: Interesse autodeclarado
+      items:
+        - Você informa o seu CPF, o empregador, o tipo de vínculo, o tempo no emprego e a faixa de salário.
+        - Não consultamos margem, score nem dados do empregador com essas informações.
+        - O cadastro não confirma elegibilidade nem reserva condições.
+    later:
+      stage: Na futura análise
+      title: Elegibilidade confirmada
+      items:
+        - Acontece somente quando a operação abrir e se o produto estiver disponível para o seu perfil.
+        - Depende da sua autorização para as consultas necessárias.
+        - A instituição responsável confirma a elegibilidade, os limites e as condições.
+  simpleNote: Empregados domésticos, rurais e de MEI poderão ser atendidos conforme as opções disponíveis. Ser autônomo ou ter um MEI, por si só, não dá acesso ao consignado.
+
+observe:
+  title: Compare o que muda no seu bolso.
+  text: A Bia vai ajudar você a entender estes pontos antes da sua escolha.
+  listLabel: Pontos para conferir numa proposta
+  items:
+    - title: Valor que você recebe
+      text: Quanto chega para você usar nos seus planos.
+    - title: Parcela e prazo
+      text: Quanto sai do salário por mês e por quanto tempo.
+    - title: CET e total a pagar
+      text: O CET reúne juros e outros custos. Compare também a soma de todas as parcelas e despesas.
+  linksTitle: Para ler com calma
+  links:
+    - { label: O que é CET e por que olhar além da taxa, to: /conteudos/o-que-e-cet }
+    - { label: Parcela menor significa crédito mais barato?, to: /conteudos/parcela-menor-e-custo-total }
+
+journey:
+  title: Pelo celular, do começo ao fim.
+  text: Cadastre-se e aguarde a chamada. Na abertura, a IA vai buscar opções para o seu perfil, conforme a análise e a disponibilidade.
+  textWaitlistClosed: Em breve, você poderá se cadastrar e conhecer as opções na abertura.
+  link: { label: Veja como funciona, to: /como-funciona }
+
+bia:
+  eyebrow: Apoio da Bia
+  title: A Bia explica. Você escolhe.
+  text: "Novo empréstimo ou parcela menor: nossa assistente de IA vai ajudar você a comparar as condições sem complicação."
+  canTitle: O que ela faz nesta fase
+  # Sem canal provisionado (biaChannel), a Bia ainda não atende: a lista descreve o que ela fará.
+  canTitleNoChannel: Quando o canal estiver ativo
+  can:
+    - { text: Explica o consignado e o desconto em folha com base em conteúdo aprovado. }
+    - { text: 'Mostra o que observar numa proposta, sem números inventados.' }
+    - { text: Ajuda você a se cadastrar para receber o aviso de abertura., requires: waitlist }
+  limitsTitle: Limites atuais
+  limits:
+    - Não consulta margem nem dados do empregador.
+    - Não envia propostas nem calcula condições.
+    - Não pede senhas, códigos ou dados bancários.
+  # Publicado somente com equipe e canal de retorno reais (channels.humanSupport).
+  handoff: Se a resposta exigir uma pessoa, a Bia encaminha para o atendimento.
+  handoffFallback: Quando a dúvida precisar de uma pessoa, use os canais da página Atendimento.
+  handoffLink: { label: Ver canais de atendimento, to: /atendimento }
+  channelPending: Em breve, você poderá conversar com a Bia. Veja um exemplo.
+  link: { label: Conheça a Bia, to: /bia }
+  demoTitle: 'Exemplo: saber o próximo passo'
+  demoExample: proximo-passo
+
+faq:
+  title: Ficou alguma dúvida?
+  text: Respostas rápidas para o seu próximo passo.
+  link: { label: Ver a central de ajuda, to: /ajuda }
+
+closing:
+  title: Cadastre-se para a abertura.
+  text: "O crédito disponível será limitado. A fila segue a ordem de cadastro; as chamadas dependem da disponibilidade e a contratação, de análise."
+  primary: { label: Quero entrar na fila, to: /avise-me#formulario }

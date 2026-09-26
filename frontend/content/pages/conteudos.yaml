@@ -1,0 +1,92 @@
+# Central editorial (/conteudos). Os artigos ficam em content/articles/*.md (ver docs/CONTENT_GUIDE.md).
+revision:
+  version: 1
+  status: draft
+  draftedAt: 2026-09-25
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Conteúdos para entender crédito com calma
+  description: Artigos educativos da Minha Folga sobre CET, parcela e custo total, desconto em folha e cuidados antes de contratar crédito, com fontes oficiais.
+
+hero:
+  eyebrow: Central editorial
+  title: Informação que abre espaço para boas decisões.
+  lead: Entenda os termos, reconheça o que importa numa proposta e tire suas dúvidas no seu ritmo.
+
+# Compromisso editorial exibido ao lado da abertura. Só afirmações que o processo real cumpre.
+editorial:
+  title: Como produzimos estes conteúdos
+  items:
+    - icon: book
+      title: Fontes oficiais citadas
+      text: Cada artigo lista os materiais usados, como os do Banco Central, do Ministério do Trabalho e Emprego e da legislação.
+    - icon: eye
+      title: Revisão registrada
+      text: A situação da revisão financeira aparece em cada artigo, com data e responsável quando concluída.
+    - icon: info
+      title: Educativo, sem oferta
+      text: Os textos explicam conceitos. Não são proposta, simulação nem promessa de condição de crédito.
+
+filters:
+  heading: Artigos
+  searchLabel: Buscar nos conteúdos
+  searchHint: Procure por um termo, como CET, prazo ou golpe. A busca considera título, resumo e texto.
+  categoryLegend: Filtrar por tema
+  all: Todos os temas
+  empty:
+    title: Nenhum conteúdo encontrado
+    text: Não encontramos artigos com esses filtros. Tente outra palavra ou volte a ver todos os temas.
+    clear: Limpar filtros
+
+next:
+  title: Ficou alguma dúvida?
+  text: Os artigos explicam os conceitos. Para perguntas sobre a Minha Folga, o cadastro ou a abertura da operação de crédito, estes caminhos podem ajudar.
+  links:
+    - label: Central de ajuda
+      text: Respostas para as dúvidas mais comuns, organizadas por tema.
+      to: /ajuda
+    - label: Conheça a Bia
+      text: Nossa assistente de IA explica os termos em uma conversa simples.
+      to: /bia
+    - label: Como funciona
+      text: As etapas previstas, do cadastro de interesse à decisão.
+      to: /como-funciona
+
+# Textos do modelo de artigo (/conteudos/:slug).
+article:
+  toc: Neste artigo
+  meta:
+    author: Autoria
+    drafted: Texto elaborado em
+    published: Publicado em
+    review: Revisão financeira
+    reviewPending: Revisão financeira pendente
+    reviewedPrefix: Revisado em
+    reviewedBy: por
+    reading: min de leitura
+  disclaimer: Conteúdo educativo. Não é uma oferta, proposta ou simulação de crédito e não substitui a leitura do contrato e das informações oficiais da instituição responsável.
+  sources:
+    title: Fontes utilizadas
+    intro: Materiais oficiais consultados na elaboração deste texto.
+    accessed: consultado em
+    external: abre site externo
+  related: Continue lendo
+  cta:
+    bia:
+      title: Quer entender esses termos em uma conversa?
+      text: Conheça a Bia, nossa assistente de inteligência artificial, e veja como ela explica termos como CET, prazo e custo total em linguagem simples.
+      primary: { label: Conhecer a Bia, to: /bia }
+      secondary: { label: Ver a central de ajuda, to: /ajuda }
+    ajuda:
+      title: Ainda com dúvidas?
+      text: A central de ajuda reúne respostas sobre o consignado, o cadastro de interesse e a segurança. Se precisar, fale com o atendimento.
+      primary: { label: Ir para a central de ajuda, to: /ajuda }
+      secondary: { label: Falar com o atendimento, to: /atendimento }
+  notFound:
+    metaTitle: Conteúdo não encontrado
+    metaDescription: O conteúdo procurado não foi encontrado na central editorial da Minha Folga. Veja os artigos disponíveis sobre crédito e decisões financeiras.
+    title: Não encontramos este conteúdo.
+    text: O endereço pode estar incompleto ou o artigo pode ter mudado de lugar. Estes são os conteúdos disponíveis na central.
+    back: Ver todos os conteúdos

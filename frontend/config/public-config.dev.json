@@ -1,0 +1,74 @@
+{
+  "$comment": "Configuração pública de DESENVOLVIMENTO. Sem identidade empresarial real: as páginas mostram marcadores de pendência. Builds de release usam o arquivo exportado pelo backend (scripts/build.sh).",
+  "schemaVersion": 1,
+  "siteUrl": "https://www.minhafolga.com.br",
+  "environment": "development",
+  "credit": {
+    "phase": "PRE_LAUNCH",
+    "operationsEnabled": false
+  },
+  "identity": {
+    "tradeName": "Minha Folga",
+    "legalName": null,
+    "cnpj": null,
+    "address": null,
+    "privacyContact": null,
+    "privacyOfficerName": null,
+    "supportContact": null,
+    "supportPhone": null,
+    "supportHours": null,
+    "supportResponseTime": null,
+    "complete": false,
+    "missing": [
+      "LEGAL_ENTITY_NAME",
+      "LEGAL_ENTITY_CNPJ",
+      "LEGAL_ENTITY_ADDRESS",
+      "PRIVACY_CONTACT",
+      "PRIVACY_OFFICER_NAME",
+      "SUPPORT_CONTACT",
+      "SUPPORT_HOURS"
+    ]
+  },
+  "channels": {
+    "whatsappNumber": null,
+    "biaOnWhatsapp": false,
+    "humanSupport": false,
+    "webchat": {
+      "enabled": false,
+      "scriptUrl": null,
+      "widgetId": null
+    }
+  },
+  "collection": {
+    "waitlistEnabled": true,
+    "supportEnabled": true
+  },
+  "analyticsEnabled": false,
+  "notices": {
+    "privacy": {
+      "version": "1.3",
+      "status": "draft",
+      "draftedAt": "2026-09-26",
+      "revisedAt": null,
+      "reviewedBy": null
+    },
+    "terms": {
+      "version": "1.2",
+      "status": "draft",
+      "draftedAt": "2026-09-26",
+      "revisedAt": null,
+      "reviewedBy": null
+    },
+    "cookies": {
+      "version": "1.4",
+      "status": "draft",
+      "draftedAt": "2026-09-26",
+      "revisedAt": null,
+      "reviewedBy": null
+    }
+  },
+  "consentVersions": {
+    "launch_notice": "launch_notice.2026-09-25.1",
+    "marketing": "marketing.2026-09-25.1"
+  }
+}

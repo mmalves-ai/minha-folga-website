@@ -1,0 +1,27 @@
+# Página 404 (rotas /404 e inexistentes). O status HTTP 404 é dado pelo servidor web. noindex.
+revision:
+  version: 1
+  status: draft
+  draftedAt: 2026-09-25
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Página não encontrada
+  description: Não encontramos o endereço que você procurou no site da Minha Folga. Veja os caminhos para o início, soluções, conteúdos, ajuda e atendimento.
+
+hero:
+  breadcrumb: Página não encontrada
+  eyebrow: Erro 404
+  title: Não encontramos esta página.
+  lead: O endereço pode ter mudado, saído do ar ou sido digitado com alguma diferença. Os caminhos abaixo levam às partes principais do site.
+
+linksTitle: Caminhos úteis
+links:
+  - { to: /, label: Início, text: Conheça a Minha Folga e a Bia., icon: home }
+  - { to: /solucoes, label: Soluções, text: O que oferecemos hoje e o consignado em estruturação., icon: layers }
+  - { to: /conteudos, label: Conteúdos, text: 'Artigos sobre CET, parcela, prazo e segurança.', icon: book }
+  - { to: /ajuda, label: Ajuda, text: Respostas para as dúvidas mais comuns., icon: compass }
+  - { to: /atendimento, label: Atendimento, text: Fale com a gente pelos canais oficiais., icon: chat }
+
+report_mdi: Chegou aqui por um link do nosso site? Conte para a gente pelo [atendimento](/atendimento?assunto=outro).

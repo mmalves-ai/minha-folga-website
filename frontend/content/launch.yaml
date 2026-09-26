@@ -1,0 +1,44 @@
+# Andamento da estruturação financeira (/lancamento e resumos da home e da landing).
+# Atualização MANUAL e baseada em evidências: qualquer `status` diferente de `pending` exige `evidence`,
+# `updatedAt` e `responsible` registrados; sem eles, o build de /lancamento falha (milestones.ts).
+# Não há percentuais, datas previstas nem atualização automática por passagem de tempo.
+# status: pending | in_progress | done
+revision:
+  version: 2
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+milestones:
+  - id: website-atendimento
+    title: Website e atendimento
+    description: Publicação do website completo, com conteúdos, central de ajuda, cadastro de interesse e canais de atendimento verificados.
+    # Continua "pending" até haver evidência interna e responsável registrados. Passa a "in_progress" com a
+    # evidência do que já foi verificado e a "done" só quando o website completo e seus canais estiverem
+    # publicados e verificados.
+    status: pending
+    evidence: null
+    updatedAt: null
+    responsible: null
+  - id: parcerias-estruturacao
+    title: Parcerias e estruturação
+    description: Definição das instituições parceiras, do modelo de atuação e das formalizações necessárias para a operação de crédito.
+    status: pending
+    evidence: null
+    updatedAt: null
+    responsible: null
+  - id: testes-operacao
+    title: Testes da operação financeira
+    description: Testes das integrações, da análise e da apresentação das condições com dados oficiais, antes de qualquer abertura ao público.
+    status: pending
+    evidence: null
+    updatedAt: null
+    responsible: null
+  - id: abertura-propostas
+    title: Abertura das propostas
+    description: Início da análise de propostas para os perfis atendidos pelo produto, com aviso às pessoas cadastradas que autorizaram receber.
+    status: pending
+    evidence: null
+    updatedAt: null
+    responsible: null

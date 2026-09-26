@@ -1,0 +1,3573 @@
+openapi: 3.1.0
+info:
+  title: API Minha Folga
+  version: 1.1.0
+  summary: Cadastro de interesse, preferências, atendimento, ferramentas da Bia (Hal-AI) e administração.
+  description: |
+    Contrato versionado entre `frontend/` (Vue) e `backend/` (Node/Express). Todas as rotas vivem sob `/api`,
+    na mesma origem do site. Regras gerais:
+
+    - Erros sempre em JSON: `{ "error": { "code", "message", "fields"? , ...extra }, "requestId" }`.
+      `message` é texto em português que pode ser exibido ao usuário; `code` é estável.
+    - Chamadas do navegador com método inseguro exigem `Content-Type: application/json` e, se houver
+      cabeçalho `Origin`, que ela esteja na lista permitida (defesa CSRF de base).
+    - Corpos com campos inesperados são recusados (`validation_error`). Limite de corpo: 16 KB em todas as rotas.
+    - Web Push usa autorização independente de navegador, endpoint cifrado e token técnico do dono; ver notifications.openapi.yaml.
+    - Sessões usam cookies `HttpOnly; Secure; SameSite=Strict` definidos pelo servidor. Nenhum token vai para
+      `localStorage`, query string ou pixels. Dados pessoais nunca aparecem em URL.
+    - Respostas de cadastro e de pedido de saída são genéricas: não revelam se um número ou CPF já está cadastrado.
+    - Em `PRE_LAUNCH`, toda rota `/api/credit/*` responde 403 `credit_phase_locked`.
+
+    Decisão D1 (docs/DECISOES.md, 26/09/2026): este sistema **não mexe com WhatsApp**. Número oficial, Bia, webchat,
+    filas, operadores e templates são da plataforma Hal-AI; a Bia chama as rotas `/api/agent/*` com `X-API-Key`.
+    Não há confirmação por código nem webhooks de mensagem. Formulários públicos usam o anti-robô próprio
+    (`GET /api/form-token` + prova de trabalho + campo-armadilha `website`).
+servers:
+  - url: https://www.minhafolga.com.br
+tags:
+  - name: plataforma
+  - name: cadastro
+  - name: preferencias
+  - name: atendimento
+  - name: metricas
+  - name: bia
+  - name: credito
+  - name: admin
+
+paths:
+  /api/notifications/config:
+    $ref: './notifications.openapi.yaml#/paths/~1api~1notifications~1config'
+  /api/notifications/subscriptions:
+    $ref: './notifications.openapi.yaml#/paths/~1api~1notifications~1subscriptions'
+  /api/admin/notifications:
+    $ref: './notifications.openapi.yaml#/paths/~1api~1admin~1notifications'
+  /api/admin/notifications/campaigns:
+    $ref: './notifications.openapi.yaml#/paths/~1api~1admin~1notifications~1campaigns'
+  /api/admin/notifications/campaigns/{id}/cancel:
+    $ref: './notifications.openapi.yaml#/paths/~1api~1admin~1notifications~1campaigns~1{id}~1cancel'
+  /api/admin/notifications/grants:
+    $ref: './notifications.openapi.yaml#/paths/~1api~1admin~1notifications~1grants'
+  /api/admin/notifications/grants/{id}:
+    $ref: './notifications.openapi.yaml#/paths/~1api~1admin~1notifications~1grants~1{id}'
+  /api/health:
+    get:
+      tags: [ plataforma ]
+      summary: Estado mínimo do processo (sem versão, dados ou infraestrutura).
+      responses:
+        '200':
+          description: Processo ativo.
+          content:
+            application/json:
+              schema: { type: object, properties: { status: { const: ok } }, required: [ status ] }
+
+  /api/internal/ready:
+    get:
+      tags: [ plataforma ]
+      summary: Prontidão interna (banco e migrações). Protegida por token.
+      parameters:
+        - { in: header, name: X-Readiness-Token, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Pronto., content: { application/json: { schema: { $ref: '#/components/schemas/Readiness' } } } }
+        '503': { description: Dependência indisponível., content: { application/json: { schema: { $ref: '#/components/schemas/Readiness' } } } }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/public-config:
+    get:
+      tags: [ plataforma ]
+      summary: Lista permitida de configuração pública (mesma usada no build do frontend).
+      description: |
+        `collection.waitlistEnabled` é calculado a cada pedido: fica `false` quando o formulário do site está pausado
+        pelo painel (`/api/admin/collection`) ou fechado por `WAITLIST_FORM_ENABLED=false`. Cache de até 25 s.
+      responses:
+        '200': { description: Configuração pública., content: { application/json: { schema: { $ref: '#/components/schemas/PublicConfig' } } } }
+
+  # ---------------------------------------------------------------------------------------------- anti-robô
+  /api/form-token:
+    get:
+      tags: [ cadastro ]
+      summary: Desafio assinado do anti-robô próprio (cadastro e pedido de saída). Nada é gravado até o uso.
+      description: |
+        `token` = `base64url(JSON payload) + "." + base64url(HMAC-SHA256(SESSION_SECRET, <payload codificado>))`, payload
+        `{ v: 1, c: <challenge>, d: <difficultyBits>, iat: <epoch ms> }`. O navegador procura `nonce` (inteiro decimal, a
+        partir de 0) tal que SHA-256(UTF-8("<challenge>:<nonce>")) tenha pelo menos `difficultyBits` bits zero à esquerda
+        (Web Worker, JavaScript puro, a partir do primeiro foco do formulário) e envia `antiBot: { token, nonce }`.
+        O token vale de `minFillSeconds` a `expiresInSeconds` depois de emitido e só uma vez
+        (contracts/validation.json → waitlist.antiBot).
+        Dificuldade adaptativa: a rede de origem com `waitlist.limits.elevatedAfterPerIpPerHour` ou mais cadastros
+        aceitos na última hora recebe `difficultyBits = waitlist.antiBot.elevatedDifficultyBits` (redes compartilhadas,
+        como o CGNAT das operadoras, não são barradas cedo). Um token mais fácil emitido antes disso é recusado no envio
+        com `400 form_expired`; o site pede outro e reenvia uma vez.
+      responses:
+        '200': { description: Desafio., content: { application/json: { schema: { $ref: '#/components/schemas/FormToken' } } } }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  # ---------------------------------------------------------------------------------------------- cadastro
+  /api/waitlist:
+    post:
+      tags: [ cadastro ]
+      summary: Cadastro de interesse pelo site (nome completo, CPF, WhatsApp, empregador e dados gerais). Sem confirmação por WhatsApp.
+      description: |
+        Resposta `201` IDÊNTICA para CPF/telefone novo, já cadastrado, suprimido ou campo-armadilha preenchido: não revela
+        cadastro. O cadastro novo nasce `received` (telefone não validado) e passa a `verified` quando a própria pessoa
+        fala com a Bia no WhatsApp oficial (ferramenta `upsert_customer`). Dados de um cadastro existente (mesmo telefone
+        ou mesmo CPF) **não são sobrescritos**: a submissão fica guardada à parte, cifrada, para revisão.
+
+        Ordem: campo-armadilha `website` preenchido → `201` sem gravar; validação estrita (`400 validation_error`); versões
+        de consentimento (`409`); anti-robô (assinatura, idade, prova de trabalho, uso único → `400 form_expired`: pegue
+        outro token e reenvie uma vez, sem perder o que foi digitado); limites de contracts/validation.json →
+        waitlist.limits por IP/hora, CPF/dia e telefone/dia (`429 rate_limited`). Erros de validação e limite não
+        consomem o token.
+
+        CPF, telefone, e-mail e empregador são cifrados (AES-256-GCM, contexto por campo); CPF e telefone têm chave HMAC de
+        deduplicação; faixas e UF ficam em claro (códigos). Nada disso em logs, URLs ou métricas.
+        Placeholder da Hal-AI (desligado por padrão): com HALAI_SIGNUP_TEMPLATE_ENABLED=true, um cadastro NOVO pode enfileirar
+        um template, só depois das travas anti-robô, uma vez por número em 30 dias e dentro do teto diário global.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/WaitlistRequest' }
+      responses:
+        '201':
+          description: Recebido (resposta genérica).
+          content: { application/json: { schema: { $ref: '#/components/schemas/WaitlistReceived' } } }
+        '400': { description: '`validation_error` (`fields`: `cpf` → "Confira o CPF.", `phone` → "Confira o DDD e o número.", …) ou `form_expired`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '409': { description: 'Versão de texto de consentimento desatualizada (`consent_version_outdated`): recarregar a página.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '503': { description: 'Coleta indisponível (`collection_unavailable`): identidade empresarial incompleta em homologação/produção.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  # ---------------------------------------------------------------------------------------- preferências
+  /api/preferences/opt-out:
+    post:
+      tags: [ preferencias ]
+      summary: Pedido de saída pelo número, sem sessão. Resposta sempre genérica; não mostra nada.
+      description: |
+        Se o número tiver cadastro, revoga o aviso de abertura e as novidades (estado `unsubscribed`), com trilha. Número sem
+        cadastro recebe a mesma resposta. Anti-robô igual ao do cadastro (`antiBot`, campo-armadilha `website` → `202` sem
+        gravar) e limite `waitlist.limits.optOutPerIpPerHour`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OptOutRequest' }
+      responses:
+        '202': { description: Pedido registrado (resposta genérica)., content: { application/json: { schema: { $ref: '#/components/schemas/OptOutReceived' } } } }
+        '400': { description: '`validation_error` (`phone` → "Confira o DDD e o número.") ou `form_expired`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /api/preferences/token:
+    post:
+      tags: [ preferencias ]
+      summary: Troca o token do link seguro gerado pela Bia (issue_preferences_link; lido do fragmento da URL) por sessão.
+      description: Uso único; validade de `waitlist.preferencesLinkTtlSeconds`. Não há acesso por código (D1).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: false, required: [ token ], properties: { token: { type: string, minLength: 20, maxLength: 100 } } }
+      responses:
+        '200': { description: Sessão aberta (cookie mf_contact)., content: { application/json: { schema: { type: object, properties: { status: { const: ok } } } } } }
+        '401': { description: '`invalid_or_expired_link`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /api/preferences:
+    get:
+      tags: [ preferencias ]
+      summary: Lê as escolhas e os dados do titular, mascarados (somente com sessão válida).
+      responses:
+        '200': { description: Preferências., content: { application/json: { schema: { $ref: '#/components/schemas/Preferences' } } } }
+        '401': { description: '`session_required` — orientar o link seguro pela Bia ou o pedido de saída, sem revelar dados.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    patch:
+      tags: [ preferencias ]
+      summary: Altera finalidades, tema de interesse e dados gerais (faixas, cidade/UF, e-mail). Revogar `launch_notice` tira o contato da lista.
+      description: CPF, telefone, nome e empregador não mudam por aqui (Bia com número atestado ou equipe de privacidade).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PreferencesPatch' }
+      responses:
+        '200': { description: Preferências atualizadas., content: { application/json: { schema: { $ref: '#/components/schemas/Preferences' } } } }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { description: '`session_required`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '409': { description: '`consent_version_outdated`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /api/preferences/deletion-request:
+    post:
+      tags: [ preferencias ]
+      summary: Registra pedido de exclusão dos dados do titular (cumprido pela equipe de privacidade).
+      responses:
+        '202': { description: Pedido registrado., content: { application/json: { schema: { type: object, properties: { status: { const: received }, message: { type: string } } } } } }
+        '401': { description: '`session_required`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /api/preferences/logout:
+    post:
+      tags: [ preferencias ]
+      summary: Encerra a sessão do titular.
+      responses:
+        '204': { description: Sessão encerrada. }
+
+  # ------------------------------------------------------------------------------------------ atendimento
+  /api/support:
+    post:
+      tags: [ atendimento ]
+      summary: Registra solicitação de atendimento, gera protocolo aleatório e encaminha à fila interna.
+      description: |
+        A solicitação é persistida antes de qualquer notificação; falha de notificação não apaga o registro.
+        O `trackingToken` é devolvido uma única vez e permite acompanhar o status; o protocolo sozinho não autoriza leitura.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SupportRequest' }
+      responses:
+        '201': { description: Solicitação registrada., content: { application/json: { schema: { $ref: '#/components/schemas/SupportCreated' } } } }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '503': { description: '`support_unavailable`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /api/support/{protocol}:
+    get:
+      tags: [ atendimento ]
+      summary: Consulta o status de uma solicitação. Exige o token de acompanhamento do titular.
+      parameters:
+        - { in: path, name: protocol, required: true, schema: { type: string, pattern: '^MF-[0-9A-Z]{4}-[0-9A-Z]{4}-[0-9A-Z]{2}$' } }
+        - { in: header, name: X-Support-Token, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Status da solicitação., content: { application/json: { schema: { $ref: '#/components/schemas/SupportStatus' } } } }
+        '404': { description: 'Protocolo inexistente ou token inválido (mesma resposta: `not_found`).', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  # --------------------------------------------------------------------------------------------- métricas
+  /api/events:
+    post:
+      tags: [ metricas ]
+      summary: Evento de produto agregado, sem identificadores. Ignorado quando ANALYTICS_ENABLED=false.
+      description: |
+        O frontend só envia com consentimento de cookies de medição. Nunca contém dado pessoal ou texto livre.
+        Cada nome tem um tipo de dimensão em contracts/validation.json → events.names, e cada tipo uma lista fechada
+        montada pelo servidor a partir do release: `route` (caminho de rota indexável de
+        frontend/src/router/manifest.ts, como `/` ou `/ajuda`, ou `/conteudos/<slug>` de artigo publicado),
+        `article_slug`, `faq_category` (ou ausente = todas), `waitlist_source`, `bia_example_id` e `none` (sem
+        dimensão). Dimensão fora da lista do evento → 400 `validation_error` em `fields.dimension`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProductEvent' }
+      responses:
+        '204': { description: Aceito (ou ignorado). }
+        '400': { $ref: '#/components/responses/ValidationError' }
+
+  # ------------------------------------------------------------------------------------------------- Bia
+  /api/agent/capabilities:
+    get:
+      tags: [ bia ]
+      summary: Ferramentas disponíveis para a Bia na fase vigente, textos de consentimento e opções do formulário.
+      security: [ { agentApiKey: [] } ]
+      parameters:
+        - { in: header, name: X-API-Key, required: true, schema: { type: string }, description: HALAI_INBOUND_API_KEY. }
+        - { in: header, name: X-MF-Timestamp, required: false, schema: { type: string, pattern: '^\d{10}$' }, description: 'Somente com assinatura configurada (HALAI_WEBHOOK_SECRET).' }
+        - { in: header, name: X-MF-Signature, required: false, schema: { type: string }, description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.")> (corpo vazio).' }
+      responses:
+        '200': { description: Capacidades., content: { application/json: { schema: { $ref: '#/components/schemas/AgentCapabilities' } } } }
+        '401': { description: '`invalid_api_key` (ou `invalid_signature` com assinatura configurada).', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '503': { description: '`agent_disabled` (HALAI_ENABLED=false ou HALAI_INBOUND_API_KEY ausente).', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  # ----------------------------------------------------------------------------------------------- crédito
+  /api/credit/{operation}:
+    parameters:
+      - { in: path, name: operation, required: true, schema: { type: string, enum: [ eligibility, margin, simulations, proposals, contracts ] } }
+    get:
+      tags: [ credito ]
+      summary: Reservado. Nenhuma operação financeira nesta entrega.
+      responses:
+        '403': { description: '`credit_phase_locked` em PRE_LAUNCH.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '503': { description: '`credit_unavailable` em PILOT/LIVE sem integração homologada.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    post:
+      tags: [ credito ]
+      summary: Reservado. Nenhuma operação financeira nesta entrega.
+      responses:
+        '403': { description: '`credit_phase_locked` em PRE_LAUNCH.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '503': { description: '`credit_unavailable`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  # ------------------------------------------------------------------------------------------------ admin
+  /api/admin/auth/login:
+    post:
+      tags: [ admin ]
+      summary: Primeiro fator (e-mail e senha). Abre sessão parcial que exige MFA.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: false, required: [ email, password ], properties: { email: { type: string, format: email, maxLength: 200 }, password: { type: string, maxLength: 200 } } }
+      responses:
+        '200':
+          description: 'Senha correta; próximo passo: `mfa_required` ou `mfa_setup_required`. Cookie mf_admin (Path=/api/admin).'
+          content: { application/json: { schema: { $ref: '#/components/schemas/AdminLoginStep' } } }
+        '401': { description: '`invalid_credentials` (genérico, inclusive conta bloqueada/desativada).', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /api/admin/auth/mfa/setup:
+    post:
+      tags: [ admin ]
+      summary: Inicia o cadastro do TOTP (somente sessão parcial de usuário sem MFA). Exige X-CSRF-Token.
+      parameters: [ { $ref: '#/components/parameters/Csrf' } ]
+      responses:
+        '200': { description: Segredo e QR para o aplicativo autenticador., content: { application/json: { schema: { $ref: '#/components/schemas/MfaSetup' } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { description: '`mfa_already_enabled`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /api/admin/auth/mfa/verify:
+    post:
+      tags: [ admin ]
+      summary: Segundo fator (código TOTP). Conclui o cadastro do MFA quando pendente e libera a sessão.
+      description: |
+        Falhas de MFA têm contador próprio por conta (5 a cada 15 minutos), que um novo login com senha correta não
+        zera. A quinta falha bloqueia a conta por 15 minutos (429 `rate_limited`); conta bloqueada não confere código.
+      parameters: [ { $ref: '#/components/parameters/Csrf' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: false, required: [ code ], properties: { code: { type: string, pattern: '^\d{6}$' } } }
+      responses:
+        '200': { description: Sessão completa., content: { application/json: { schema: { $ref: '#/components/schemas/AdminSession' } } } }
+        '400': { description: '`invalid_code`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /api/admin/auth/me:
+    get:
+      tags: [ admin ]
+      summary: Sessão atual (usuário, permissões e token CSRF). Sessão parcial devolve o passo pendente.
+      responses:
+        '200': { description: Sessão., content: { application/json: { schema: { oneOf: [ { $ref: '#/components/schemas/AdminSession' }, { $ref: '#/components/schemas/AdminLoginStep' } ] } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /api/admin/auth/logout:
+    post:
+      tags: [ admin ]
+      summary: Encerra a sessão administrativa.
+      parameters: [ { $ref: '#/components/parameters/Csrf' } ]
+      responses:
+        '204': { description: Encerrada. }
+
+  /api/admin/auth/password:
+    post:
+      tags: [ admin ]
+      summary: Troca a própria senha (mínimo 12 caracteres). Obrigatória no primeiro acesso.
+      parameters: [ { $ref: '#/components/parameters/Csrf' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: false, required: [ currentPassword, newPassword ], properties: { currentPassword: { type: string, maxLength: 200 }, newPassword: { type: string, minLength: 12, maxLength: 200 } } }
+      responses:
+        '204': { description: Senha alterada; outras sessões do usuário são encerradas. }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /api/admin/leads:
+    get:
+      tags: [ admin ]
+      summary: Lista cadastros com filtros (permissão leads:read). Telefone, CPF e e-mail sempre mascarados.
+      description: |
+        Nome, empregador, faixas e UF/cidade visíveis para leads:read. Cada consulta é auditada (`admin.leads_listed`, com
+        filtros, página e quantidade; sem dados do titular).
+      parameters:
+        - { in: query, name: from, schema: { type: string, format: date } }
+        - { in: query, name: to, schema: { type: string, format: date } }
+        - { in: query, name: state, schema: { $ref: '#/components/schemas/LeadState' } }
+        - { in: query, name: source, schema: { type: string } }
+        - { in: query, name: employmentType, schema: { $ref: '#/components/schemas/EmploymentType' } }
+        - { in: query, name: jobTenure, schema: { $ref: '#/components/schemas/JobTenure' } }
+        - { in: query, name: incomeRange, schema: { $ref: '#/components/schemas/IncomeRange' } }
+        - { in: query, name: uf, schema: { $ref: '#/components/schemas/Uf' } }
+        - { in: query, name: phoneVerified, schema: { type: string, enum: [ 'true', 'false' ] }, description: 'Telefone validado (a própria pessoa falou com a Bia).' }
+        - { in: query, name: purpose, schema: { type: string, enum: [ launch_notice, marketing ] } }
+        - { in: query, name: granted, schema: { type: string, enum: [ 'true', 'false' ] } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: pageSize, schema: { type: integer, minimum: 1, maximum: 100, default: 25 } }
+      responses:
+        '200':
+          description: Página de cadastros.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items: { type: array, items: { $ref: '#/components/schemas/AdminLead' } }
+                  total: { type: integer }
+                  page: { type: integer }
+                  pageSize: { type: integer }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/leads/{id}:
+    get:
+      tags: [ admin ]
+      summary: Detalhe do cadastro com trilha de eventos e submissões pendentes de revisão, mascaradas (leads:read).
+      parameters: [ { in: path, name: id, required: true, schema: { type: string, format: uuid } } ]
+      responses:
+        '200': { description: Detalhe., content: { application/json: { schema: { $ref: '#/components/schemas/AdminLeadDetail' } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/admin/leads/{id}/reveal-contact:
+    post:
+      tags: [ admin ]
+      summary: Revela telefone, e-mail e CPF (leads:read_contact). Exige justificativa; registrado em auditoria (sem os valores).
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/Csrf' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: false, required: [ reason ], properties: { reason: { type: string, minLength: 5, maxLength: 200 } } }
+      responses:
+        '200': { description: Contato e documento., content: { application/json: { schema: { $ref: '#/components/schemas/RevealedContact' } } } }
+        '409': { description: '`lead_anonymized`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/leads/{id}/submissions/{submissionId}/apply:
+    post:
+      tags: [ admin ]
+      summary: Aplica ao cadastro uma submissão guardada (privacy:manage). Justificativa obrigatória; auditado.
+      description: |
+        Muda só dados cadastrais (nome, CPF, e-mail, empregador, vínculo, tempo no emprego, faixa de renda, cidade/UF,
+        tema de interesse). Nunca o telefone nem as preferências de comunicação. E-mail e tema ausentes não apagam o
+        existente. `cpf_conflict` e `suppressed` não se aplicam (só descartar). Depois da revisão, o conteúdo cifrado da
+        submissão é apagado.
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { in: path, name: submissionId, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/Csrf' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: false, required: [ reason ], properties: { reason: { type: string, minLength: 5, maxLength: 200 } } }
+      responses:
+        '200': { description: Aplicada., content: { application/json: { schema: { $ref: '#/components/schemas/SubmissionReviewResult' } } } }
+        '404': { description: 'Cadastro ou submissão não encontrados (ou submissão de outro cadastro).', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '409': { description: '`submission_already_reviewed`, `submission_not_applicable`, `cpf_in_use` ou `lead_anonymized`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/leads/{id}/submissions/{submissionId}/discard:
+    post:
+      tags: [ admin ]
+      summary: Descarta uma submissão guardada (privacy:manage). Justificativa obrigatória; auditado; conteúdo apagado.
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { in: path, name: submissionId, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/Csrf' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: false, required: [ reason ], properties: { reason: { type: string, minLength: 5, maxLength: 200 } } }
+      responses:
+        '200': { description: Descartada., content: { application/json: { schema: { $ref: '#/components/schemas/SubmissionReviewResult' } } } }
+        '404': { description: 'Cadastro ou submissão não encontrados.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '409': { description: '`submission_already_reviewed`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/collection:
+    get:
+      tags: [ admin ]
+      summary: Estado do formulário de cadastro do site (collection:manage, só admin).
+      responses:
+        '200': { description: Estado., content: { application/json: { schema: { $ref: '#/components/schemas/CollectionView' } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/collection/waitlist-form:
+    put:
+      tags: [ admin ]
+      summary: Pausa ou reabre o formulário de cadastro do site (collection:manage). Justificativa obrigatória; auditado.
+      description: |
+        Pausado: `POST /api/waitlist` responde `503 collection_unavailable` e `/api/public-config` passa
+        `collection.waitlistEnabled=false` (o site mostra o aviso de indisponível em até ~30 s). A Bia (telefone
+        atestado) e o pedido de saída continuam. Com `WAITLIST_FORM_ENABLED=false` no servidor, reabrir não tem efeito
+        (`lockedByEnvironment`).
+      parameters: [ { $ref: '#/components/parameters/Csrf' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [ paused, reason ]
+              properties:
+                paused: { type: boolean }
+                reason: { type: string, minLength: 5, maxLength: 200 }
+      responses:
+        '200': { description: Estado depois da mudança., content: { application/json: { schema: { $ref: '#/components/schemas/CollectionView' } } } }
+        '400': { $ref: '#/components/responses/ValidationError' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/leads/export:
+    post:
+      tags: [ admin ]
+      summary: Exporta CSV filtrado (leads:export). Justificativa obrigatória; auditado. Telefone, CPF e e-mail mascarados.
+      parameters: [ { $ref: '#/components/parameters/Csrf' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [ reason ]
+              properties:
+                reason: { type: string, minLength: 5, maxLength: 200 }
+                filters: { type: object, additionalProperties: { type: string } }
+      responses:
+        '200': { description: CSV (text/csv; charset=utf-8). }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/support:
+    get:
+      tags: [ admin ]
+      summary: Fila de atendimento (support:read).
+      description: Cada consulta é auditada (`admin.support_listed`, com filtros, página e quantidade; sem dados do titular).
+      parameters:
+        - { in: query, name: status, schema: { $ref: '#/components/schemas/SupportState' } }
+        - { in: query, name: assignee, schema: { type: string, description: 'uuid, "me" ou "none"' } }
+        - { in: query, name: from, schema: { type: string, format: date } }
+        - { in: query, name: to, schema: { type: string, format: date } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+        - { in: query, name: pageSize, schema: { type: integer, minimum: 1, maximum: 100, default: 25 } }
+      responses:
+        '200':
+          description: Página da fila.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items: { type: array, items: { $ref: '#/components/schemas/AdminSupportItem' } }
+                  total: { type: integer }
+                  page: { type: integer }
+                  pageSize: { type: integer }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/support/{id}:
+    get:
+      tags: [ admin ]
+      summary: Detalhe com mensagem e contato decifrados (support:read); acesso auditado.
+      parameters: [ { in: path, name: id, required: true, schema: { type: string, format: uuid } } ]
+      responses:
+        '200': { description: Detalhe., content: { application/json: { schema: { $ref: '#/components/schemas/AdminSupportDetail' } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [ admin ]
+      summary: Altera status e/ou responsável (support:update). Registra responsável e horário.
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/Csrf' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                status: { $ref: '#/components/schemas/SupportState' }
+                assigneeId: { type: [ string, 'null' ], format: uuid }
+      responses:
+        '200': { description: Atualizado., content: { application/json: { schema: { $ref: '#/components/schemas/AdminSupportDetail' } } } }
+        '400': { description: '`invalid_transition` ou validação.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/support/{id}/notes:
+    post:
+      tags: [ admin ]
+      summary: Registra nota interna ou resposta visível ao titular no acompanhamento (support:update).
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/Csrf' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [ note ]
+              properties:
+                note: { type: string, minLength: 1, maxLength: 2000 }
+                visibleToRequester: { type: boolean, default: false }
+      responses:
+        '201': { description: Registrada., content: { application/json: { schema: { $ref: '#/components/schemas/AdminSupportDetail' } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/team:
+    get:
+      tags: [ admin ]
+      summary: Pessoas ativas que podem ser responsáveis por atendimentos (team:read).
+      responses:
+        '200': { description: Equipe., content: { application/json: { schema: { type: object, properties: { items: { type: array, items: { $ref: '#/components/schemas/AdminUserRef' } } } } } } }
+
+  /api/admin/privacy-requests:
+    get:
+      tags: [ admin ]
+      summary: Pedidos de titulares (privacy:manage).
+      parameters:
+        - { in: query, name: status, schema: { type: string, enum: [ open, in_progress, fulfilled, rejected ] } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+      responses:
+        '200':
+          description: Lista.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items: { type: array, items: { $ref: '#/components/schemas/PrivacyRequest' } }
+                  total: { type: integer }
+                  page: { type: integer }
+                  pageSize: { type: integer }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      tags: [ admin ]
+      summary: Registra pedido recebido por outro canal (privacy:manage).
+      parameters: [ { $ref: '#/components/parameters/Csrf' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [ requestType, channel, summary, receivedAt ]
+              properties:
+                requestType: { $ref: '#/components/schemas/PrivacyRequestType' }
+                leadId: { type: [ string, 'null' ], format: uuid }
+                supportRequestId: { type: [ string, 'null' ], format: uuid }
+                channel: { type: string, maxLength: 60 }
+                summary: { type: string, minLength: 5, maxLength: 1000 }
+                receivedAt: { type: string, format: date-time }
+      responses:
+        '201': { description: Registrado., content: { application/json: { schema: { $ref: '#/components/schemas/PrivacyRequest' } } } }
+
+  /api/admin/privacy-requests/{id}:
+    patch:
+      tags: [ admin ]
+      summary: Atualiza/cumpre o pedido. Ações irreversíveis exigem confirmação e são auditadas.
+      description: |
+        `action`: `revoke_all` (revoga todas as finalidades), `anonymize_lead` (remove nome, telefone, CPF, e-mail, empregador
+        e cidade do cadastro, apaga as submissões guardadas para revisão com o mesmo telefone ou CPF, substitui dados de
+        todas as solicitações de atendimento do titular — vinculadas ao cadastro, a do pedido e as com a mesma chave de
+        contato, como as abertas pela Bia ou pelo site com o mesmo WhatsApp ou e-mail —, encerra sessões e cancela
+        mensagens pendentes; os ids alcançados ficam na auditoria) e `suppress_contact` (impede novos envios ao
+        número e do CPF, pelas chaves originais, mesmo após anonimização). Preferências do titular prevalecem.
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/Csrf' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                status: { type: string, enum: [ open, in_progress, fulfilled, rejected ] }
+                resolution: { type: string, maxLength: 1000 }
+                action: { type: string, enum: [ revoke_all, anonymize_lead, suppress_contact ] }
+                confirm: { type: boolean, description: 'Obrigatório (true) para anonymize_lead.' }
+      responses:
+        '200': { description: Atualizado., content: { application/json: { schema: { $ref: '#/components/schemas/PrivacyRequest' } } } }
+        '400': { description: '`confirmation_required` ou validação.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/metrics:
+    get:
+      tags: [ admin ]
+      summary: Métricas agregadas de cadastro, preferências e atendimento (metrics:read). Sem conteúdo de conversas.
+      parameters:
+        - { in: query, name: from, schema: { type: string, format: date } }
+        - { in: query, name: to, schema: { type: string, format: date } }
+      responses:
+        '200': { description: Métricas., content: { application/json: { schema: { $ref: '#/components/schemas/AdminMetrics' } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/audit:
+    get:
+      tags: [ admin ]
+      summary: Trilha de auditoria (audit:read).
+      parameters:
+        - { in: query, name: action, schema: { type: string } }
+        - { in: query, name: actorId, schema: { type: string } }
+        - { in: query, name: from, schema: { type: string, format: date } }
+        - { in: query, name: to, schema: { type: string, format: date } }
+        - { in: query, name: page, schema: { type: integer, minimum: 1, default: 1 } }
+      responses:
+        '200':
+          description: Página de eventos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items: { type: array, items: { $ref: '#/components/schemas/AuditEntry' } }
+                  total: { type: integer }
+                  page: { type: integer }
+                  pageSize: { type: integer }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /api/admin/users:
+    get:
+      tags: [ admin ]
+      summary: Usuários do painel (users:manage).
+      responses:
+        '200': { description: Usuários., content: { application/json: { schema: { type: object, properties: { items: { type: array, items: { $ref: '#/components/schemas/AdminUser' } } } } } } }
+        '403': { $ref: '#/components/responses/Forbidden' }
+    post:
+      tags: [ admin ]
+      summary: Cria usuário individual com senha temporária exibida uma única vez (users:manage).
+      parameters: [ { $ref: '#/components/parameters/Csrf' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [ email, displayName, role ]
+              properties:
+                email: { type: string, format: email, maxLength: 200 }
+                displayName: { type: string, minLength: 2, maxLength: 80 }
+                role: { $ref: '#/components/schemas/AdminRole' }
+      responses:
+        '201':
+          description: Criado.
+          content:
+            application/json:
+              schema: { type: object, properties: { user: { $ref: '#/components/schemas/AdminUser' }, temporaryPassword: { type: string } } }
+        '409': { description: '`email_in_use`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+
+  /api/admin/users/{id}:
+    patch:
+      tags: [ admin ]
+      summary: Altera papel, desativa, redefine senha ou MFA (users:manage). Não permite remover o último admin.
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/Csrf' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                role: { $ref: '#/components/schemas/AdminRole' }
+                disabled: { type: boolean }
+                resetPassword: { type: boolean }
+                resetMfa: { type: boolean }
+      responses:
+        '200':
+          description: Atualizado.
+          content:
+            application/json:
+              schema: { type: object, properties: { user: { $ref: '#/components/schemas/AdminUser' }, temporaryPassword: { type: string } } }
+        '409': { description: '`last_admin`.', content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+  /api/agent/tools/get_approved_faq:
+    post:
+      tags:
+        - bia
+      operationId: agent_get_approved_faq
+      summary: Busca na base aprovada de perguntas frequentes (frontend/content/faq.yaml, a mesma de /ajuda).
+      description: |-
+        Busca na base aprovada de perguntas frequentes (frontend/content/faq.yaml, a mesma de /ajuda). Sem correspondência, found=false e items vazio: a Bia diz que não tem confirmação e oferece atendimento.
+
+        Fases permitidas: PRE_LAUNCH, PILOT, LIVE.
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputGetApprovedFaq"
+            examples:
+              exemplo1:
+                value:
+                  conversationRef: conv-exemplo
+                  input:
+                    query: A Minha Folga já está liberando empréstimo?
+              exemplo2:
+                value:
+                  conversationRef: conv-exemplo
+                  input:
+                    query: qual a taxa de juros para aposentado do INSS
+              exemplo3:
+                value:
+                  conversationRef: conv-exemplo
+                  input:
+                    category: cadastro
+                    limit: 5
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: get_approved_faq
+                  result:
+                    $ref: "#/components/schemas/AgentOutputGetApprovedFaq"
+              examples:
+                exemplo1:
+                  value:
+                    ok: true
+                    tool: get_approved_faq
+                    result:
+                      found: true
+                      baseVersion: faq.v1.draft
+                      baseStatus: draft
+                      items:
+                        - id: ja-libera-emprestimos
+                          category: consignado
+                          categoryLabel: Consignado
+                          question: A Minha Folga já está liberando empréstimos?
+                          answer: Ainda não. Estamos estruturando a operação. Nesta fase, você pode tirar dúvidas e se cadastrar para receber o aviso de abertura.
+                          helpUrl: https://www.minhafolga.com.br/ajuda
+                          links:
+                            - label: Acompanhe a abertura financeira
+                              url: https://www.minhafolga.com.br/lancamento
+                            - label: Quero ser avisado
+                              url: https://www.minhafolga.com.br/avise-me
+                      categories:
+                        - id: sobre
+                          label: Sobre a Minha Folga
+                        - id: consignado
+                          label: Consignado
+                        - id: cadastro
+                          label: Cadastro e avisos
+                        - id: bia
+                          label: Bia
+                        - id: dados
+                          label: Dados e segurança
+                      note: Responda somente com base nestes itens, em linguagem simples, e ofereça o link quando fizer sentido.
+                exemplo2:
+                  value:
+                    ok: true
+                    tool: get_approved_faq
+                    result:
+                      found: false
+                      baseVersion: faq.v1.draft
+                      baseStatus: draft
+                      items: []
+                      categories:
+                        - id: sobre
+                          label: Sobre a Minha Folga
+                        - id: consignado
+                          label: Consignado
+                        - id: cadastro
+                          label: Cadastro e avisos
+                        - id: bia
+                          label: Bia
+                        - id: dados
+                          label: Dados e segurança
+                      note: Não há resposta aprovada para esta pergunta. Diga que não tem essa confirmação, não crie regra nem cite norma, e ofereça o atendimento.
+        "400":
+          description: "`validation_error (fields com o caminho, ex.: input.cpf)`, `validation_error (input.category inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`, `knowledge_base_unavailable`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+  /api/agent/tools/upsert_customer:
+    post:
+      tags:
+        - bia
+      operationId: agent_upsert_customer
+      summary: Cria ou atualiza o cadastro do PRÓPRIO remetente atestado (o telefone é senderPhone, nunca input), com os mesmos campos do formulário do site (/avise-me), e marca o número como validado (estado verified).
+      description: |-
+        Cria ou atualiza o cadastro do PRÓPRIO remetente atestado (o telefone é senderPhone, nunca input), com os mesmos campos do formulário do site (/avise-me), e marca o número como validado (estado verified). Para criar: fullName, cpf, employerName, employmentType, jobTenure, incomeRange, city, uf, ageConfirmed=true, consents.launch_notice=true, consents.marketing (true ou false conforme a resposta) e as duas versões de consentimento vigentes. Para atualizar: só os campos informados mudam. CPF de outro cadastro (outro telefone), CPF diferente do já cadastrado para este número ou contato suprimido → status needs_review, sem mesclar nem alterar nada (a equipe revisa). Peça o CPF só com o consentimento da pessoa e nunca o repita na conversa.
+
+        Fases permitidas: PRE_LAUNCH, PILOT, LIVE. Exige remetente atestado pela plataforma (senderVerified).
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputUpsertCustomer"
+            examples:
+              exemplo1:
+                value:
+                  conversationRef: conv-exemplo
+                  senderPhone: "+5511999999999"
+                  senderVerified: true
+                  input:
+                    fullName: Pessoa de Exemplo Silva
+                    cpf: 529.982.247-25
+                    employerName: Empresa Exemplo
+                    employmentType: clt
+                    jobTenure: 1_a_3_anos
+                    incomeRange: 2000_a_4000
+                    city: São Paulo
+                    uf: SP
+                    ageConfirmed: true
+                    consents:
+                      launch_notice: true
+                      marketing: false
+                    consentVersions:
+                      launch_notice: launch_notice.2026-09-25.1
+                      marketing: marketing.2026-09-25.1
+              exemplo2:
+                value:
+                  conversationRef: conv-exemplo
+                  senderPhone: "+5511999999999"
+                  senderVerified: true
+                  input:
+                    email: pessoa@exemplo.invalid
+                    incomeRange: nao_informar
+              exemplo3:
+                value:
+                  conversationRef: conv-exemplo
+                  senderPhone: "+5511999999999"
+                  senderVerified: true
+                  input:
+                    cpf: 111.444.777-35
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: upsert_customer
+                  result:
+                    $ref: "#/components/schemas/AgentOutputUpsertCustomer"
+              examples:
+                exemplo1:
+                  value:
+                    ok: true
+                    tool: upsert_customer
+                    result:
+                      status: created
+                      message: Pronto, seu cadastro ficou registrado. Vamos avisar quando a análise estiver disponível.
+                      employmentNotice: null
+                      contactVerified: true
+                      state: verified
+                      purposes:
+                        launch_notice: true
+                        marketing: false
+                      interestTopic: null
+                      customer:
+                        nameHint: Pessoa E. S.
+                        cpfHint: "***.***.***-25"
+                        emailHint: null
+                        employerName: Empresa Exemplo
+                        employmentType: clt
+                        jobTenure: 1_a_3_anos
+                        incomeRange: 2000_a_4000
+                        city: São Paulo
+                        uf: SP
+                exemplo3:
+                  value:
+                    ok: true
+                    tool: upsert_customer
+                    result:
+                      status: needs_review
+                      message: Recebi seus dados, mas a equipe da Minha Folga precisa conferir algumas informações antes de concluir. Não é preciso enviar de novo.
+        "400":
+          description: '`validation_error (fields com o caminho, ex.: input.cpf)`, `validation_error (ex.: input.cpf "Confira o CPF."; campos obrigatórios para criar)`'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "403":
+          description: "`sender_not_verified (com alternativeUrl para /avise-me)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`, `consent_version_outdated`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`, `collection_unavailable`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+  /api/agent/tools/get_customer_status:
+    post:
+      tags:
+        - bia
+      operationId: agent_get_customer_status
+      summary: "Consulta o cadastro do PRÓPRIO remetente atestado: se existe, estado, número validado, finalidades autorizadas e dados mascarados."
+      description: |-
+        Consulta o cadastro do PRÓPRIO remetente atestado: se existe, estado, número validado, finalidades autorizadas e dados mascarados. Sem cadastro → not_registered (ofereça o cadastro).
+
+        Fases permitidas: PRE_LAUNCH, PILOT, LIVE. Exige remetente atestado pela plataforma (senderVerified).
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputGetCustomerStatus"
+            examples:
+              exemplo1:
+                value:
+                  conversationRef: conv-exemplo
+                  senderPhone: "+5511999999999"
+                  senderVerified: true
+                  input: {}
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: get_customer_status
+                  result:
+                    $ref: "#/components/schemas/AgentOutputGetCustomerStatus"
+              examples:
+                exemplo1:
+                  value:
+                    ok: true
+                    tool: get_customer_status
+                    result:
+                      status: not_registered
+                      message: Não encontrei um cadastro ativo para este número de WhatsApp.
+        "400":
+          description: "`validation_error (fields com o caminho, ex.: input.cpf)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "403":
+          description: "`sender_not_verified (com alternativeUrl)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+  /api/agent/tools/update_contact_preferences:
+    post:
+      tags:
+        - bia
+      operationId: agent_update_contact_preferences
+      summary: Consulta ou altera as finalidades de comunicação do PRÓPRIO remetente atestado.
+      description: |-
+        Consulta ou altera as finalidades de comunicação do PRÓPRIO remetente atestado. 'Sair', 'pare', 'não me mande' = action revoke_all, sem pedir justificativa. Conceder uma finalidade exige a versão do texto apresentado.
+
+        Fases permitidas: PRE_LAUNCH, PILOT, LIVE. Exige remetente atestado pela plataforma (senderVerified).
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputUpdateContactPreferences"
+            examples:
+              exemplo1:
+                value:
+                  conversationRef: conv-exemplo
+                  senderPhone: "+5511999999999"
+                  senderVerified: true
+                  input:
+                    action: revoke_all
+              exemplo2:
+                value:
+                  conversationRef: conv-exemplo
+                  senderPhone: "+5511999999999"
+                  senderVerified: true
+                  input:
+                    action: set
+                    purposes:
+                      marketing: false
+              exemplo3:
+                value:
+                  conversationRef: conv-exemplo
+                  senderPhone: "+5511999999999"
+                  senderVerified: true
+                  input:
+                    action: view
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: update_contact_preferences
+                  result:
+                    $ref: "#/components/schemas/AgentOutputUpdateContactPreferences"
+              examples:
+                exemplo1:
+                  value:
+                    ok: true
+                    tool: update_contact_preferences
+                    result:
+                      status: revoked
+                      message: Pronto, registramos seu pedido. Você não vai mais receber os avisos nem as novidades da Minha Folga. Se mudar de ideia, é só pedir.
+                exemplo2:
+                  value:
+                    ok: true
+                    tool: update_contact_preferences
+                    result:
+                      status: updated
+                      message: Pronto, suas preferências foram atualizadas.
+                      state: verified
+                      purposes:
+                        launch_notice: true
+                        marketing: false
+                      interestTopic: null
+        "400":
+          description: "`validation_error (fields com o caminho, ex.: input.cpf)`, `validation_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "403":
+          description: "`sender_not_verified (com alternativeUrl)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`, `consent_version_outdated`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+  /api/agent/tools/issue_preferences_link:
+    post:
+      tags:
+        - bia
+      operationId: agent_issue_preferences_link
+      summary: Gera um link seguro de uso único para /preferencias do PRÓPRIO remetente atestado (o número já está validado pela conversa).
+      description: |-
+        Gera um link seguro de uso único para /preferencias do PRÓPRIO remetente atestado (o número já está validado pela conversa). Válido por 30 minutos (waitlist.preferencesLinkTtlSeconds). Envie a URL exatamente como recebida; nada é enviado pela Minha Folga. Sem cadastro → not_registered.
+
+        Fases permitidas: PRE_LAUNCH, PILOT, LIVE. Exige remetente atestado pela plataforma (senderVerified).
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputIssuePreferencesLink"
+            examples:
+              exemplo1:
+                value:
+                  conversationRef: conv-exemplo
+                  senderPhone: "+5511999999999"
+                  senderVerified: true
+                  input: {}
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: issue_preferences_link
+                  result:
+                    $ref: "#/components/schemas/AgentOutputIssuePreferencesLink"
+              examples:
+                exemplo1:
+                  value:
+                    ok: true
+                    tool: issue_preferences_link
+                    result:
+                      status: issued
+                      url: https://www.minhafolga.com.br/preferencias#token=TOKEN_ILUSTRATIVO_NAO_VALIDO
+                      expiresInSeconds: 1800
+                      message: Este é o seu link seguro para ver e alterar suas preferências. Ele vale por 30 minutos e só pode ser usado uma vez.
+        "400":
+          description: "`validation_error (fields com o caminho, ex.: input.cpf)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "403":
+          description: "`sender_not_verified (com alternativeUrl)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+  /api/agent/tools/check_eligibility:
+    post:
+      tags:
+        - bia
+      operationId: agent_check_eligibility
+      summary: Reservada.
+      description: |-
+        Reservada. Confirmação de elegibilidade só com resultado autorizado do parceiro. A entrada não é lida nesta entrega.
+
+        Fases permitidas: PILOT, LIVE. Exige remetente atestado pela plataforma (senderVerified). Requisitos adicionais: CREDIT_OPERATIONS_ENABLED=true; integração financeira homologada; autorização específica do titular.
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputCheckEligibility"
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: check_eligibility
+                  result:
+                    $ref: "#/components/schemas/AgentOutputCheckEligibility"
+        "400":
+          description: "`validation_error (fields com o caminho, ex.: input.cpf)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "403":
+          description: "`credit_phase_locked (PRE_LAUNCH)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`, `credit_unavailable (PILOT/LIVE sem integração)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+  /api/agent/tools/query_margin:
+    post:
+      tags:
+        - bia
+      operationId: agent_query_margin
+      summary: Reservada.
+      description: |-
+        Reservada. Consulta de dados e margem somente após autorização específica e integração habilitada. A entrada não é lida nesta entrega.
+
+        Fases permitidas: PILOT, LIVE. Exige remetente atestado pela plataforma (senderVerified). Requisitos adicionais: CREDIT_OPERATIONS_ENABLED=true; integração financeira homologada; autorização específica do titular.
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputQueryMargin"
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: query_margin
+                  result:
+                    $ref: "#/components/schemas/AgentOutputQueryMargin"
+        "400":
+          description: "`validation_error (fields com o caminho, ex.: input.cpf)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "403":
+          description: "`credit_phase_locked (PRE_LAUNCH)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`, `credit_unavailable (PILOT/LIVE sem integração)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+  /api/agent/tools/get_proposal:
+    post:
+      tags:
+        - bia
+      operationId: agent_get_proposal
+      summary: Reservada.
+      description: |-
+        Reservada. Somente proposta válida recebida da integração, com todos os componentes obrigatórios. A entrada não é lida nesta entrega.
+
+        Fases permitidas: PILOT, LIVE. Exige remetente atestado pela plataforma (senderVerified). Requisitos adicionais: CREDIT_OPERATIONS_ENABLED=true; integração financeira homologada; autorização específica do titular.
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputGetProposal"
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: get_proposal
+                  result:
+                    $ref: "#/components/schemas/AgentOutputGetProposal"
+        "400":
+          description: "`validation_error (fields com o caminho, ex.: input.cpf)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "403":
+          description: "`credit_phase_locked (PRE_LAUNCH)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`, `credit_unavailable (PILOT/LIVE sem integração)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+  /api/agent/tools/simulate_credit:
+    post:
+      tags:
+        - bia
+      operationId: agent_simulate_credit
+      summary: Reservada.
+      description: |-
+        Reservada. Cálculo sempre oficial do serviço financeiro homologado; a Bia nunca calcula preço. A entrada não é lida nesta entrega.
+
+        Fases permitidas: PILOT, LIVE. Exige remetente atestado pela plataforma (senderVerified). Requisitos adicionais: CREDIT_OPERATIONS_ENABLED=true; integração financeira homologada; autorização específica do titular.
+
+        Contrato PROPOSTO (a confirmar com o fornecedor Hal-AI). Esquemas também em contracts/agent-tools.json.
+      security:
+        - agentApiKey: []
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: HALAI_INBOUND_API_KEY (comparação em tempo constante).
+        - in: header
+          name: X-MF-Timestamp
+          required: false
+          schema:
+            type: string
+            pattern: ^\d{10}$
+          description: "Somente com assinatura configurada (HALAI_WEBHOOK_SECRET): epoch em segundos; tolerância de 300 s."
+        - in: header
+          name: X-MF-Signature
+          required: false
+          schema:
+            type: string
+          description: 'Somente com assinatura configurada: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, "<timestamp>.<corpo bruto>")>; lista separada por vírgula na rotação.'
+        - in: header
+          name: X-MF-Request-Id
+          required: false
+          schema:
+            type: string
+            pattern: ^[A-Za-z0-9._:-]{8,128}$
+          description: Obrigatório com assinatura; opcional sem ela. Único por chamada; repetição → 409 replayed_request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/AgentToolEnvelope"
+                - type: object
+                  properties:
+                    input:
+                      $ref: "#/components/schemas/AgentInputSimulateCredit"
+      responses:
+        "200":
+          description: Resultado da ferramenta.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - ok
+                  - tool
+                  - result
+                properties:
+                  ok:
+                    const: true
+                  tool:
+                    const: simulate_credit
+                  result:
+                    $ref: "#/components/schemas/AgentOutputSimulateCredit"
+        "400":
+          description: "`validation_error (fields com o caminho, ex.: input.cpf)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "401":
+          description: "`invalid_api_key`, `invalid_signature (com assinatura configurada)`, `stale_request (com assinatura configurada)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "403":
+          description: "`credit_phase_locked (PRE_LAUNCH)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "404":
+          description: "`not_found (ferramenta inexistente)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "409":
+          description: "`replayed_request`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "415":
+          description: "`unsupported_media_type`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "429":
+          description: "`rate_limited`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "500":
+          description: "`internal_error`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+        "503":
+          description: "`agent_disabled`, `credit_unavailable (PILOT/LIVE sem integração)`"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentToolError"
+
+components:
+  securitySchemes:
+    adminSession: { type: apiKey, in: cookie, name: mf_admin }
+    contactSession: { type: apiKey, in: cookie, name: mf_contact }
+    agentApiKey: { type: apiKey, in: header, name: X-API-Key }
+
+  parameters:
+    Csrf:
+      in: header
+      name: X-CSRF-Token
+      required: true
+      description: Token da sessão administrativa (de /api/admin/auth/me ou do login). Obrigatório em métodos inseguros do admin.
+      schema: { type: string }
+
+  responses:
+    ValidationError:
+      description: '`validation_error` com `fields` { campo: mensagem }.'
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    RateLimited:
+      description: '`rate_limited`.'
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    Unauthorized:
+      description: '`unauthorized` / `session_required`.'
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    Forbidden:
+      description: '`forbidden` (sem permissão; tentativa auditada).'
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    NotFound:
+      description: '`not_found`.'
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+
+  schemas:
+    Error:
+      type: object
+      required: [ error ]
+      properties:
+        error:
+          type: object
+          required: [ code, message ]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            fields: { type: object, additionalProperties: { type: string } }
+            attemptsRemaining: { type: integer }
+            retryAfterSeconds: { type: integer }
+        requestId: { type: string }
+
+    Readiness:
+      type: object
+      properties:
+        status: { type: string, enum: [ ready, not_ready ] }
+        checks: { type: object, additionalProperties: { type: string, enum: [ ok, fail ] } }
+
+    PublicConfig:
+      type: object
+      description: Ver backend/src/config/public.ts (lista permitida).
+      properties:
+        schemaVersion: { const: 1 }
+        siteUrl: { type: string }
+        environment: { type: string, enum: [ development, test, staging, production ] }
+        credit: { type: object, properties: { phase: { type: string, enum: [ PRE_LAUNCH, PILOT, LIVE ] }, operationsEnabled: { type: boolean } } }
+        identity: { type: object }
+        channels:
+          type: object
+          properties:
+            whatsappNumber: { type: [ string, 'null' ], description: 'Número oficial do WhatsApp hospedado na Hal-AI (botão flutuante, wa.me).' }
+            biaOnWhatsapp: { type: boolean }
+            humanSupport: { type: boolean }
+            webchat:
+              type: object
+              description: 'Widget de webchat da Hal-AI (placeholder). Carregado só depois do clique, com aviso de tratamento; a CSP precisa liberar a origem de scriptUrl.'
+              required: [ enabled, scriptUrl, widgetId ]
+              properties:
+                enabled: { type: boolean }
+                scriptUrl: { type: [ string, 'null' ] }
+                widgetId: { type: [ string, 'null' ] }
+        collection: { type: object, properties: { waitlistEnabled: { type: boolean }, supportEnabled: { type: boolean } } }
+        analyticsEnabled: { type: boolean }
+        notices: { type: object }
+        consentVersions: { type: object, properties: { launch_notice: { type: string }, marketing: { type: string } } }
+
+    EmploymentType: { type: string, enum: [ clt, domestico, rural, outro ] }
+    JobTenure: { type: string, enum: [ menos_3_meses, 3_a_12_meses, 1_a_3_anos, mais_3_anos ] }
+    IncomeRange: { type: string, enum: [ ate_2000, 2000_a_4000, 4000_a_7000, acima_7000, nao_informar ] }
+    Uf: { type: string, enum: [ AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO ] }
+    InterestTopic: { type: string, enum: [ organizar_compromissos, entender_alternativa, entender_portabilidade, so_conhecer ] }
+    LeadState:
+      type: string
+      description: 'D1: received (site, telefone não validado) → verified (a Bia atestou o número) → invited; laterais unsubscribed e expired. verification_pending, waiting e human_support só em cadastros anteriores à D1.'
+      enum: [ received, verified, invited, unsubscribed, expired, verification_pending, waiting, human_support ]
+    SupportState: { type: string, enum: [ received, in_progress, answered, closed ] }
+    AdminRole: { type: string, enum: [ admin, support, privacy, marketing ] }
+    PrivacyRequestType: { type: string, enum: [ access, correction, deletion, revocation, opposition, portability, information, other ] }
+
+    AntiBot:
+      type: object
+      additionalProperties: false
+      required: [ token, nonce ]
+      properties:
+        token: { type: string, maxLength: 512, description: 'De GET /api/form-token.' }
+        nonce: { oneOf: [ { type: string, pattern: '^\d{1,16}$' }, { type: integer, minimum: 0 } ], description: 'Solução da prova de trabalho.' }
+
+    FormToken:
+      type: object
+      required: [ token, challenge, difficultyBits, expiresInSeconds, minFillSeconds ]
+      properties:
+        token: { type: string }
+        challenge: { type: string, pattern: '^[A-Za-z0-9_-]{22}$', description: '16 bytes em base64url.' }
+        difficultyBits: { type: integer, description: 'contracts/validation.json → waitlist.antiBot.difficultyBits.' }
+        expiresInSeconds: { type: integer }
+        minFillSeconds: { type: integer }
+
+    WaitlistRequest:
+      type: object
+      additionalProperties: false
+      required: [ fullName, cpf, phone, employerName, employmentType, jobTenure, incomeRange, city, uf, ageConfirmed, consents, consentVersions, source, antiBot ]
+      properties:
+        fullName: { type: string, minLength: 5, maxLength: 120, description: 'Nome e sobrenome, sem números. Erro: "Informe seu nome completo (nome e sobrenome)."' }
+        cpf: { type: string, maxLength: 20, description: 'Com ou sem pontuação; dígitos verificadores conferidos e sequências repetidas recusadas. Erro: "Confira o CPF."' }
+        phone: { type: string, maxLength: 20, description: 'Celular com DDD; aceita máscara. Erro: "Confira o DDD e o número."' }
+        email: { type: string, maxLength: 160, description: 'Opcional (vazio = sem e-mail). Erro: "Confira o e-mail."' }
+        employerName: { type: string, minLength: 2, maxLength: 120, description: 'Nome da empresa empregadora.' }
+        employmentType: { $ref: '#/components/schemas/EmploymentType' }
+        jobTenure: { $ref: '#/components/schemas/JobTenure' }
+        incomeRange: { $ref: '#/components/schemas/IncomeRange' }
+        city: { type: string, maxLength: 80 }
+        uf: { $ref: '#/components/schemas/Uf' }
+        ageConfirmed: { const: true }
+        interestTopic: { oneOf: [ { $ref: '#/components/schemas/InterestTopic' }, { type: 'null' } ] }
+        consents:
+          type: object
+          additionalProperties: false
+          required: [ launch_notice, marketing ]
+          properties:
+            launch_notice: { const: true }
+            marketing: { type: boolean }
+        consentVersions:
+          type: object
+          additionalProperties: false
+          required: [ launch_notice, marketing ]
+          properties:
+            launch_notice: { type: string }
+            marketing: { type: string }
+        source: { type: string, description: 'Uma de contracts/validation.json → waitlist.sources.' }
+        utm:
+          type: object
+          additionalProperties: false
+          description: Somente chaves permitidas e valores no padrão de contracts/validation.json; nunca dados pessoais.
+          properties:
+            utm_source: { type: string }
+            utm_medium: { type: string }
+            utm_campaign: { type: string }
+            utm_content: { type: string }
+            utm_term: { type: string }
+        antiBot: { $ref: '#/components/schemas/AntiBot' }
+        website: { type: string, description: 'Campo-armadilha: sempre vazio para humanos. Preenchido → 201 genérico sem gravar.' }
+
+    WaitlistReceived:
+      type: object
+      required: [ status, message ]
+      properties:
+        status: { const: received }
+        message: { type: string, example: Recebemos seu cadastro. Vamos avisar quando a análise estiver disponível. Enquanto isso, você pode conversar com a Bia. }
+
+    OptOutRequest:
+      type: object
+      additionalProperties: false
+      required: [ phone, antiBot ]
+      properties:
+        phone: { type: string, maxLength: 20 }
+        antiBot: { $ref: '#/components/schemas/AntiBot' }
+        website: { type: string, description: 'Campo-armadilha.' }
+
+    OptOutReceived:
+      type: object
+      required: [ status, message ]
+      properties:
+        status: { const: received }
+        message: { type: string }
+
+    Preferences:
+      type: object
+      required: [ preferredName, nameHint, contactHint, contactVerified, employmentType, state, purposes ]
+      properties:
+        preferredName: { type: string, description: Primeiro nome. }
+        nameHint: { type: string, example: Ana P. S., description: 'Nome completo mascarado.' }
+        contactHint: { type: string, example: '(11) •••••-••34' }
+        contactVerified: { type: boolean, description: 'true depois que a própria pessoa falou com a Bia (número atestado).' }
+        cpfHint: { type: [ string, 'null' ], example: '***.***.***-12' }
+        emailHint: { type: [ string, 'null' ], example: 'a•••@e•••.com.br' }
+        employerName: { type: [ string, 'null' ] }
+        employmentType: { $ref: '#/components/schemas/EmploymentType' }
+        jobTenure: { oneOf: [ { $ref: '#/components/schemas/JobTenure' }, { type: 'null' } ] }
+        incomeRange: { oneOf: [ { $ref: '#/components/schemas/IncomeRange' }, { type: 'null' } ] }
+        city: { type: [ string, 'null' ] }
+        uf: { oneOf: [ { $ref: '#/components/schemas/Uf' }, { type: 'null' } ] }
+        interestTopic: { oneOf: [ { $ref: '#/components/schemas/InterestTopic' }, { type: 'null' } ] }
+        state: { $ref: '#/components/schemas/LeadState' }
+        purposes:
+          type: object
+          properties:
+            launch_notice: { $ref: '#/components/schemas/PurposeState' }
+            marketing: { $ref: '#/components/schemas/PurposeState' }
+
+    PurposeState:
+      type: object
+      properties:
+        granted: { type: boolean }
+        updatedAt: { type: string, format: date-time }
+        consentTextVersion: { type: string }
+
+    PreferencesPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        purposes:
+          type: object
+          additionalProperties: false
+          properties:
+            launch_notice: { type: boolean }
+            marketing: { type: boolean }
+        consentVersions:
+          type: object
+          additionalProperties: false
+          description: Obrigatório ao conceder (true) uma finalidade.
+          properties:
+            launch_notice: { type: string }
+            marketing: { type: string }
+        interestTopic: { oneOf: [ { $ref: '#/components/schemas/InterestTopic' }, { type: 'null' } ] }
+        employmentType: { $ref: '#/components/schemas/EmploymentType' }
+        jobTenure: { $ref: '#/components/schemas/JobTenure' }
+        incomeRange: { $ref: '#/components/schemas/IncomeRange' }
+        city: { type: string, maxLength: 80 }
+        uf: { $ref: '#/components/schemas/Uf' }
+        email: { type: [ string, 'null' ], maxLength: 160, description: 'null ou vazio remove o e-mail.' }
+
+    SupportRequest:
+      type: object
+      additionalProperties: false
+      required: [ name, contactMethod, contact, subject, message ]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 80 }
+        contactMethod: { type: string, enum: [ email, whatsapp ] }
+        contact: { type: string, maxLength: 120, description: 'E-mail ("Confira o e-mail.") ou celular com DDD ("Confira o DDD e o número.").' }
+        subject: { type: string, description: 'Uma de contracts/validation.json → support.subjects.' }
+        message: { type: string, minLength: 10, maxLength: 2000 }
+
+    SupportCreated:
+      type: object
+      required: [ protocol, trackingToken, status, message ]
+      properties:
+        protocol: { type: string, example: MF-7K3P-9QXA-2M }
+        trackingToken: { type: string, description: Exibido uma única vez; compõe o link seguro de acompanhamento (fragmento da URL). }
+        status: { const: received }
+        message: { type: string }
+
+    SupportStatus:
+      type: object
+      properties:
+        protocol: { type: string }
+        status: { $ref: '#/components/schemas/SupportState' }
+        subject: { type: string }
+        subjectLabel: { type: string }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        timeline:
+          type: array
+          items:
+            type: object
+            properties:
+              type: { type: string, enum: [ created, status_changed, reply ] }
+              status: { $ref: '#/components/schemas/SupportState' }
+              text: { type: [ string, 'null' ], description: Somente respostas marcadas como visíveis ao titular. }
+              at: { type: string, format: date-time }
+
+    ProductEvent:
+      type: object
+      additionalProperties: false
+      required: [ name ]
+      properties:
+        name: { type: string, enum: [ page_section_view, article_read, help_search, help_search_empty, waitlist_start, waitlist_cta_click, waitlist_error, waitlist_confirmed, bia_demo_tab, bia_channel_click, support_form_start ] }
+        dimension:
+          type: string
+          maxLength: 80
+          description: |
+            Valor da lista fechada do tipo de dimensão do evento (contracts/validation.json → events): caminho de rota
+            (`/`, `/ajuda`, `/conteudos/o-que-e-cet`), slug de artigo, categoria da ajuda, origem do cadastro ou id de
+            exemplo da Bia. Ausente em `support_form_start` e quando a busca da ajuda é em todas as categorias.
+            Nunca texto digitado pelo usuário.
+
+    AgentCapabilities:
+      type: object
+      required:
+        - phase
+        - tools
+        - knowledgeBase
+        - consents
+        - options
+        - humanSupport
+        - links
+      properties:
+        phase:
+          enum:
+            - PRE_LAUNCH
+            - PILOT
+            - LIVE
+        tools:
+          type: array
+          items:
+            type: object
+            required:
+              - name
+              - kind
+              - enabled
+              - reason
+              - requiresSenderVerified
+            properties:
+              name:
+                type: string
+              kind:
+                enum:
+                  - information
+                  - relationship
+                  - financial
+              enabled:
+                type: boolean
+              reason:
+                enum:
+                  - available
+                  - pre_launch
+                  - operations_disabled
+                  - integration_not_available
+                  - collection_unavailable
+                  - knowledge_base_not_approved
+                  - knowledge_base_unavailable
+              requiresSenderVerified:
+                type: boolean
+        knowledgeBase:
+          type:
+            - object
+            - "null"
+          properties:
+            version:
+              type: string
+            status:
+              type: string
+        consents:
+          type: object
+          description: Textos EXATOS a apresentar e versões a devolver em consentVersions.
+          properties:
+            launch_notice:
+              type: object
+              properties:
+                version:
+                  type: string
+                text:
+                  type: string
+            marketing:
+              type: object
+              properties:
+                version:
+                  type: string
+                text:
+                  type: string
+        options:
+          type: object
+          description: Códigos aceitos por upsert_customer (contracts/validation.json → waitlist), com o rótulo a apresentar.
+          properties:
+            employmentTypes:
+              type: array
+              items:
+                type: object
+                required:
+                  - value
+                  - label
+                properties:
+                  value:
+                    type: string
+                  label:
+                    type: string
+            jobTenureRanges:
+              type: array
+              items:
+                type: object
+                required:
+                  - value
+                  - label
+                properties:
+                  value:
+                    type: string
+                  label:
+                    type: string
+            incomeRanges:
+              type: array
+              items:
+                type: object
+                required:
+                  - value
+                  - label
+                properties:
+                  value:
+                    type: string
+                  label:
+                    type: string
+            interestTopics:
+              type: array
+              items:
+                type: object
+                required:
+                  - value
+                  - label
+                properties:
+                  value:
+                    type: string
+                  label:
+                    type: string
+            ufs:
+              type: array
+              items:
+                type: string
+                pattern: ^[A-Z]{2}$
+        humanSupport:
+          type: object
+          properties:
+            available:
+              type: boolean
+            hours:
+              type:
+                - string
+                - "null"
+            responseTime:
+              type:
+                - string
+                - "null"
+          description: Horário do atendimento humano da Minha Folga (formulário /atendimento). O atendimento humano do WhatsApp é da Hal-AI.
+        links:
+          type: object
+          description: Únicos links que a Bia pode enviar além dos devolvidos pelas ferramentas.
+          properties:
+            site:
+              type: string
+              format: uri
+            atendimento:
+              type: string
+              format: uri
+            ajuda:
+              type: string
+              format: uri
+            aviseMe:
+              type: string
+              format: uri
+            preferencias:
+              type: string
+              format: uri
+            privacidade:
+              type: string
+              format: uri
+            seguranca:
+              type: string
+              format: uri
+            lancamento:
+              type: string
+              format: uri
+            bia:
+              type: string
+              format: uri
+      example:
+        phase: PRE_LAUNCH
+        tools:
+          - name: get_approved_faq
+            kind: information
+            requiresSenderVerified: false
+            enabled: true
+            reason: available
+          - name: upsert_customer
+            kind: relationship
+            requiresSenderVerified: true
+            enabled: true
+            reason: available
+          - name: get_customer_status
+            kind: relationship
+            requiresSenderVerified: true
+            enabled: true
+            reason: available
+          - name: update_contact_preferences
+            kind: relationship
+            requiresSenderVerified: true
+            enabled: true
+            reason: available
+          - name: issue_preferences_link
+            kind: relationship
+            requiresSenderVerified: true
+            enabled: true
+            reason: available
+          - name: check_eligibility
+            kind: financial
+            requiresSenderVerified: true
+            enabled: false
+            reason: pre_launch
+          - name: query_margin
+            kind: financial
+            requiresSenderVerified: true
+            enabled: false
+            reason: pre_launch
+          - name: get_proposal
+            kind: financial
+            requiresSenderVerified: true
+            enabled: false
+            reason: pre_launch
+          - name: simulate_credit
+            kind: financial
+            requiresSenderVerified: true
+            enabled: false
+            reason: pre_launch
+        knowledgeBase:
+          version: faq.v1.draft
+          status: draft
+        consents:
+          launch_notice:
+            version: launch_notice.2026-09-25.1
+            text: Quero receber pelo WhatsApp o aviso de abertura da operação de crédito da Minha Folga e atualizações sobre esse lançamento. Posso cancelar quando quiser.
+          marketing:
+            version: marketing.2026-09-25.1
+            text: Também quero receber conteúdos e novidades da Minha Folga.
+        options:
+          employmentTypes:
+            - value: clt
+              label: CLT
+            - value: domestico
+              label: Empregado doméstico registrado
+            - value: rural
+              label: Trabalhador rural registrado
+            - value: outro
+              label: Outro vínculo ou não sei
+          jobTenureRanges:
+            - value: menos_3_meses
+              label: Menos de 3 meses
+            - value: 3_a_12_meses
+              label: De 3 a 12 meses
+            - value: 1_a_3_anos
+              label: De 1 a 3 anos
+            - value: mais_3_anos
+              label: Mais de 3 anos
+          incomeRanges:
+            - value: ate_2000
+              label: Até R$ 2.000
+            - value: 2000_a_4000
+              label: De R$ 2.000,01 a R$ 4.000
+            - value: 4000_a_7000
+              label: De R$ 4.000,01 a R$ 7.000
+            - value: acima_7000
+              label: Acima de R$ 7.000
+            - value: nao_informar
+              label: Prefiro não informar
+          interestTopics:
+            - value: organizar_compromissos
+              label: Organizar compromissos
+            - value: entender_alternativa
+              label: Entender uma alternativa de crédito
+            - value: entender_portabilidade
+              label: Entender portabilidade
+            - value: so_conhecer
+              label: Só conhecer
+          ufs:
+            - AC
+            - AL
+            - AP
+            - AM
+            - BA
+            - CE
+            - DF
+            - ES
+            - GO
+            - MA
+            - MT
+            - MS
+            - MG
+            - PA
+            - PB
+            - PR
+            - PE
+            - PI
+            - RJ
+            - RN
+            - RS
+            - RO
+            - RR
+            - SC
+            - SP
+            - SE
+            - TO
+        humanSupport:
+          available: false
+          hours: null
+          responseTime: null
+        links:
+          site: https://www.minhafolga.com.br
+          atendimento: https://www.minhafolga.com.br/atendimento
+          ajuda: https://www.minhafolga.com.br/ajuda
+          aviseMe: https://www.minhafolga.com.br/avise-me
+          preferencias: https://www.minhafolga.com.br/preferencias
+          privacidade: https://www.minhafolga.com.br/privacidade
+          seguranca: https://www.minhafolga.com.br/seguranca
+          lancamento: https://www.minhafolga.com.br/lancamento
+          bia: https://www.minhafolga.com.br/bia
+
+    AdminLoginStep:
+      type: object
+      properties:
+        status: { type: string, enum: [ mfa_required, mfa_setup_required ] }
+        csrfToken: { type: string }
+
+    MfaSetup:
+      type: object
+      properties:
+        secret: { type: string, description: Base32, para digitação manual. }
+        otpauthUrl: { type: string }
+        qrSvg: { type: string, description: SVG gerado no servidor. }
+
+    AdminSession:
+      type: object
+      properties:
+        status: { const: authenticated }
+        user: { $ref: '#/components/schemas/AdminUser' }
+        permissions: { type: array, items: { type: string, enum: [ leads:read, leads:read_contact, leads:export, support:read, support:update, privacy:manage, metrics:read, audit:read, users:manage, team:read, collection:manage, notifications:send, notifications:manage ] } }
+        csrfToken: { type: string }
+
+    AdminUserRef:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        displayName: { type: string }
+        role: { $ref: '#/components/schemas/AdminRole' }
+
+    AdminUser:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string }
+        displayName: { type: string }
+        role: { $ref: '#/components/schemas/AdminRole' }
+        mfaEnabled: { type: boolean }
+        mustChangePassword: { type: boolean }
+        disabled: { type: boolean }
+        lastLoginAt: { type: [ string, 'null' ], format: date-time }
+        createdAt: { type: string, format: date-time }
+
+    AdminLead:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        preferredName: { type: string }
+        fullName: { type: string }
+        phoneHint: { type: string }
+        phoneVerified: { type: boolean, description: 'Telefone validado pela Bia (número atestado).' }
+        cpfHint: { type: [ string, 'null' ] }
+        emailHint: { type: [ string, 'null' ] }
+        employerName: { type: [ string, 'null' ] }
+        employmentType: { $ref: '#/components/schemas/EmploymentType' }
+        jobTenure: { type: [ string, 'null' ] }
+        incomeRange: { type: [ string, 'null' ] }
+        city: { type: [ string, 'null' ] }
+        uf: { type: [ string, 'null' ] }
+        interestTopic: { type: [ string, 'null' ] }
+        state: { $ref: '#/components/schemas/LeadState' }
+        source: { type: string }
+        utmSource: { type: [ string, 'null' ] }
+        utmCampaign: { type: [ string, 'null' ] }
+        contactVerifiedAt: { type: [ string, 'null' ], format: date-time }
+        createdAt: { type: string, format: date-time }
+        purposes:
+          type: object
+          properties:
+            launch_notice: { type: boolean }
+            marketing: { type: boolean }
+        pendingReview: { type: integer, description: 'Submissões guardadas para revisão (não aplicadas ao cadastro).' }
+
+    AdminLeadDetail:
+      allOf:
+        - { $ref: '#/components/schemas/AdminLead' }
+        - type: object
+          properties:
+            anonymized: { type: boolean }
+            events:
+              type: array
+              items:
+                type: object
+                properties:
+                  type: { type: string }
+                  fromState: { type: [ string, 'null' ] }
+                  toState: { type: [ string, 'null' ] }
+                  purpose: { type: [ string, 'null' ] }
+                  granted: { type: [ boolean, 'null' ] }
+                  source: { type: string }
+                  actorType: { type: string }
+                  at: { type: string, format: date-time }
+            pendingSubmissions:
+              type: array
+              description: 'Submissões do site ou da Bia que não sobrescreveram o cadastro (mascaradas).'
+              items:
+                type: object
+                properties:
+                  id: { type: string, format: uuid }
+                  channel: { type: string, enum: [ site, bia ] }
+                  source: { type: string }
+                  reason: { type: string, enum: [ existing_phone, existing_cpf, existing_phone_and_cpf, cpf_conflict, cpf_mismatch, suppressed ] }
+                  createdAt: { type: string, format: date-time }
+                  data:
+                    type: [ object, 'null' ]
+                    properties:
+                      fullName: { type: [ string, 'null' ] }
+                      phoneHint: { type: [ string, 'null' ] }
+                      cpfHint: { type: [ string, 'null' ] }
+                      emailHint: { type: [ string, 'null' ] }
+                      employerName: { type: [ string, 'null' ] }
+                      employmentType: { type: [ string, 'null' ] }
+                      jobTenure: { type: [ string, 'null' ] }
+                      incomeRange: { type: [ string, 'null' ] }
+                      city: { type: [ string, 'null' ] }
+                      uf: { type: [ string, 'null' ] }
+                      interestTopic: { type: [ string, 'null' ] }
+                  consents:
+                    type: object
+                    properties:
+                      launch_notice: { type: [ boolean, 'null' ] }
+                      marketing: { type: [ boolean, 'null' ] }
+                  applicable: { type: boolean, description: '`false` = só descartar (`cpf_conflict`, `suppressed` ou conteúdo ilegível).' }
+
+    SubmissionReviewResult:
+      type: object
+      required: [ status, changed ]
+      properties:
+        status: { type: string, enum: [ applied, discarded ] }
+        changed: { type: array, items: { type: string }, description: Nomes dos campos do cadastro alterados (sem valores). }
+
+    CollectionView:
+      type: object
+      required: [ waitlistForm ]
+      properties:
+        waitlistForm:
+          type: object
+          required: [ open, paused, lockedByEnvironment, reasons, changedAt, changedBy ]
+          properties:
+            open: { type: boolean, description: O formulário do site aceita cadastros agora. }
+            paused: { type: boolean, description: Pausado pelo painel. }
+            lockedByEnvironment: { type: boolean, description: 'Fechado por `WAITLIST_FORM_ENABLED=false`; o painel não reabre.' }
+            reasons: { type: array, items: { type: string }, description: 'Outros motivos de configuração (ex.: `identity_incomplete`).' }
+            changedAt: { type: [ string, 'null' ], format: date-time }
+            changedBy: { type: [ string, 'null' ], description: Nome de exibição de quem mudou por último. }
+
+    RevealedContact:
+      type: object
+      required: [ phone, email, cpf ]
+      properties:
+        phone: { type: string, description: E.164. }
+        email: { type: [ string, 'null' ] }
+        cpf: { type: [ string, 'null' ], description: '000.000.000-00; null em cadastros anteriores à D1.' }
+
+    AdminSupportItem:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        protocol: { type: string }
+        subject: { type: string }
+        status: { $ref: '#/components/schemas/SupportState' }
+        source: { type: string, enum: [ web_form, agent ] }
+        contactMethod: { type: string }
+        contactHint: { type: string }
+        assignee: { oneOf: [ { $ref: '#/components/schemas/AdminUserRef' }, { type: 'null' } ] }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    AdminSupportDetail:
+      allOf:
+        - { $ref: '#/components/schemas/AdminSupportItem' }
+        - type: object
+          properties:
+            requesterName: { type: string }
+            contact: { type: string }
+            message: { type: string }
+            firstResponseAt: { type: [ string, 'null' ], format: date-time }
+            closedAt: { type: [ string, 'null' ], format: date-time }
+            events:
+              type: array
+              items:
+                type: object
+                properties:
+                  type: { type: string }
+                  fromStatus: { type: [ string, 'null' ] }
+                  toStatus: { type: [ string, 'null' ] }
+                  note: { type: [ string, 'null' ] }
+                  visibleToRequester: { type: boolean }
+                  actor: { oneOf: [ { $ref: '#/components/schemas/AdminUserRef' }, { type: 'null' } ] }
+                  actorType: { type: string }
+                  at: { type: string, format: date-time }
+                  assignee:
+                    description: Responsável naquele momento (eventos de atribuição).
+                    oneOf:
+                      - $ref: "#/components/schemas/AdminUserRef"
+                      - type: "null"
+
+    PrivacyRequest:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        requestType: { $ref: '#/components/schemas/PrivacyRequestType' }
+        leadId: { type: [ string, 'null' ] }
+        supportRequestId: { type: [ string, 'null' ] }
+        channel: { type: string }
+        status: { type: string, enum: [ open, in_progress, fulfilled, rejected ] }
+        summary: { type: string }
+        resolution: { type: [ string, 'null' ] }
+        receivedAt: { type: string, format: date-time }
+        fulfilledAt: { type: [ string, 'null' ], format: date-time }
+        handledBy: { oneOf: [ { $ref: '#/components/schemas/AdminUserRef' }, { type: 'null' } ] }
+
+    AdminMetrics:
+      type: object
+      properties:
+        period: { type: object, properties: { from: { type: string }, to: { type: string } } }
+        leads:
+          type: object
+          properties:
+            created: { type: integer }
+            verified: { type: integer, description: 'Números validados no período (desde a D1, pela Bia).' }
+            verifiedByBia: { type: integer, description: 'Validados pela ferramenta da Bia no período (número atestado).' }
+            verifiedWithEligibleIntent: { type: integer, description: 'Métrica principal: número validado, vínculo autodeclarado CLT/doméstico/rural e aviso autorizado.' }
+            unsubscribed: { type: integer }
+            pendingReview: { type: integer, description: 'Submissões guardadas para revisão no período.' }
+            byState: { type: object, additionalProperties: { type: integer } }
+            byEmploymentType: { type: object, additionalProperties: { type: integer } }
+            bySource: { type: object, additionalProperties: { type: integer } }
+            byUf: { type: object, additionalProperties: { type: integer }, description: '`sem_registro` = cadastro anterior à D1.' }
+            byIncomeRange: { type: object, additionalProperties: { type: integer } }
+            byJobTenure: { type: object, additionalProperties: { type: integer } }
+            byDay: { type: array, items: { type: object, properties: { day: { type: string }, created: { type: integer }, verified: { type: integer } } } }
+        preferences:
+          type: object
+          properties:
+            launchNoticeGranted: { type: integer }
+            marketingGranted: { type: integer }
+        support:
+          type: object
+          properties:
+            created: { type: integer }
+            byStatus: { type: object, additionalProperties: { type: integer } }
+            medianFirstResponseHours: { type: [ number, 'null' ] }
+        events:
+          description: Eventos de produto (nome do contrato, sem prefixo), com as `dimensionsPerName` dimensões mais frequentes de cada nome.
+          type: array
+          items: { $ref: '#/components/schemas/MetricRow' }
+        eventsOmitted:
+          description: Eventos com mais dimensões do que o limite, com a quantidade de dimensões e a contagem que ficaram de fora.
+          type: array
+          items: { $ref: '#/components/schemas/MetricOmitted' }
+        counters:
+          description: Contadores internos agregados (cadastro, submissões retidas, recusas do anti-robô, templates da Hal-AI, atendimento, Bia), também limitados ao top-N por nome.
+          type: array
+          items: { $ref: '#/components/schemas/MetricRow' }
+        countersOmitted: { type: array, items: { $ref: '#/components/schemas/MetricOmitted' } }
+        dimensionsPerName: { type: integer, description: 'N do top-N por nome (hoje 25).' }
+
+    MetricRow:
+      type: object
+      required: [ name, dimension, count ]
+      properties: { name: { type: string }, dimension: { type: string }, count: { type: integer } }
+
+    MetricOmitted:
+      type: object
+      required: [ name, dimensions, count ]
+      properties: { name: { type: string }, dimensions: { type: integer }, count: { type: integer } }
+
+    AuditEntry:
+      type: object
+      properties:
+        id: { type: string }
+        actorType: { type: string }
+        actor: { oneOf: [ { $ref: '#/components/schemas/AdminUserRef' }, { type: 'null' } ] }
+        action: { type: string }
+        resourceType: { type: [ string, 'null' ] }
+        resourceId: { type: [ string, 'null' ] }
+        metadata: { type: object }
+        at: { type: string, format: date-time }
+    AgentToolEnvelope:
+      type: object
+      additionalProperties: false
+      required:
+        - conversationRef
+        - input
+      properties:
+        conversationRef:
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: ^[\x21-\x7e]+$
+          description: Identificador opaco da conversa na Hal-AI. O servidor guarda apenas um HMAC dele.
+        senderPhone:
+          type: string
+          pattern: ^\+55\d{10,11}$
+          description: E.164 do remetente no canal WhatsApp, atestado pela plataforma (nunca informado pelo modelo).
+        senderVerified:
+          type: boolean
+          description: true somente quando a plataforma atesta que a conversa vem de senderPhone. Exige senderPhone.
+        input:
+          type: object
+          description: Entrada da ferramenta (esquema em tools.<nome>.input).
+    AgentToolError:
+      type: object
+      required:
+        - error
+        - requestId
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+              description: Português; pode ser dito à pessoa quando fizer sentido.
+            fields:
+              type: object
+              additionalProperties:
+                type: string
+            attemptsRemaining:
+              type: integer
+            retryAfterSeconds:
+              type: integer
+            alternativeUrl:
+              type: string
+              format: uri
+        requestId:
+          type: string
+    AgentInputGetApprovedFaq:
+      type: object
+      additionalProperties: false
+      properties:
+        query:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Pergunta da pessoa, sem dados pessoais.
+        category:
+          type: string
+          minLength: 1
+          maxLength: 40
+          description: "id de categoria devolvido em result.categories (ex.: consignado, cadastro, bia, dados, sobre)."
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 5
+          default: 3
+    AgentOutputGetApprovedFaq:
+      type: object
+      required:
+        - found
+        - baseVersion
+        - baseStatus
+        - items
+        - categories
+        - note
+      properties:
+        found:
+          type: boolean
+          description: false = a base aprovada não tem resposta (não é o mesmo que erro).
+        baseVersion:
+          type: string
+        baseStatus:
+          type: string
+          description: draft ou approved. Em produção, somente approved responde.
+        items:
+          type: array
+          maxItems: 5
+          items:
+            type: object
+            required:
+              - id
+              - category
+              - categoryLabel
+              - question
+              - answer
+              - helpUrl
+              - links
+            properties:
+              id:
+                type: string
+              category:
+                type: string
+              categoryLabel:
+                type: string
+              question:
+                type: string
+              answer:
+                type: string
+                description: Texto simples (Markdown convertido).
+              helpUrl:
+                type: string
+                format: uri
+              links:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - label
+                    - url
+                  properties:
+                    label:
+                      type: string
+                    url:
+                      type: string
+                      format: uri
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              label:
+                type: string
+        note:
+          type: string
+    AgentInputUpsertCustomer:
+      type: object
+      additionalProperties: false
+      properties:
+        fullName:
+          type: string
+          minLength: 5
+          maxLength: 120
+          description: Nome completo (nome e sobrenome), sem números.
+        cpf:
+          type: string
+          maxLength: 20
+          description: CPF com ou sem pontuação; dígitos verificadores conferidos ("Confira o CPF.").
+        email:
+          type:
+            - string
+            - "null"
+          maxLength: 160
+          description: Opcional; null ou vazio remove.
+        employerName:
+          type: string
+          minLength: 2
+          maxLength: 120
+          description: Nome da empresa empregadora.
+        employmentType:
+          enum:
+            - clt
+            - domestico
+            - rural
+            - outro
+        jobTenure:
+          enum:
+            - menos_3_meses
+            - 3_a_12_meses
+            - 1_a_3_anos
+            - mais_3_anos
+        incomeRange:
+          enum:
+            - ate_2000
+            - 2000_a_4000
+            - 4000_a_7000
+            - acima_7000
+            - nao_informar
+        city:
+          type: string
+          maxLength: 80
+        uf:
+          enum:
+            - AC
+            - AL
+            - AP
+            - AM
+            - BA
+            - CE
+            - DF
+            - ES
+            - GO
+            - MA
+            - MT
+            - MS
+            - MG
+            - PA
+            - PB
+            - PR
+            - PE
+            - PI
+            - RJ
+            - RN
+            - RS
+            - RO
+            - RR
+            - SC
+            - SP
+            - SE
+            - TO
+        interestTopic:
+          oneOf:
+            - enum:
+                - organizar_compromissos
+                - entender_alternativa
+                - entender_portabilidade
+                - so_conhecer
+            - type: "null"
+        ageConfirmed:
+          const: true
+          description: Obrigatório na criação.
+        consents:
+          type: object
+          additionalProperties: false
+          properties:
+            launch_notice:
+              type: boolean
+            marketing:
+              type: boolean
+          description: "Na criação: launch_notice=true e marketing explícito. Na atualização: false revoga; true exige a versão."
+        consentVersions:
+          type: object
+          additionalProperties: false
+          description: "Obrigatório para cada finalidade concedida (true) — e as duas na criação: capabilities.consents.<finalidade>.version."
+          properties:
+            launch_notice:
+              type: string
+              maxLength: 64
+            marketing:
+              type: string
+              maxLength: 64
+    AgentOutputUpsertCustomer:
+      oneOf:
+        - type: object
+          required:
+            - status
+            - message
+            - employmentNotice
+            - contactVerified
+            - state
+            - purposes
+            - interestTopic
+            - customer
+          properties:
+            status:
+              enum:
+                - created
+                - updated
+            message:
+              type: string
+            employmentNotice:
+              type:
+                - string
+                - "null"
+              description: Texto da seção 6.7 para vínculo "outro".
+            contactVerified:
+              const: true
+            state:
+              type: string
+              description: received, verified, invited, unsubscribed ou expired (estados legados em cadastros antigos).
+            purposes:
+              type: object
+              properties:
+                launch_notice:
+                  type: boolean
+                marketing:
+                  type: boolean
+            interestTopic:
+              type:
+                - string
+                - "null"
+            customer:
+              type: object
+              description: Dados do próprio titular, mascarados (CPF, e-mail e nome) — nunca o documento completo.
+              properties:
+                nameHint:
+                  type: string
+                  description: 'Primeiro nome e iniciais, ex.: "Carla M. R."'
+                cpfHint:
+                  type:
+                    - string
+                    - "null"
+                  description: "***.***.***-12"
+                emailHint:
+                  type:
+                    - string
+                    - "null"
+                employerName:
+                  type:
+                    - string
+                    - "null"
+                employmentType:
+                  type: string
+                jobTenure:
+                  type:
+                    - string
+                    - "null"
+                incomeRange:
+                  type:
+                    - string
+                    - "null"
+                city:
+                  type:
+                    - string
+                    - "null"
+                uf:
+                  type:
+                    - string
+                    - "null"
+        - type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              const: needs_review
+            message:
+              type: string
+    AgentInputGetCustomerStatus:
+      type: object
+      additionalProperties: false
+      properties: {}
+    AgentOutputGetCustomerStatus:
+      oneOf:
+        - type: object
+          required:
+            - status
+            - contactVerified
+            - state
+            - purposes
+            - interestTopic
+            - customer
+          properties:
+            status:
+              const: registered
+            contactVerified:
+              type: boolean
+            state:
+              type: string
+              description: received, verified, invited, unsubscribed ou expired (estados legados em cadastros antigos).
+            purposes:
+              type: object
+              properties:
+                launch_notice:
+                  type: boolean
+                marketing:
+                  type: boolean
+            interestTopic:
+              type:
+                - string
+                - "null"
+            customer:
+              type: object
+              description: Dados do próprio titular, mascarados (CPF, e-mail e nome) — nunca o documento completo.
+              properties:
+                nameHint:
+                  type: string
+                  description: 'Primeiro nome e iniciais, ex.: "Carla M. R."'
+                cpfHint:
+                  type:
+                    - string
+                    - "null"
+                  description: "***.***.***-12"
+                emailHint:
+                  type:
+                    - string
+                    - "null"
+                employerName:
+                  type:
+                    - string
+                    - "null"
+                employmentType:
+                  type: string
+                jobTenure:
+                  type:
+                    - string
+                    - "null"
+                incomeRange:
+                  type:
+                    - string
+                    - "null"
+                city:
+                  type:
+                    - string
+                    - "null"
+                uf:
+                  type:
+                    - string
+                    - "null"
+        - type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              const: not_registered
+            message:
+              type: string
+    AgentInputUpdateContactPreferences:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required:
+            - action
+          properties:
+            action:
+              const: view
+        - type: object
+          additionalProperties: false
+          required:
+            - action
+          properties:
+            action:
+              const: revoke_all
+        - type: object
+          additionalProperties: false
+          required:
+            - action
+          properties:
+            action:
+              const: set
+            purposes:
+              type: object
+              additionalProperties: false
+              properties:
+                launch_notice:
+                  type: boolean
+                marketing:
+                  type: boolean
+            consentVersions:
+              type: object
+              additionalProperties: false
+              description: Obrigatório para cada finalidade concedida (true).
+              properties:
+                launch_notice:
+                  type: string
+                marketing:
+                  type: string
+            interestTopic:
+              oneOf:
+                - enum:
+                    - organizar_compromissos
+                    - entender_alternativa
+                    - entender_portabilidade
+                    - so_conhecer
+                - type: "null"
+    AgentOutputUpdateContactPreferences:
+      oneOf:
+        - type: object
+          required:
+            - status
+            - state
+            - purposes
+            - interestTopic
+          properties:
+            status:
+              const: current
+            state:
+              type: string
+            purposes:
+              type: object
+              properties:
+                launch_notice:
+                  type: boolean
+                marketing:
+                  type: boolean
+            interestTopic:
+              type:
+                - string
+                - "null"
+        - type: object
+          required:
+            - status
+            - message
+            - state
+            - purposes
+            - interestTopic
+          properties:
+            status:
+              const: updated
+            message:
+              type: string
+            state:
+              type: string
+            purposes:
+              type: object
+              properties:
+                launch_notice:
+                  type: boolean
+                marketing:
+                  type: boolean
+            interestTopic:
+              type:
+                - string
+                - "null"
+        - type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              const: revoked
+            message:
+              type: string
+        - type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              const: not_registered
+            message:
+              type: string
+    AgentInputIssuePreferencesLink:
+      type: object
+      additionalProperties: false
+      properties: {}
+    AgentOutputIssuePreferencesLink:
+      oneOf:
+        - type: object
+          required:
+            - status
+            - url
+            - expiresInSeconds
+            - message
+          properties:
+            status:
+              const: issued
+            url:
+              type: string
+              format: uri
+              description: "<site>/preferencias#token=<token> (fragmento: não chega ao servidor web). Exibido uma única vez."
+            expiresInSeconds:
+              type: integer
+            message:
+              type: string
+        - type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              const: not_registered
+            message:
+              type: string
+    AgentInputCheckEligibility:
+      type: object
+      description: A definir com o parceiro financeiro.
+    AgentOutputCheckEligibility:
+      description: Nenhuma saída nesta entrega.
+    AgentInputQueryMargin:
+      type: object
+      description: A definir com o parceiro financeiro.
+    AgentOutputQueryMargin:
+      description: Nenhuma saída nesta entrega.
+    AgentInputGetProposal:
+      type: object
+      description: A definir com o parceiro financeiro.
+    AgentOutputGetProposal:
+      description: Nenhuma saída nesta entrega.
+    AgentInputSimulateCredit:
+      type: object
+      description: A definir com o parceiro financeiro.
+    AgentOutputSimulateCredit:
+      description: Nenhuma saída nesta entrega.

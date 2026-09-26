@@ -1,0 +1,76 @@
+# Direção confirmada em 26/09/2026: jornada digital e ágil, IA para condições adequadas ao perfil,
+# possibilidade de aliviar consignado existente e fila por ordem de cadastro/disponibilidade.
+# /solucoes — visão das soluções (seção 6.11). Exibir somente o que a empresa confirmou:
+# consignado privado (em estruturação) e dois serviços de apoio, sem aparência de produto financeiro.
+revision:
+  version: 4
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Soluções da Minha Folga | Consignado, Bia e conteúdos
+  description: "Novo empréstimo ou uma parcela mais leve: conheça o consignado privado que a Minha Folga está preparando, com jornada digital e ajuda da IA."
+
+breadcrumb: Soluções
+
+hero:
+  eyebrow: Soluções
+  title: Crédito para dar o próximo passo.
+  lead: Precisa de um novo empréstimo ou quer aliviar uma parcela? A Minha Folga está chegando com consignado privado, uma jornada 100% digital e IA para buscar opções para você.
+  overviewTitle: O que vem por aí
+  overview:
+    consignado: Consignado privado
+    bia: 'Bia, nossa IA'
+    # Situação da Bia conforme os canais da Hal-AI ativos (decisão D1).
+    biaLiveBoth: Conversa disponível no site e no WhatsApp
+    biaLiveWebchat: Conversa disponível no chat do site
+    biaLive: Conversa disponível no WhatsApp
+    biaDemo: Exemplos de conversa disponíveis no site
+    content: Conteúdos para decidir
+    contentStatus: Disponíveis para leitura
+
+consignado:
+  eyebrow: Crédito
+  title: Novo crédito. Ou uma parcela mais leve.
+  text: "Para quem trabalha com carteira assinada: vamos buscar propostas para novos planos e alternativas para o consignado que você já tem. As condições dependerão da análise do seu perfil."
+  primary: { label: Conheça o crédito, to: /consignado-privado }
+  secondary: { label: Quero entrar na fila, to: /avise-me#formulario }
+  secondaryClosed: { label: Acompanhar preparação, to: /lancamento }
+  exploreTitle: Na página do produto
+  explore:
+    - { label: O que é o consignado privado, to: '/consignado-privado#o-que-e' }
+    - { label: Para quem estamos preparando, to: '/consignado-privado#para-quem' }
+    - { label: O que observar antes de contratar, to: '/consignado-privado#o-que-observar' }
+    - { label: Como será a jornada, to: '/consignado-privado#jornada' }
+    - { label: Dúvidas do produto, to: '/consignado-privado#duvidas' }
+
+support:
+  eyebrow: Ajuda para escolher
+  title: Você não precisa entender tudo sozinho.
+  text: Conte com explicações simples para comparar as opções e decidir.
+  tag: Serviço de apoio
+  bia:
+    title: 'Bia, nossa IA'
+    text: Nossa assistente de IA vai ajudar você a entender as opções disponíveis, a parcela e o custo do empréstimo.
+    points:
+      - Explicações no seu ritmo.
+      - Parcela, prazo e custo total lado a lado.
+      - Ajuda para escolher com clareza.
+    cta: { label: Conheça a Bia, to: /bia }
+  content:
+    title: Conteúdos para decidir
+    text: Entenda os conceitos que fazem diferença na hora de avaliar crédito.
+    listTitle: Para começar
+    cta: { label: Ver todos os conteúdos, to: /conteudos }
+
+scope:
+  title: Somente soluções confirmadas
+  text: Aqui aparecem apenas as soluções confirmadas pela Minha Folga. Uma nova solução só será apresentada nesta página quando estiver definida, com a situação real de disponibilidade.
+
+closing:
+  title: Entre na fila para a abertura.
+  text: "O crédito disponível será limitado. Quem se cadastra antes entra antes na ordem de chamada, conforme a disponibilidade e os critérios de análise."
+  primary: { label: Quero entrar na fila, to: /avise-me#formulario }
+  secondary: { label: Acompanhe a abertura, to: /lancamento }

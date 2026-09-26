@@ -1,0 +1,61 @@
+# /cadastro-confirmado — recebimento do cadastro e próximos passos (seções 6.7 e 6.15; decisão D1 em
+# docs/DECISOES.md). Fora do sitemap, noindex. Sem parâmetros pessoais na URL e sem sessão do titular:
+# a confirmação só aparece quando o formulário desta aba recebeu a resposta 201 do servidor.
+revision:
+  version: 3
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Cadastro de interesse recebido
+  description: Recebimento do cadastro de interesse na Minha Folga, próximos passos e um guia gratuito para comparar propostas de consignado com mais clareza.
+
+hero:
+  breadcrumb: Cadastro de interesse
+  neutralTitle: Cadastro de interesse
+  neutralLead: Esta página aparece logo depois do envio do cadastro de interesse. Não há um envio recente nesta aba.
+  neutralActions:
+    - { label: Quero entrar na fila, to: /avise-me }
+    - { label: Gerenciar preferências, to: /preferencias }
+  successTitle: Cadastro recebido.
+  successLead: A fila de chamada seguirá a ordem de cadastro, conforme a disponibilidade de recursos. As novidades serão comunicadas de acordo com as preferências registradas. O cadastro não garante aprovação, valor ou data de liberação.
+
+duplicateNotice: Se este CPF ou telefone já estava cadastrado, suas informações e escolhas anteriores foram mantidas.
+
+validation:
+  title: Seu telefone ainda não está validado
+  whatsapp: 'Ele fica validado quando você conversa com a Bia pelo WhatsApp oficial: nessa conversa, o próprio canal confirma que o número é seu.'
+  noWhatsapp: Ele fica validado quando você conversar com a Bia pelo WhatsApp oficial, assim que esse canal estiver disponível.
+  webchat: No chat do site, a Bia tira dúvidas, mas o número não é validado por lá.
+  whatsappText: 'Olá, Bia! Acabei de fazer meu cadastro de interesse no site.'
+
+employmentOther: O produto inicial será voltado a vínculos formais elegíveis. Seu cadastro não confirma acesso a crédito. Você pode continuar recebendo as novidades escolhidas.
+
+guide:
+  eyebrow: Para usar hoje
+  title: Compare com mais clareza, desde agora.
+  text: Baixe o roteiro de uma página para conferir parcela, prazo, CET e total a pagar. Use a tabela para colocar duas propostas lado a lado antes de decidir.
+  label: Baixar meu guia de comparação
+  to: /guias/roteiro-consignado.pdf
+  note: PDF gratuito · 1 página · disponível sem cadastro
+
+next:
+  title: Próximos passos
+  newTab: (abre o WhatsApp em nova aba)
+  items:
+    - icon: book
+      to: /conteudos
+      title: Leia os conteúdos
+      text: Entenda CET, parcela, prazo e desconto em folha antes de decidir.
+    - icon: chat
+      to: /bia
+      title: Conheça a Bia
+      webchatTitle: Converse com a Bia no site
+      whatsappTitle: Converse com a Bia no WhatsApp
+      text: Nossa assistente de IA explica termos e próximos passos, no seu ritmo.
+    - icon: eye
+      to: /preferencias
+      title: Ajuste suas preferências
+      text: Mude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.

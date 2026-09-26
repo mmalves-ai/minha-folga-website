@@ -13,5 +13,28 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-dist/
-build/
+/dist/
+frontend/dist/
+backend/dist/
+/build/
+
+# Minha Folga — artefatos locais
+.dev/
+backend/.dev/
+frontend/.vite-ssg-temp/
+frontend/.generated/
+frontend/test-results/
+frontend/playwright-report/
+*.log
+var/
+
+# Implantação: registro do build (scripts/build.sh grava na raiz da origem; vai no pacote de CI de propósito)
+# e raiz descartável de CI dentro do checkout (docs/DEPLOY_SHARED_SERVER.md, passo 2).
+/.minhafolga-build
+/.ci-root/
+
+# Temporários e runtime privados do projeto (regra: tudo restrito ao diretório do projeto)
+/.tmp/
+/.runtime/
+/.cache/
+frontend/.e2e/

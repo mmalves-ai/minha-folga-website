@@ -1,0 +1,1776 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Contrato PROPOSTO das ferramentas da Bia (Hal-AI → Minha Folga), atualizado pela decisão D1 (docs/DECISOES.md, 26/09/2026): WhatsApp e Bia 100% na Hal-AI; a Bia conecta estas APIs para cadastrar e consultar o cliente com o telefone ATESTADO pelo canal. Os nomes e formatos são proposta da Minha Folga e precisam ser confirmados com o fornecedor. Implementação: backend/src/services/agent-tools.service.ts. Mudança aqui exige alterar o servidor e a configuração da Bia (docs/BIA_AGENTE.md) na mesma release.",
+  "title": "Ferramentas da Bia — Minha Folga",
+  "version": "2026-09-26.1",
+  "status": "proposed",
+  "transport": {
+    "capabilities": "GET /api/agent/capabilities",
+    "call": "POST /api/agent/tools/{tool}",
+    "authentication": {
+      "scheme": "api_key",
+      "headers": {
+        "X-API-Key": "obrigatório: HALAI_INBOUND_API_KEY (comparação em tempo constante). Sem chave configurada no servidor, 503 agent_disabled.",
+        "X-MF-Timestamp": "somente com assinatura (HALAI_WEBHOOK_SECRET configurado): epoch em segundos; tolerância de 300 s",
+        "X-MF-Signature": "somente com assinatura: v1=<hex HMAC-SHA256(HALAI_WEBHOOK_SECRET, \"<timestamp>.<corpo bruto>\")>; aceita lista separada por vírgula (rotação)",
+        "X-MF-Request-Id": "obrigatório com assinatura; opcional sem ela. Único por chamada (8–128 caracteres [A-Za-z0-9._:-]); repetição → 409 replayed_request"
+      },
+      "notes": [
+        "X-API-Key é o modelo que a Hal-AI usa para chamar APIs externas. Com HALAI_WEBHOOK_SECRET configurado, a assinatura v1 passa a ser exigida além da chave; a mesma assinatura (mesmo horário e corpo) com outro X-MF-Request-Id também é recusada (409).",
+        "senderPhone e senderVerified precisam ser preenchidos pela plataforma a partir do canal (número do remetente no WhatsApp oficial), nunca pelo modelo de linguagem — a confirmar com a Hal-AI.",
+        "As ferramentas de cadastro e preferências (upsert_customer, get_customer_status, update_contact_preferences, issue_preferences_link) só atuam sobre o número atestado: o telefone nunca vem de input."
+      ]
+    },
+    "envelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conversationRef",
+        "input"
+      ],
+      "properties": {
+        "conversationRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[\\x21-\\x7e]+$",
+          "description": "Identificador opaco da conversa na Hal-AI. O servidor guarda apenas um HMAC dele."
+        },
+        "senderPhone": {
+          "type": "string",
+          "pattern": "^\\+55\\d{10,11}$",
+          "description": "E.164 do remetente no canal WhatsApp, atestado pela plataforma (nunca informado pelo modelo)."
+        },
+        "senderVerified": {
+          "type": "boolean",
+          "description": "true somente quando a plataforma atesta que a conversa vem de senderPhone. Exige senderPhone."
+        },
+        "input": {
+          "type": "object",
+          "description": "Entrada da ferramenta (esquema em tools.<nome>.input)."
+        }
+      }
+    },
+    "response": {
+      "type": "object",
+      "required": [
+        "ok",
+        "tool",
+        "result"
+      ],
+      "properties": {
+        "ok": {
+          "const": true
+        },
+        "tool": {
+          "type": "string"
+        },
+        "result": {
+          "type": "object",
+          "description": "Esquema em tools.<nome>.output."
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "error",
+        "requestId"
+      ],
+      "properties": {
+        "error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string",
+              "description": "Português; pode ser dito à pessoa quando fizer sentido."
+            },
+            "fields": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "attemptsRemaining": {
+              "type": "integer"
+            },
+            "retryAfterSeconds": {
+              "type": "integer"
+            },
+            "alternativeUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "requestId": {
+          "type": "string"
+        }
+      }
+    },
+    "commonErrors": {
+      "400": [
+        "validation_error (fields com o caminho, ex.: input.cpf)"
+      ],
+      "401": [
+        "invalid_api_key",
+        "invalid_signature (com assinatura configurada)",
+        "stale_request (com assinatura configurada)"
+      ],
+      "404": [
+        "not_found (ferramenta inexistente)"
+      ],
+      "409": [
+        "replayed_request"
+      ],
+      "415": [
+        "unsupported_media_type"
+      ],
+      "429": [
+        "rate_limited"
+      ],
+      "500": [
+        "internal_error"
+      ],
+      "503": [
+        "agent_disabled"
+      ]
+    }
+  },
+  "phases": [
+    "PRE_LAUNCH",
+    "PILOT",
+    "LIVE"
+  ],
+  "capabilitiesOutput": {
+    "type": "object",
+    "required": [
+      "phase",
+      "tools",
+      "knowledgeBase",
+      "consents",
+      "options",
+      "humanSupport",
+      "links"
+    ],
+    "properties": {
+      "phase": {
+        "enum": [
+          "PRE_LAUNCH",
+          "PILOT",
+          "LIVE"
+        ]
+      },
+      "tools": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "name",
+            "kind",
+            "enabled",
+            "reason",
+            "requiresSenderVerified"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "information",
+                "relationship",
+                "financial"
+              ]
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "reason": {
+              "enum": [
+                "available",
+                "pre_launch",
+                "operations_disabled",
+                "integration_not_available",
+                "collection_unavailable",
+                "knowledge_base_not_approved",
+                "knowledge_base_unavailable"
+              ]
+            },
+            "requiresSenderVerified": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "knowledgeBase": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "consents": {
+        "type": "object",
+        "description": "Textos EXATOS a apresentar e versões a devolver em consentVersions.",
+        "properties": {
+          "launch_notice": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            }
+          },
+          "marketing": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "type": "object",
+        "description": "Códigos aceitos por upsert_customer (contracts/validation.json → waitlist), com o rótulo a apresentar.",
+        "properties": {
+          "employmentTypes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "jobTenureRanges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "incomeRanges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "interestTopics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "value",
+                "label"
+              ],
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "ufs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            }
+          }
+        }
+      },
+      "humanSupport": {
+        "type": "object",
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "hours": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "responseTime": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "description": "Horário do atendimento humano da Minha Folga (formulário /atendimento). O atendimento humano do WhatsApp é da Hal-AI."
+      },
+      "links": {
+        "type": "object",
+        "description": "Únicos links que a Bia pode enviar além dos devolvidos pelas ferramentas.",
+        "properties": {
+          "site": {
+            "type": "string",
+            "format": "uri"
+          },
+          "atendimento": {
+            "type": "string",
+            "format": "uri"
+          },
+          "ajuda": {
+            "type": "string",
+            "format": "uri"
+          },
+          "aviseMe": {
+            "type": "string",
+            "format": "uri"
+          },
+          "preferencias": {
+            "type": "string",
+            "format": "uri"
+          },
+          "privacidade": {
+            "type": "string",
+            "format": "uri"
+          },
+          "seguranca": {
+            "type": "string",
+            "format": "uri"
+          },
+          "lancamento": {
+            "type": "string",
+            "format": "uri"
+          },
+          "bia": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "example": {
+      "phase": "PRE_LAUNCH",
+      "tools": [
+        {
+          "name": "get_approved_faq",
+          "kind": "information",
+          "requiresSenderVerified": false,
+          "enabled": true,
+          "reason": "available"
+        },
+        {
+          "name": "upsert_customer",
+          "kind": "relationship",
+          "requiresSenderVerified": true,
+          "enabled": true,
+          "reason": "available"
+        },
+        {
+          "name": "get_customer_status",
+          "kind": "relationship",
+          "requiresSenderVerified": true,
+          "enabled": true,
+          "reason": "available"
+        },
+        {
+          "name": "update_contact_preferences",
+          "kind": "relationship",
+          "requiresSenderVerified": true,
+          "enabled": true,
+          "reason": "available"
+        },
+        {
+          "name": "issue_preferences_link",
+          "kind": "relationship",
+          "requiresSenderVerified": true,
+          "enabled": true,
+          "reason": "available"
+        },
+        {
+          "name": "check_eligibility",
+          "kind": "financial",
+          "requiresSenderVerified": true,
+          "enabled": false,
+          "reason": "pre_launch"
+        },
+        {
+          "name": "query_margin",
+          "kind": "financial",
+          "requiresSenderVerified": true,
+          "enabled": false,
+          "reason": "pre_launch"
+        },
+        {
+          "name": "get_proposal",
+          "kind": "financial",
+          "requiresSenderVerified": true,
+          "enabled": false,
+          "reason": "pre_launch"
+        },
+        {
+          "name": "simulate_credit",
+          "kind": "financial",
+          "requiresSenderVerified": true,
+          "enabled": false,
+          "reason": "pre_launch"
+        }
+      ],
+      "knowledgeBase": {
+        "version": "faq.v1.draft",
+        "status": "draft"
+      },
+      "consents": {
+        "launch_notice": {
+          "version": "launch_notice.2026-09-25.1",
+          "text": "Quero receber pelo WhatsApp o aviso de abertura da operação de crédito da Minha Folga e atualizações sobre esse lançamento. Posso cancelar quando quiser."
+        },
+        "marketing": {
+          "version": "marketing.2026-09-25.1",
+          "text": "Também quero receber conteúdos e novidades da Minha Folga."
+        }
+      },
+      "options": {
+        "employmentTypes": [
+          {
+            "value": "clt",
+            "label": "CLT"
+          },
+          {
+            "value": "domestico",
+            "label": "Empregado doméstico registrado"
+          },
+          {
+            "value": "rural",
+            "label": "Trabalhador rural registrado"
+          },
+          {
+            "value": "outro",
+            "label": "Outro vínculo ou não sei"
+          }
+        ],
+        "jobTenureRanges": [
+          {
+            "value": "menos_3_meses",
+            "label": "Menos de 3 meses"
+          },
+          {
+            "value": "3_a_12_meses",
+            "label": "De 3 a 12 meses"
+          },
+          {
+            "value": "1_a_3_anos",
+            "label": "De 1 a 3 anos"
+          },
+          {
+            "value": "mais_3_anos",
+            "label": "Mais de 3 anos"
+          }
+        ],
+        "incomeRanges": [
+          {
+            "value": "ate_2000",
+            "label": "Até R$ 2.000"
+          },
+          {
+            "value": "2000_a_4000",
+            "label": "De R$ 2.000,01 a R$ 4.000"
+          },
+          {
+            "value": "4000_a_7000",
+            "label": "De R$ 4.000,01 a R$ 7.000"
+          },
+          {
+            "value": "acima_7000",
+            "label": "Acima de R$ 7.000"
+          },
+          {
+            "value": "nao_informar",
+            "label": "Prefiro não informar"
+          }
+        ],
+        "interestTopics": [
+          {
+            "value": "organizar_compromissos",
+            "label": "Organizar compromissos"
+          },
+          {
+            "value": "entender_alternativa",
+            "label": "Entender uma alternativa de crédito"
+          },
+          {
+            "value": "entender_portabilidade",
+            "label": "Entender portabilidade"
+          },
+          {
+            "value": "so_conhecer",
+            "label": "Só conhecer"
+          }
+        ],
+        "ufs": [
+          "AC",
+          "AL",
+          "AP",
+          "AM",
+          "BA",
+          "CE",
+          "DF",
+          "ES",
+          "GO",
+          "MA",
+          "MT",
+          "MS",
+          "MG",
+          "PA",
+          "PB",
+          "PR",
+          "PE",
+          "PI",
+          "RJ",
+          "RN",
+          "RS",
+          "RO",
+          "RR",
+          "SC",
+          "SP",
+          "SE",
+          "TO"
+        ]
+      },
+      "humanSupport": {
+        "available": false,
+        "hours": null,
+        "responseTime": null
+      },
+      "links": {
+        "site": "https://www.minhafolga.com.br",
+        "atendimento": "https://www.minhafolga.com.br/atendimento",
+        "ajuda": "https://www.minhafolga.com.br/ajuda",
+        "aviseMe": "https://www.minhafolga.com.br/avise-me",
+        "preferencias": "https://www.minhafolga.com.br/preferencias",
+        "privacidade": "https://www.minhafolga.com.br/privacidade",
+        "seguranca": "https://www.minhafolga.com.br/seguranca",
+        "lancamento": "https://www.minhafolga.com.br/lancamento",
+        "bia": "https://www.minhafolga.com.br/bia"
+      }
+    }
+  },
+  "tools": {
+    "get_approved_faq": {
+      "description": "Busca na base aprovada de perguntas frequentes (frontend/content/faq.yaml, a mesma de /ajuda). Sem correspondência, found=false e items vazio: a Bia diz que não tem confirmação e oferece atendimento.",
+      "kind": "information",
+      "allowedPhases": [
+        "PRE_LAUNCH",
+        "PILOT",
+        "LIVE"
+      ],
+      "requiresSenderVerified": false,
+      "input": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Pergunta da pessoa, sem dados pessoais."
+          },
+          "category": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "id de categoria devolvido em result.categories (ex.: consignado, cadastro, bia, dados, sobre)."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "default": 3
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "required": [
+          "found",
+          "baseVersion",
+          "baseStatus",
+          "items",
+          "categories",
+          "note"
+        ],
+        "properties": {
+          "found": {
+            "type": "boolean",
+            "description": "false = a base aprovada não tem resposta (não é o mesmo que erro)."
+          },
+          "baseVersion": {
+            "type": "string"
+          },
+          "baseStatus": {
+            "type": "string",
+            "description": "draft ou approved. Em produção, somente approved responde."
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "category",
+                "categoryLabel",
+                "question",
+                "answer",
+                "helpUrl",
+                "links"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "categoryLabel": {
+                  "type": "string"
+                },
+                "question": {
+                  "type": "string"
+                },
+                "answer": {
+                  "type": "string",
+                  "description": "Texto simples (Markdown convertido)."
+                },
+                "helpUrl": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "links": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "label",
+                      "url"
+                    ],
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "errors": {
+        "400": [
+          "validation_error (input.category inexistente)"
+        ],
+        "503": [
+          "knowledge_base_unavailable"
+        ]
+      },
+      "examples": [
+        {
+          "input": {
+            "query": "A Minha Folga já está liberando empréstimo?"
+          },
+          "output": {
+            "found": true,
+            "baseVersion": "faq.v1.draft",
+            "baseStatus": "draft",
+            "items": [
+              {
+                "id": "ja-libera-emprestimos",
+                "category": "consignado",
+                "categoryLabel": "Consignado",
+                "question": "A Minha Folga já está liberando empréstimos?",
+                "answer": "Ainda não. Estamos estruturando a operação. Nesta fase, você pode tirar dúvidas e se cadastrar para receber o aviso de abertura.",
+                "helpUrl": "https://www.minhafolga.com.br/ajuda",
+                "links": [
+                  {
+                    "label": "Acompanhe a abertura financeira",
+                    "url": "https://www.minhafolga.com.br/lancamento"
+                  },
+                  {
+                    "label": "Quero ser avisado",
+                    "url": "https://www.minhafolga.com.br/avise-me"
+                  }
+                ]
+              }
+            ],
+            "categories": [
+              {
+                "id": "sobre",
+                "label": "Sobre a Minha Folga"
+              },
+              {
+                "id": "consignado",
+                "label": "Consignado"
+              },
+              {
+                "id": "cadastro",
+                "label": "Cadastro e avisos"
+              },
+              {
+                "id": "bia",
+                "label": "Bia"
+              },
+              {
+                "id": "dados",
+                "label": "Dados e segurança"
+              }
+            ],
+            "note": "Responda somente com base nestes itens, em linguagem simples, e ofereça o link quando fizer sentido."
+          }
+        },
+        {
+          "input": {
+            "query": "qual a taxa de juros para aposentado do INSS"
+          },
+          "output": {
+            "found": false,
+            "baseVersion": "faq.v1.draft",
+            "baseStatus": "draft",
+            "items": [],
+            "categories": [
+              {
+                "id": "sobre",
+                "label": "Sobre a Minha Folga"
+              },
+              {
+                "id": "consignado",
+                "label": "Consignado"
+              },
+              {
+                "id": "cadastro",
+                "label": "Cadastro e avisos"
+              },
+              {
+                "id": "bia",
+                "label": "Bia"
+              },
+              {
+                "id": "dados",
+                "label": "Dados e segurança"
+              }
+            ],
+            "note": "Não há resposta aprovada para esta pergunta. Diga que não tem essa confirmação, não crie regra nem cite norma, e ofereça o atendimento."
+          }
+        },
+        {
+          "input": {
+            "category": "cadastro",
+            "limit": 5
+          }
+        }
+      ]
+    },
+    "upsert_customer": {
+      "description": "Cria ou atualiza o cadastro do PRÓPRIO remetente atestado (o telefone é senderPhone, nunca input), com os mesmos campos do formulário do site (/avise-me), e marca o número como validado (estado verified). Para criar: fullName, cpf, employerName, employmentType, jobTenure, incomeRange, city, uf, ageConfirmed=true, consents.launch_notice=true, consents.marketing (true ou false conforme a resposta) e as duas versões de consentimento vigentes. Para atualizar: só os campos informados mudam. CPF de outro cadastro (outro telefone), CPF diferente do já cadastrado para este número ou contato suprimido → status needs_review, sem mesclar nem alterar nada (a equipe revisa). Peça o CPF só com o consentimento da pessoa e nunca o repita na conversa.",
+      "kind": "relationship",
+      "allowedPhases": [
+        "PRE_LAUNCH",
+        "PILOT",
+        "LIVE"
+      ],
+      "requiresSenderVerified": true,
+      "input": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 120,
+            "description": "Nome completo (nome e sobrenome), sem números."
+          },
+          "cpf": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "CPF com ou sem pontuação; dígitos verificadores conferidos (\"Confira o CPF.\")."
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160,
+            "description": "Opcional; null ou vazio remove."
+          },
+          "employerName": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120,
+            "description": "Nome da empresa empregadora."
+          },
+          "employmentType": {
+            "enum": [
+              "clt",
+              "domestico",
+              "rural",
+              "outro"
+            ]
+          },
+          "jobTenure": {
+            "enum": [
+              "menos_3_meses",
+              "3_a_12_meses",
+              "1_a_3_anos",
+              "mais_3_anos"
+            ]
+          },
+          "incomeRange": {
+            "enum": [
+              "ate_2000",
+              "2000_a_4000",
+              "4000_a_7000",
+              "acima_7000",
+              "nao_informar"
+            ]
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "uf": {
+            "enum": [
+              "AC",
+              "AL",
+              "AP",
+              "AM",
+              "BA",
+              "CE",
+              "DF",
+              "ES",
+              "GO",
+              "MA",
+              "MT",
+              "MS",
+              "MG",
+              "PA",
+              "PB",
+              "PR",
+              "PE",
+              "PI",
+              "RJ",
+              "RN",
+              "RS",
+              "RO",
+              "RR",
+              "SC",
+              "SP",
+              "SE",
+              "TO"
+            ]
+          },
+          "interestTopic": {
+            "oneOf": [
+              {
+                "enum": [
+                  "organizar_compromissos",
+                  "entender_alternativa",
+                  "entender_portabilidade",
+                  "so_conhecer"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ageConfirmed": {
+            "const": true,
+            "description": "Obrigatório na criação."
+          },
+          "consents": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "launch_notice": {
+                "type": "boolean"
+              },
+              "marketing": {
+                "type": "boolean"
+              }
+            },
+            "description": "Na criação: launch_notice=true e marketing explícito. Na atualização: false revoga; true exige a versão."
+          },
+          "consentVersions": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Obrigatório para cada finalidade concedida (true) — e as duas na criação: capabilities.consents.<finalidade>.version.",
+            "properties": {
+              "launch_notice": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "marketing": {
+                "type": "string",
+                "maxLength": 64
+              }
+            }
+          }
+        }
+      },
+      "output": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "message",
+              "employmentNotice",
+              "contactVerified",
+              "state",
+              "purposes",
+              "interestTopic",
+              "customer"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "created",
+                  "updated"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "employmentNotice": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Texto da seção 6.7 para vínculo \"outro\"."
+              },
+              "contactVerified": {
+                "const": true
+              },
+              "state": {
+                "type": "string",
+                "description": "received, verified, invited, unsubscribed ou expired (estados legados em cadastros antigos)."
+              },
+              "purposes": {
+                "type": "object",
+                "properties": {
+                  "launch_notice": {
+                    "type": "boolean"
+                  },
+                  "marketing": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "interestTopic": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "customer": {
+                "type": "object",
+                "description": "Dados do próprio titular, mascarados (CPF, e-mail e nome) — nunca o documento completo.",
+                "properties": {
+                  "nameHint": {
+                    "type": "string",
+                    "description": "Primeiro nome e iniciais, ex.: \"Carla M. R.\""
+                  },
+                  "cpfHint": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "***.***.***-12"
+                  },
+                  "emailHint": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "employerName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "employmentType": {
+                    "type": "string"
+                  },
+                  "jobTenure": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "incomeRange": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "city": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "uf": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "message"
+            ],
+            "properties": {
+              "status": {
+                "const": "needs_review"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "errors": {
+        "400": [
+          "validation_error (ex.: input.cpf \"Confira o CPF.\"; campos obrigatórios para criar)"
+        ],
+        "403": [
+          "sender_not_verified (com alternativeUrl para /avise-me)"
+        ],
+        "409": [
+          "consent_version_outdated"
+        ],
+        "503": [
+          "collection_unavailable"
+        ]
+      },
+      "examples": [
+        {
+          "input": {
+            "fullName": "Pessoa de Exemplo Silva",
+            "cpf": "529.982.247-25",
+            "employerName": "Empresa Exemplo",
+            "employmentType": "clt",
+            "jobTenure": "1_a_3_anos",
+            "incomeRange": "2000_a_4000",
+            "city": "São Paulo",
+            "uf": "SP",
+            "ageConfirmed": true,
+            "consents": {
+              "launch_notice": true,
+              "marketing": false
+            },
+            "consentVersions": {
+              "launch_notice": "launch_notice.2026-09-25.1",
+              "marketing": "marketing.2026-09-25.1"
+            }
+          },
+          "output": {
+            "status": "created",
+            "message": "Pronto, seu cadastro ficou registrado. Vamos avisar quando a análise estiver disponível.",
+            "employmentNotice": null,
+            "contactVerified": true,
+            "state": "verified",
+            "purposes": {
+              "launch_notice": true,
+              "marketing": false
+            },
+            "interestTopic": null,
+            "customer": {
+              "nameHint": "Pessoa E. S.",
+              "cpfHint": "***.***.***-25",
+              "emailHint": null,
+              "employerName": "Empresa Exemplo",
+              "employmentType": "clt",
+              "jobTenure": "1_a_3_anos",
+              "incomeRange": "2000_a_4000",
+              "city": "São Paulo",
+              "uf": "SP"
+            }
+          }
+        },
+        {
+          "input": {
+            "email": "pessoa@exemplo.invalid",
+            "incomeRange": "nao_informar"
+          }
+        },
+        {
+          "input": {
+            "cpf": "111.444.777-35"
+          },
+          "output": {
+            "status": "needs_review",
+            "message": "Recebi seus dados, mas a equipe da Minha Folga precisa conferir algumas informações antes de concluir. Não é preciso enviar de novo."
+          }
+        }
+      ]
+    },
+    "get_customer_status": {
+      "description": "Consulta o cadastro do PRÓPRIO remetente atestado: se existe, estado, número validado, finalidades autorizadas e dados mascarados. Sem cadastro → not_registered (ofereça o cadastro).",
+      "kind": "relationship",
+      "allowedPhases": [
+        "PRE_LAUNCH",
+        "PILOT",
+        "LIVE"
+      ],
+      "requiresSenderVerified": true,
+      "input": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "output": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "contactVerified",
+              "state",
+              "purposes",
+              "interestTopic",
+              "customer"
+            ],
+            "properties": {
+              "status": {
+                "const": "registered"
+              },
+              "contactVerified": {
+                "type": "boolean"
+              },
+              "state": {
+                "type": "string",
+                "description": "received, verified, invited, unsubscribed ou expired (estados legados em cadastros antigos)."
+              },
+              "purposes": {
+                "type": "object",
+                "properties": {
+                  "launch_notice": {
+                    "type": "boolean"
+                  },
+                  "marketing": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "interestTopic": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "customer": {
+                "type": "object",
+                "description": "Dados do próprio titular, mascarados (CPF, e-mail e nome) — nunca o documento completo.",
+                "properties": {
+                  "nameHint": {
+                    "type": "string",
+                    "description": "Primeiro nome e iniciais, ex.: \"Carla M. R.\""
+                  },
+                  "cpfHint": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "***.***.***-12"
+                  },
+                  "emailHint": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "employerName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "employmentType": {
+                    "type": "string"
+                  },
+                  "jobTenure": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "incomeRange": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "city": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "uf": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "message"
+            ],
+            "properties": {
+              "status": {
+                "const": "not_registered"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "errors": {
+        "403": [
+          "sender_not_verified (com alternativeUrl)"
+        ]
+      },
+      "examples": [
+        {
+          "input": {},
+          "output": {
+            "status": "not_registered",
+            "message": "Não encontrei um cadastro ativo para este número de WhatsApp."
+          }
+        }
+      ]
+    },
+    "update_contact_preferences": {
+      "description": "Consulta ou altera as finalidades de comunicação do PRÓPRIO remetente atestado. 'Sair', 'pare', 'não me mande' = action revoke_all, sem pedir justificativa. Conceder uma finalidade exige a versão do texto apresentado.",
+      "kind": "relationship",
+      "allowedPhases": [
+        "PRE_LAUNCH",
+        "PILOT",
+        "LIVE"
+      ],
+      "requiresSenderVerified": true,
+      "input": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "view"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "revoke_all"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "action"
+            ],
+            "properties": {
+              "action": {
+                "const": "set"
+              },
+              "purposes": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "launch_notice": {
+                    "type": "boolean"
+                  },
+                  "marketing": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "consentVersions": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Obrigatório para cada finalidade concedida (true).",
+                "properties": {
+                  "launch_notice": {
+                    "type": "string"
+                  },
+                  "marketing": {
+                    "type": "string"
+                  }
+                }
+              },
+              "interestTopic": {
+                "oneOf": [
+                  {
+                    "enum": [
+                      "organizar_compromissos",
+                      "entender_alternativa",
+                      "entender_portabilidade",
+                      "so_conhecer"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "output": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "state",
+              "purposes",
+              "interestTopic"
+            ],
+            "properties": {
+              "status": {
+                "const": "current"
+              },
+              "state": {
+                "type": "string"
+              },
+              "purposes": {
+                "type": "object",
+                "properties": {
+                  "launch_notice": {
+                    "type": "boolean"
+                  },
+                  "marketing": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "interestTopic": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "message",
+              "state",
+              "purposes",
+              "interestTopic"
+            ],
+            "properties": {
+              "status": {
+                "const": "updated"
+              },
+              "message": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "purposes": {
+                "type": "object",
+                "properties": {
+                  "launch_notice": {
+                    "type": "boolean"
+                  },
+                  "marketing": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "interestTopic": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "message"
+            ],
+            "properties": {
+              "status": {
+                "const": "revoked"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "message"
+            ],
+            "properties": {
+              "status": {
+                "const": "not_registered"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "errors": {
+        "400": [
+          "validation_error"
+        ],
+        "403": [
+          "sender_not_verified (com alternativeUrl)"
+        ],
+        "409": [
+          "consent_version_outdated"
+        ]
+      },
+      "examples": [
+        {
+          "input": {
+            "action": "revoke_all"
+          },
+          "output": {
+            "status": "revoked",
+            "message": "Pronto, registramos seu pedido. Você não vai mais receber os avisos nem as novidades da Minha Folga. Se mudar de ideia, é só pedir."
+          }
+        },
+        {
+          "input": {
+            "action": "set",
+            "purposes": {
+              "marketing": false
+            }
+          },
+          "output": {
+            "status": "updated",
+            "message": "Pronto, suas preferências foram atualizadas.",
+            "state": "verified",
+            "purposes": {
+              "launch_notice": true,
+              "marketing": false
+            },
+            "interestTopic": null
+          }
+        },
+        {
+          "input": {
+            "action": "view"
+          }
+        }
+      ]
+    },
+    "issue_preferences_link": {
+      "description": "Gera um link seguro de uso único para /preferencias do PRÓPRIO remetente atestado (o número já está validado pela conversa). Válido por 30 minutos (waitlist.preferencesLinkTtlSeconds). Envie a URL exatamente como recebida; nada é enviado pela Minha Folga. Sem cadastro → not_registered.",
+      "kind": "relationship",
+      "allowedPhases": [
+        "PRE_LAUNCH",
+        "PILOT",
+        "LIVE"
+      ],
+      "requiresSenderVerified": true,
+      "input": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "output": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "url",
+              "expiresInSeconds",
+              "message"
+            ],
+            "properties": {
+              "status": {
+                "const": "issued"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "<site>/preferencias#token=<token> (fragmento: não chega ao servidor web). Exibido uma única vez."
+              },
+              "expiresInSeconds": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "status",
+              "message"
+            ],
+            "properties": {
+              "status": {
+                "const": "not_registered"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "errors": {
+        "403": [
+          "sender_not_verified (com alternativeUrl)"
+        ]
+      },
+      "examples": [
+        {
+          "input": {},
+          "output": {
+            "status": "issued",
+            "url": "https://www.minhafolga.com.br/preferencias#token=TOKEN_ILUSTRATIVO_NAO_VALIDO",
+            "expiresInSeconds": 1800,
+            "message": "Este é o seu link seguro para ver e alterar suas preferências. Ele vale por 30 minutos e só pode ser usado uma vez."
+          }
+        }
+      ]
+    },
+    "check_eligibility": {
+      "description": "Reservada. Confirmação de elegibilidade só com resultado autorizado do parceiro. A entrada não é lida nesta entrega.",
+      "kind": "financial",
+      "allowedPhases": [
+        "PILOT",
+        "LIVE"
+      ],
+      "additionalRequirements": [
+        "CREDIT_OPERATIONS_ENABLED=true",
+        "integração financeira homologada",
+        "autorização específica do titular"
+      ],
+      "requiresSenderVerified": true,
+      "input": {
+        "type": "object",
+        "description": "A definir com o parceiro financeiro."
+      },
+      "output": {
+        "description": "Nenhuma saída nesta entrega."
+      },
+      "errors": {
+        "403": [
+          "credit_phase_locked (PRE_LAUNCH)"
+        ],
+        "503": [
+          "credit_unavailable (PILOT/LIVE sem integração)"
+        ]
+      }
+    },
+    "query_margin": {
+      "description": "Reservada. Consulta de dados e margem somente após autorização específica e integração habilitada. A entrada não é lida nesta entrega.",
+      "kind": "financial",
+      "allowedPhases": [
+        "PILOT",
+        "LIVE"
+      ],
+      "additionalRequirements": [
+        "CREDIT_OPERATIONS_ENABLED=true",
+        "integração financeira homologada",
+        "autorização específica do titular"
+      ],
+      "requiresSenderVerified": true,
+      "input": {
+        "type": "object",
+        "description": "A definir com o parceiro financeiro."
+      },
+      "output": {
+        "description": "Nenhuma saída nesta entrega."
+      },
+      "errors": {
+        "403": [
+          "credit_phase_locked (PRE_LAUNCH)"
+        ],
+        "503": [
+          "credit_unavailable (PILOT/LIVE sem integração)"
+        ]
+      }
+    },
+    "get_proposal": {
+      "description": "Reservada. Somente proposta válida recebida da integração, com todos os componentes obrigatórios. A entrada não é lida nesta entrega.",
+      "kind": "financial",
+      "allowedPhases": [
+        "PILOT",
+        "LIVE"
+      ],
+      "additionalRequirements": [
+        "CREDIT_OPERATIONS_ENABLED=true",
+        "integração financeira homologada",
+        "autorização específica do titular"
+      ],
+      "requiresSenderVerified": true,
+      "input": {
+        "type": "object",
+        "description": "A definir com o parceiro financeiro."
+      },
+      "output": {
+        "description": "Nenhuma saída nesta entrega."
+      },
+      "errors": {
+        "403": [
+          "credit_phase_locked (PRE_LAUNCH)"
+        ],
+        "503": [
+          "credit_unavailable (PILOT/LIVE sem integração)"
+        ]
+      }
+    },
+    "simulate_credit": {
+      "description": "Reservada. Cálculo sempre oficial do serviço financeiro homologado; a Bia nunca calcula preço. A entrada não é lida nesta entrega.",
+      "kind": "financial",
+      "allowedPhases": [
+        "PILOT",
+        "LIVE"
+      ],
+      "additionalRequirements": [
+        "CREDIT_OPERATIONS_ENABLED=true",
+        "integração financeira homologada",
+        "autorização específica do titular"
+      ],
+      "requiresSenderVerified": true,
+      "input": {
+        "type": "object",
+        "description": "A definir com o parceiro financeiro."
+      },
+      "output": {
+        "description": "Nenhuma saída nesta entrega."
+      },
+      "errors": {
+        "403": [
+          "credit_phase_locked (PRE_LAUNCH)"
+        ],
+        "503": [
+          "credit_unavailable (PILOT/LIVE sem integração)"
+        ]
+      }
+    }
+  }
+}

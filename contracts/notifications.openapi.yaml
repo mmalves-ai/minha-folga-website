@@ -1,0 +1,201 @@
+openapi: 3.1.0
+info:
+  title: Minha Folga — Web Push
+  version: 1.0.0
+  description: >-
+    Inscrição independente do cadastro de crédito. Endpoint e chaves cifrados; cancelamento por token do dono.
+    O navegador solicita permissão apenas após ação explícita. Payload entregue ao service worker contém
+    title, body, url e campaignId. O status accepted significa aceitação pelo serviço Push, não leitura/exibição.
+paths:
+  /api/notifications/config:
+    get:
+      summary: Disponibilidade e chave pública VAPID; nunca retorna chave privada.
+      responses:
+        '200':
+          description: Estado atual, inclusive quando desativado.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [enabled, publicKey, consentVersion]
+                properties:
+                  enabled: {type: boolean}
+                  publicKey: {type: [string, 'null']}
+                  consentVersion: {type: string}
+  /api/notifications/subscriptions:
+    post:
+      summary: Opt-in explícito neste aparelho; idempotente para endpoint e chaves idênticos.
+      description: Consentimento de contracts/notifications.json. Limite de 30 requisições por rede/hora e teto global de inscrições. HTTPS em provedores de push admitidos; sem CPF/lead.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [subscription, consentVersion]
+              properties:
+                consentVersion: {const: '1.0'}
+                subscription:
+                  type: object
+                  additionalProperties: false
+                  required: [endpoint, keys]
+                  properties:
+                    endpoint: {type: string, maxLength: 4096, format: uri}
+                    expirationTime: {type: [number, 'null']}
+                    keys:
+                      type: object
+                      additionalProperties: false
+                      required: [p256dh, auth]
+                      properties:
+                        p256dh: {type: string, minLength: 87, maxLength: 87}
+                        auth: {type: string, minLength: 22, maxLength: 22}
+      responses:
+        '201':
+          description: Inscrição ativa. Guardar identificador/token técnicos apenas para gestão local da autorização.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, subscriptionId, unsubscribeToken]
+                properties:
+                  status: {const: subscribed}
+                  subscriptionId: {type: string, format: uuid}
+                  unsubscribeToken: {type: string, pattern: '^[a-f0-9]{64}$'}
+        '400': {description: validation_error; inscrição ou versão de consentimento inválida.}
+        '409': {description: subscription_conflict; mesmo endpoint com outras chaves.}
+        '429': {description: rate_limited.}
+        '503': {description: notifications_unavailable.}
+    delete:
+      summary: Revoga e apaga inscrição; funciona também com envio desativado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [subscriptionId, unsubscribeToken]
+              properties:
+                subscriptionId: {type: string, format: uuid}
+                unsubscribeToken: {type: string, pattern: '^[a-f0-9]{64}$'}
+      responses:
+        '204': {description: Inscrição apagada ou já inexistente. Mensagens já aceitas pelo provedor não podem ser recolhidas.}
+        '403': {description: Token do dono inválido.}
+  /api/admin/notifications:
+    get:
+      summary: Disponibilidade, número agregado de inscritos e últimas 50 campanhas (notifications:send).
+      security: [{adminSession: []}]
+      responses:
+        '200':
+          description: Sem lista de endpoints, chaves ou dados pessoais dos destinatários.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [enabled, subscribers, dailyCampaignCap, destinations, campaigns]
+                properties:
+                  enabled: {type: boolean}
+                  subscribers: {type: integer}
+                  dailyCampaignCap: {type: integer}
+                  destinations: {type: array, items: {type: string}}
+                  campaigns: {type: array, items: {$ref: '#/components/schemas/Campaign'}}
+  /api/admin/notifications/campaigns:
+    post:
+      summary: Enfileira campanha para inscritos autorizados; admin ou grant nominal notifications:send.
+      security: [{adminSession: []}]
+      parameters: [{$ref: '#/components/parameters/Csrf'}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [requestKey, title, body, url, confirm]
+              properties:
+                requestKey: {type: string, format: uuid, description: Idempotência por remetente; preservar nos retries do mesmo conteúdo.}
+                title: {type: string, minLength: 1, maxLength: 60}
+                body: {type: string, minLength: 1, maxLength: 180}
+                url: {enum: ['/', /avise-me, /lancamento, /consignado-privado, /bia, /conteudos, /ajuda]}
+                confirm: {const: true}
+      responses:
+        '202':
+          description: Mesma requestKey e conteúdo retornam a campanha existente sem novo envio.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, campaignId, audienceCount]
+                properties:
+                  status: {const: queued}
+                  campaignId: {type: string, format: uuid}
+                  audienceCount: {type: integer}
+        '409': {description: no_subscribers ou request_key_reused com outro conteúdo.}
+        '429': {description: campaign_limit ou rate_limited. Teto global configurável de campanhas nas últimas 24h.}
+        '503': {description: notifications_unavailable.}
+  /api/admin/notifications/campaigns/{id}/cancel:
+    post:
+      summary: Cancela pendências (admin ou próprio remetente autorizado); envios em trânsito podem concluir.
+      security: [{adminSession: []}]
+      parameters:
+        - {$ref: '#/components/parameters/Csrf'}
+        - {in: path, name: id, required: true, schema: {type: string, format: uuid}}
+      responses:
+        '200': {description: '{status: cancelled}'}
+  /api/admin/notifications/grants:
+    get:
+      summary: Lista usuários e autorizações nominais; só notifications:manage (admin).
+      security: [{adminSession: []}]
+      responses:
+        '200':
+          description: '{users:[{id,displayName,role,disabled,allowed,grantedAt}]} — grantedAt é ISO ou null. Admin sempre allowed=true.'
+  /api/admin/notifications/grants/{id}:
+    put:
+      summary: Concede/revoga notifications:send; só admin, com justificativa e auditoria.
+      security: [{adminSession: []}]
+      parameters:
+        - {$ref: '#/components/parameters/Csrf'}
+        - {in: path, name: id, required: true, schema: {type: string, format: uuid}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [enabled, reason]
+              properties:
+                enabled: {type: boolean}
+                reason: {type: string, minLength: 5, maxLength: 200}
+      responses:
+        '200': {description: '{status: updated}. Permissão é relida na próxima requisição e antes de cada envio pendente.'}
+        '409': {description: admin_permission ou user_disabled.}
+components:
+  securitySchemes:
+    adminSession: {type: apiKey, in: cookie, name: mf_admin}
+  parameters:
+    Csrf: {in: header, name: X-CSRF-Token, required: true, schema: {type: string}}
+  schemas:
+    Campaign:
+      type: object
+      required: [id, title, body, url, audienceCount, createdBy, createdAt, cancelled, delivery]
+      properties:
+        id: {type: string, format: uuid}
+        title: {type: string}
+        body: {type: string}
+        url: {type: string}
+        audienceCount: {type: integer}
+        createdBy: {type: string, format: uuid}
+        createdAt: {type: string, format: date-time}
+        cancelled: {type: boolean}
+        delivery:
+          type: object
+          required: [pending, sending, accepted, failed, expired, cancelled]
+          properties:
+            pending: {type: integer}
+            sending: {type: integer}
+            accepted: {type: integer, description: Aceito pelo provedor; não comprova leitura nem exibição.}
+            failed: {type: integer}
+            expired: {type: integer}
+            cancelled: {type: integer}

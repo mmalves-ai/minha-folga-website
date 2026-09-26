@@ -1,0 +1,30 @@
+# Minha Folga — rotação dos logs da aplicação (EXEMPLO; substitua <MINHAFOLGA_APP_ROOT>)
+#
+# Executado pelo PRÓPRIO usuário da aplicação com o binário logrotate do sistema, com estado privado.
+# Não usa root, não entra em /etc/logrotate.d, não usa módulo global do PM2 (pm2-logrotate) nem
+# "pm2 reloadLogs" (que atinge todos os processos do daemon).
+#
+# Instalação: copie para <MINHAFOLGA_APP_ROOT>/config/logrotate.conf (chmod 600) e agende
+# (docs/OPERATIONS.md, "Logs e rotação"):
+#   logrotate -s <MINHAFOLGA_APP_ROOT>/var/run/logrotate.state <MINHAFOLGA_APP_ROOT>/config/logrotate.conf
+#
+# Os registros do Nginx/Apache (<DIRETORIO_DE_LOGS_MINHAFOLGA>/access.log e error.log) ficam na pasta do servidor
+# web e têm regra própria, instalada pelo administrador: deploy/logrotate.minhafolga-web.conf.example
+# (acesso: 6 meses; erro: 30 dias).
+
+<MINHAFOLGA_APP_ROOT>/var/log/*.log {
+    daily
+    # Retenção curta: os logs da API registram método, rota, status, duração e o id da requisição, sem
+    # corpo, query string, cookies, contato ou IP; ainda assim são registros de uso com horário.
+    rotate 14
+    maxsize 50M
+    missingok
+    notifempty
+    # Os processos (PM2, systemd --user ou nohup) mantêm o arquivo aberto: copia e trunca, sem sinal a ninguém.
+    copytruncate
+    compress
+    delaycompress
+    dateext
+    dateformat -%Y%m%d-%s
+    nomail
+}

@@ -1,0 +1,58 @@
+# /atendimento/acompanhar — consulta de status com o link seguro (seção 6.14). Fora do sitemap, noindex.
+# O link traz protocolo e token no fragmento (#p=…&t=…), que nunca é enviado ao servidor web.
+revision:
+  version: 2
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Acompanhar solicitação de atendimento
+  description: Consulte o andamento da sua solicitação de atendimento na Minha Folga com o link seguro recebido no envio. O protocolo sozinho não dá acesso aos dados.
+
+hero:
+  breadcrumbs:
+    - { label: Atendimento, to: /atendimento }
+    - { label: Acompanhar solicitação, to: /atendimento/acompanhar }
+  title: Acompanhe sua solicitação
+  lead: Use o link seguro que você recebeu ao enviar a solicitação. Por proteção, o número de protocolo sozinho não mostra informações.
+
+form:
+  title: Consultar com o link seguro
+  label: Link de acompanhamento
+  hint: Cole o link completo que apareceu quando você enviou a solicitação.
+  submit: Consultar
+  invalid: Confira se o link foi copiado inteiro. Ele contém o protocolo e uma chave de acesso.
+  required: Cole o link de acompanhamento.
+loading: Consultando sua solicitação…
+notFound: Não foi possível abrir esta solicitação. Confira se o link foi copiado inteiro. Se o problema continuar, fale com o atendimento.
+fragmentRemoved: Por segurança, retiramos o link da barra de endereço. Para consultar de novo mais tarde, use o link que você guardou.
+
+result:
+  protocol: Protocolo
+  subject: Assunto
+  createdAt: Aberta em
+  updatedAt: Última atualização
+  refresh: Atualizar
+  refreshing: Atualizando…
+  refreshed: Situação atualizada.
+  other: Consultar outro link
+
+statuses:
+  received: { label: Recebida, text: Sua solicitação foi registrada e está na fila do atendimento. }
+  in_progress: { label: Em andamento, text: A equipe de atendimento está cuidando da sua solicitação. }
+  answered: { label: Respondida, text: A equipe enviou uma resposta. Confira também o meio de retorno que você escolheu. }
+  closed: { label: Encerrada, text: 'A solicitação foi concluída. Se precisar, abra uma nova solicitação.' }
+
+timeline:
+  title: Histórico
+  created: Solicitação registrada
+  statusChanged: 'Situação alterada para “{status}”'
+  reply: Resposta da equipe
+  empty: Ainda não há outras movimentações.
+
+help:
+  title: Precisa de outra coisa?
+  newRequest: { label: Abrir nova solicitação, to: /atendimento }
+  helpCenter: { label: Central de ajuda, to: /ajuda }

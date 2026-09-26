@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "consent": {
+    "version": "1.0",
+    "text": "Ative os avisos para receber a abertura e novidades da Minha Folga neste aparelho. Você pode desativar quando quiser."
+  },
+  "limits": { "titleMax": 60, "bodyMax": 180, "campaignTtlSeconds": 86400, "deliveryTtlSeconds": 3600, "maxAttempts": 3 },
+  "destinations": ["/", "/avise-me", "/lancamento", "/consignado-privado", "/bia", "/conteudos", "/ajuda"]
+}

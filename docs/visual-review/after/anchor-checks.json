@@ -1,0 +1,32 @@
+[
+  {
+    "case": "home to landing",
+    "name": "fullName",
+    "y": 437.703125,
+    "bottom": 485.703125,
+    "height": 844,
+    "scrollY": 5625,
+    "url": "/avise-me#formulario",
+    "passed": true
+  },
+  {
+    "case": "direct landing hash",
+    "name": "fullName",
+    "y": 437.703125,
+    "bottom": 485.703125,
+    "height": 844,
+    "scrollY": 5625,
+    "url": "/avise-me#formulario",
+    "passed": true
+  },
+  {
+    "case": "landing hero CTA",
+    "name": "fullName",
+    "y": 443.703125,
+    "bottom": 491.703125,
+    "height": 844,
+    "scrollY": 5619,
+    "url": "/avise-me",
+    "passed": true
+  }
+]

@@ -1,0 +1,301 @@
+{
+  "$comment": "Regras de validação compartilhadas por frontend e backend. Alterar aqui exige nova release das duas aplicações.",
+  "version": "2026-09-26.3",
+  "phone": {
+    "country": "BR",
+    "kind": "mobile",
+    "validDdds": [
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      21,
+      22,
+      24,
+      27,
+      28,
+      31,
+      32,
+      33,
+      34,
+      35,
+      37,
+      38,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      51,
+      53,
+      54,
+      55,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      71,
+      73,
+      74,
+      75,
+      77,
+      79,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ]
+  },
+  "waitlist": {
+    "$comment": "Cadastro de interesse (decisão de 26/09/2026, docs/DECISOES.md): nome completo, CPF, WhatsApp, empregador e dados gerais; sem código de confirmação — o telefone só é validado quando a própria pessoa fala com a Bia no WhatsApp da Hal-AI. Proteção anti-robô própria (antiBot).",
+    "fullNameMin": 5,
+    "fullNameMax": 120,
+    "emailMax": 160,
+    "employerNameMin": 2,
+    "employerNameMax": 120,
+    "cityMax": 80,
+    "employmentTypes": [
+      {
+        "value": "clt",
+        "label": "CLT"
+      },
+      {
+        "value": "domestico",
+        "label": "Empregado doméstico registrado"
+      },
+      {
+        "value": "rural",
+        "label": "Trabalhador rural registrado"
+      },
+      {
+        "value": "outro",
+        "label": "Outro vínculo ou não sei"
+      }
+    ],
+    "jobTenureRanges": [
+      {
+        "value": "menos_3_meses",
+        "label": "Menos de 3 meses"
+      },
+      {
+        "value": "3_a_12_meses",
+        "label": "De 3 a 12 meses"
+      },
+      {
+        "value": "1_a_3_anos",
+        "label": "De 1 a 3 anos"
+      },
+      {
+        "value": "mais_3_anos",
+        "label": "Mais de 3 anos"
+      }
+    ],
+    "incomeRanges": [
+      {
+        "value": "ate_2000",
+        "label": "Até R$ 2.000"
+      },
+      {
+        "value": "2000_a_4000",
+        "label": "De R$ 2.000,01 a R$ 4.000"
+      },
+      {
+        "value": "4000_a_7000",
+        "label": "De R$ 4.000,01 a R$ 7.000"
+      },
+      {
+        "value": "acima_7000",
+        "label": "Acima de R$ 7.000"
+      },
+      {
+        "value": "nao_informar",
+        "label": "Prefiro não informar"
+      }
+    ],
+    "ufs": [
+      "AC",
+      "AL",
+      "AP",
+      "AM",
+      "BA",
+      "CE",
+      "DF",
+      "ES",
+      "GO",
+      "MA",
+      "MT",
+      "MS",
+      "MG",
+      "PA",
+      "PB",
+      "PR",
+      "PE",
+      "PI",
+      "RJ",
+      "RN",
+      "RS",
+      "RO",
+      "RR",
+      "SC",
+      "SP",
+      "SE",
+      "TO"
+    ],
+    "interestTopics": [
+      {
+        "value": "organizar_compromissos",
+        "label": "Organizar compromissos"
+      },
+      {
+        "value": "entender_alternativa",
+        "label": "Entender uma alternativa de crédito"
+      },
+      {
+        "value": "entender_portabilidade",
+        "label": "Entender portabilidade"
+      },
+      {
+        "value": "so_conhecer",
+        "label": "Só conhecer"
+      }
+    ],
+    "sources": [
+      "avise-me",
+      "home",
+      "consignado-privado",
+      "solucoes",
+      "como-funciona",
+      "bia",
+      "lancamento",
+      "conteudos",
+      "ajuda"
+    ],
+    "antiBot": {
+      "$comment": "GET /api/form-token entrega um desafio assinado; o navegador resolve a prova de trabalho (SHA-256 com difficultyBits zeros à esquerda) e envia token+nonce. Token de uso único, com idade mínima e validade.",
+      "difficultyBits": 16,
+      "elevatedDifficultyBits": 18,
+      "minFillSeconds": 3,
+      "tokenTtlSeconds": 7200,
+      "honeypotField": "website"
+    },
+    "limits": {
+      "$comment": "Contam submissões aceitas. Muita gente sai pelo mesmo IP (CGNAT das operadoras móveis): a partir de elevatedAfterPerIpPerHour na última hora, a rede recebe prova de trabalho mais difícil (antiBot.elevatedDifficultyBits); o 429 só vem em submissionsPerIpPerHour.",
+      "elevatedAfterPerIpPerHour": 10,
+      "submissionsPerIpPerHour": 60,
+      "submissionsPerCpfPerDay": 3,
+      "submissionsPerPhonePerDay": 3,
+      "optOutPerIpPerHour": 10
+    },
+    "preferencesLinkTtlSeconds": 1800
+  },
+  "support": {
+    "nameMax": 80,
+    "contactMax": 120,
+    "messageMin": 10,
+    "messageMax": 2000,
+    "contactMethods": [
+      {
+        "value": "email",
+        "label": "E-mail",
+        "requires": null
+      },
+      {
+        "value": "whatsapp",
+        "label": "WhatsApp",
+        "requires": "whatsapp_channel"
+      }
+    ],
+    "subjects": [
+      {
+        "value": "sobre_minha_folga",
+        "label": "Dúvida sobre a Minha Folga"
+      },
+      {
+        "value": "consignado",
+        "label": "Consignado privado"
+      },
+      {
+        "value": "cadastro_avisos",
+        "label": "Cadastro e avisos"
+      },
+      {
+        "value": "bia",
+        "label": "Bia, nossa assistente de IA"
+      },
+      {
+        "value": "privacidade",
+        "label": "Privacidade e meus dados"
+      },
+      {
+        "value": "seguranca",
+        "label": "Segurança ou suspeita de golpe"
+      },
+      {
+        "value": "outro",
+        "label": "Outro assunto"
+      }
+    ]
+  },
+  "utm": {
+    "allowedParams": [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+      "utm_term"
+    ],
+    "pattern": "^[a-z0-9][a-z0-9_.-]{0,63}$"
+  },
+  "events": {
+    "$comment": "Eventos de produto agregados (POST /api/events). A dimensão é sempre um valor de baixa cardinalidade de uma lista conhecida — nunca texto digitado. O backend recusa (400) dimensões fora da lista do evento.",
+    "dimensionKinds": {
+      "route": "caminho de rota pública do frontend (frontend/src/router/manifest.ts, indexable=true) ou /conteudos/<slug> de artigo existente",
+      "article_slug": "nome de arquivo (sem .md) em frontend/content/articles",
+      "faq_category": "id de categoria em frontend/content/faq.yaml → categories; vazio quando a busca é feita em todas",
+      "waitlist_source": "valor de waitlist.sources deste arquivo",
+      "bia_example_id": "id de frontend/content/site.yaml → biaExamples",
+      "none": "sem dimensão (string vazia)"
+    },
+    "names": {
+      "page_section_view": "route",
+      "article_read": "article_slug",
+      "help_search": "faq_category",
+      "help_search_empty": "faq_category",
+      "waitlist_start": "waitlist_source",
+      "waitlist_cta_click": "waitlist_source",
+      "waitlist_error": "waitlist_source",
+      "waitlist_confirmed": "waitlist_source",
+      "support_form_start": "none",
+      "bia_demo_tab": "bia_example_id",
+      "bia_channel_click": "route"
+    }
+  }
+}

@@ -1,0 +1,126 @@
+# Segurança (/seguranca). Canais oficiais vêm da configuração pública validada (publicConfig):
+# telefone e WhatsApp só aparecem quando configurados; o e-mail de atendimento é identidade obrigatória
+# (pendência visível no build de revisão; o build estrito recusa a release sem ele). O que se diz da Bia
+# acompanha os canais da Bia (chat do site e WhatsApp, ambos da Hal-AI — decisão D1 de docs/DECISOES.md)
+# e channels.humanSupport. Não prometer criptografia, monitoramento ou certificação sem implementação
+# verificada; não criar selo próprio.
+revision:
+  version: 4
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Segurança e prevenção a golpes
+  description: Conheça os canais oficiais da Minha Folga, o que nunca pedimos, como a Bia se identifica e o que fazer diante de uma mensagem ou oferta suspeita.
+
+hero:
+  eyebrow: Segurança
+  title: Crédito com cuidado, desde o primeiro contato.
+  lead: Confira os canais oficiais e saiba reconhecer um pedido suspeito.
+
+never:
+  title: A Minha Folga nunca pede
+  items:
+    - Pagamento antecipado para liberar empréstimo.
+    - Senhas de banco, dados de cartão ou códigos recebidos por mensagem.
+    - Fotos de documentos ou dados bancários no cadastro de interesse.
+  footnote: Se alguém pedir algo assim em nome da Minha Folga, interrompa o contato.
+
+channels:
+  title: Canais oficiais
+  intro: Antes de informar seus dados, confirme se está falando com a Minha Folga.
+  site: Site oficial
+  # {dominio} é substituído pelo endereço configurado do site (VITE_SITE_URL).
+  siteHint: "Confira o endereço: {dominio}."
+  email: E-mail de atendimento
+  phone: Telefone de atendimento
+  whatsapp: WhatsApp oficial
+  # O número oficial é hospedado na plataforma Hal-AI, que atende a Minha Folga (decisão D1).
+  # Sem a Bia no WhatsApp (channels.biaOnWhatsapp=false) o texto não a menciona.
+  whatsappHint: Os avisos da Minha Folga chegam somente deste número.
+  whatsappHintBia: A Bia e os avisos da Minha Folga usam somente este número.
+  # Chat do site (channels.webchat), só quando habilitado.
+  webchat: Chat do site
+  webchatValue: Conversar com a Bia no site
+  webchatHint: Abre somente dentro deste site e é operado pela plataforma Hal-AI, que atende a Minha Folga.
+  support: Formulário de atendimento
+  supportText: Envie sua solicitação pelo site e receba um protocolo.
+  supportLink: Abrir o formulário
+
+principles:
+  title: Três cuidados simples.
+  items:
+    - icon: check-circle
+      title: Cadastro gratuito
+      text: O cadastro e os avisos são gratuitos.
+    - icon: hand
+      title: Nenhum depósito para liberar empréstimo
+      text: Se alguém pedir dinheiro antes de liberar um empréstimo, interrompa o contato.
+    - icon: chat
+      title: A Bia se identifica como IA
+      text: A Bia é a assistente de inteligência artificial da Minha Folga e sempre se apresenta assim.
+      # Complemento escolhido pelos canais reais (seção 6.4: encaminhamento só com equipe e canal de retorno).
+      bia:
+        # Bia no WhatsApp e atendimento humano ativos.
+        handoff: Quando a dúvida exige uma pessoa, ela encaminha para o atendimento.
+        # Bia no WhatsApp, sem atendimento humano ativo.
+        noHandoff: Quando a dúvida exigir uma pessoa, use o formulário de atendimento.
+        # Bia ainda sem canal: só a demonstração rotulada do site.
+        demoOnly: Conheça os exemplos no site. Para falar com a gente, use o atendimento.
+      # Exibido somente na fase PRE_LAUNCH.
+      preLaunch: O CPF só é pedido no cadastro oficial, com sua autorização.
+
+care:
+  title: Cuidados com links, senhas e códigos
+  intro: Golpes costumam começar com uma mensagem que parece urgente ou vantajosa. Alguns hábitos simples reduzem o risco.
+  items:
+    - Confira o endereço do site antes de informar seus dados.
+    - Não compartilhe senhas, códigos ou dados bancários.
+    - Informe o CPF somente no cadastro deste site ou na conversa com a Bia pelos canais oficiais.
+    - Se tiver dúvida sobre uma mensagem, pare e confira com a gente.
+  # Quem opera as conversas (decisão D1). Substitui o antigo bloco do código de confirmação.
+  operator:
+    title: Quem atende nas conversas
+    text: Os canais de conversa da Minha Folga são operados pela Hal-AI. Use apenas o chat deste site e o WhatsApp oficial listado aqui.
+    warning: O cadastro pelo site não envia código de confirmação. Se alguém pedir um código em nome da Minha Folga, não repasse.
+
+fraud:
+  eyebrow: Suspeita de fraude
+  title: Recebeu algo estranho em nosso nome?
+  intro: Se uma mensagem, ligação, perfil ou site usou o nome da Minha Folga e pareceu estranho, siga estes passos.
+  steps:
+    - title: Pare antes de responder
+      text: Não informe dados, não clique em links e não faça pagamentos.
+    - title: Guarde as informações
+      text: Anote ou salve o número, o perfil, a mensagem ou o endereço do site usado no contato.
+    - title: Relate para a Minha Folga
+      text: Use o formulário de atendimento com o assunto Segurança ou suspeita de golpe.
+    - title: Se já informou dados ou pagou
+      text: Procure o quanto antes a sua instituição financeira pelos canais oficiais dela e registre um boletim de ocorrência.
+  cta: { label: Relatar uma suspeita, to: '/atendimento?assunto=seguranca' }
+  note: No relato, descreva o que aconteceu e como o contato chegou até você. Não envie senhas, códigos ou dados bancários.
+
+incidents:
+  title: Comunicação de incidentes
+  text: Se ocorrer um incidente de segurança que possa trazer risco ou dano relevante às pessoas cadastradas, a comunicação às pessoas afetadas e à Agência Nacional de Proteção de Dados (ANPD) seguirá o que determina a Lei Geral de Proteção de Dados Pessoais (LGPD).
+  channels: Qualquer comunicação nossa sobre o assunto chega pelos canais oficiais desta página e nunca pede senha, código ou pagamento.
+
+privacy:
+  title: Seus dados e sua privacidade
+  text: Veja como usamos seus dados e como mudar suas escolhas de comunicação.
+  contact: Canal de privacidade
+  officer: Encarregado pelo tratamento de dados
+  links:
+    - { label: Aviso de Privacidade, to: /privacidade }
+    - { label: Preferências de comunicação, to: /preferencias }
+
+learn:
+  title: Para se aprofundar
+  article: antes-de-contratar-credito
+  faqTitle: Perguntas relacionadas
+  faq:
+    - { label: Como reconheço os canais oficiais da Minha Folga?, to: '/ajuda#canais-oficiais' }
+    - { label: Recebi uma mensagem suspeita em nome da Minha Folga. O que faço?, to: '/ajuda#suspeita-de-golpe' }
+    - { label: Preciso pagar para entrar na lista ou liberar crédito?, to: '/ajuda#preciso-pagar' }

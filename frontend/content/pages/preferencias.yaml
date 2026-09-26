@@ -1,0 +1,108 @@
+# /preferencias — gestão de finalidades com acesso seguro (seções 6.15 e 9; decisão D1 em docs/DECISOES.md).
+# Fora do sitemap, noindex. Nenhum dado de cadastro aparece sem sessão válida do titular, aberta pelo link
+# seguro de uso único que a Bia gera na conversa pelo WhatsApp oficial (o número é atestado pelo canal).
+# Sem o link, qualquer pessoa pode pedir a saída das comunicações informando o número, sem ver dados.
+revision:
+  version: 2
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Preferências de comunicação
+  description: Gerencie com o link seguro da Bia as comunicações que você recebe da Minha Folga, ajuste seus dados gerais, saia da lista de aviso ou peça a exclusão dos dados.
+
+hero:
+  breadcrumb: Preferências
+  title: Suas preferências de comunicação
+  lead: Escolha o que você quer receber da Minha Folga e mude de ideia quando quiser. Para proteger seus dados, suas escolhas só aparecem com o link seguro que a Bia envia na conversa.
+
+checking: Conferindo seu acesso…
+retry: Tentar novamente
+linkInvalid: Este link de preferências expirou ou já foi usado. Peça um novo link à Bia.
+loggedOut: Sessão encerrada neste navegador.
+sessionEnded: Sua sessão terminou. Para continuar, peça um novo link seguro à Bia.
+
+noLink:
+  title: Peça seu link seguro à Bia
+  text: 'Para ver e mudar suas escolhas, peça à Bia um link de preferências na conversa pelo WhatsApp oficial. Nesse canal, o próprio WhatsApp confirma que o número é seu. O link vale por {minutes} minutos e só pode ser usado uma vez.'
+  steps:
+    - Abra a conversa com a Bia no WhatsApp oficial.
+    - Diga que quer mudar suas preferências.
+    - Toque no link que a Bia enviar na conversa.
+  unavailable: O pedido do link pela conversa com a Bia no WhatsApp ainda não está disponível. Enquanto isso, você pode pedir a saída das comunicações nesta página ou falar com o atendimento.
+  whatsappText: 'Olá, Bia! Quero mudar minhas preferências de comunicação.'
+  webchatNote: No chat do site, a Bia tira dúvidas, mas não consegue confirmar o seu número. Por isso, o link sai só pela conversa no WhatsApp.
+  deletion_mdi: Para pedir a exclusão dos seus dados sem o link, fale com o [atendimento](/atendimento?assunto=privacidade).
+
+security:
+  title: Como protegemos o acesso
+  items:
+    - Suas escolhas só aparecem com um link seguro de uso único, que a Bia envia na conversa pelo WhatsApp oficial.
+    - O pedido de saída pelo número não mostra dados nem confirma se o número está cadastrado.
+    - Não pedimos CPF, documentos, senhas ou dados bancários para mudar preferências.
+    - Ao terminar, encerre a sessão, principalmente em aparelhos compartilhados.
+  links:
+    - { label: Aviso de Privacidade, to: /privacidade }
+    - { label: Segurança e canais oficiais, to: /seguranca }
+
+manage:
+  greeting: 'Olá, {name}.'
+  greetingNoName: Suas preferências
+  summary: 'Acesso pelo link seguro para o WhatsApp {hint}.'
+  dataTitle: Dados do cadastro
+  dataHint: Os dados que identificam você aparecem mascarados. Para corrigir nome, CPF, telefone, e-mail ou empresa, fale com a Bia ou com o atendimento.
+  labels:
+    name: Nome
+    employer: Empresa
+    phone: WhatsApp
+    validation: Validação do telefone
+    cpf: CPF
+    email: E-mail
+  phoneVerified: 'Validado pela Bia em {date}.'
+  phoneVerifiedNoDate: Validado pela Bia.
+  phoneNotVerified: Ainda não validado. Ele fica validado quando você conversa com a Bia pelo WhatsApp oficial.
+  emailNone: Não informado
+  purposesTitle: O que você quer receber
+  purposesHint: Marque ou desmarque as opções e salve. Cada mudança fica registrada com data.
+  launchTag: Aviso de abertura
+  marketingTag: Conteúdos e novidades
+  active: Ativo
+  inactive: Desativado
+  updatedAt: 'Última alteração em {date}.'
+  topicLabel: Tema de interesse
+  topicHint: Opcional. Ajuda a entender o que você quer saber.
+  topicNone: Prefiro não informar
+  save: Salvar preferências
+  saving: Salvando…
+  saved: Suas preferências foram salvas.
+  unsaved: Há alterações não salvas.
+  reload: Recarregar a página
+  noChanges: Nenhuma alteração para salvar.
+  consentOutdated: Os textos de consentimento foram atualizados. Recarregue a página para ler a versão atual antes de salvar.
+  invited: O aviso de abertura já foi enviado para este número. Isso não significa aprovação de crédito.
+  general:
+    title: Seus dados gerais
+    hint: Estas respostas organizam os avisos e a futura pré-análise. Não são uma análise de crédito.
+    save: Salvar dados gerais
+    saved: Seus dados gerais foram salvos.
+  leave:
+    title: Sair da lista de aviso
+    text: Você deixa de receber o aviso de abertura e as atualizações sobre o lançamento. Se mudar de ideia, é só marcar a opção de novo.
+    button: Sair da lista de aviso
+    leaving: Saindo da lista…
+    done: Pronto. Você saiu da lista de aviso. Não enviaremos mais o aviso de abertura nem atualizações do lançamento para este número.
+    already: Você não está na lista de aviso de abertura.
+    marketingStill: Você ainda recebe conteúdos e novidades. Se não quiser, desmarque a opção acima e salve.
+  deletion:
+    title: Excluir seus dados
+    text: Você pode pedir a exclusão dos dados do seu cadastro. A equipe de privacidade registra e cumpre o pedido conforme o Aviso de Privacidade.
+    button: Pedir exclusão dos dados
+    dialogTitle: Pedir a exclusão dos seus dados?
+    dialogText: Vamos registrar seu pedido para a equipe de privacidade e, a partir de agora, você deixa de receber qualquer comunicação da Minha Folga. Podemos manter o registro mínimo necessário para comprovar e respeitar o seu pedido.
+    confirm: Confirmar pedido
+    confirming: Registrando…
+    cancel: Cancelar
+    done: Pedido de exclusão registrado. A partir de agora, você não recebe mais comunicações da Minha Folga, e a equipe de privacidade vai concluir o atendimento.
+  logout: Encerrar sessão

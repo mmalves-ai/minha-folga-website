@@ -1,0 +1,197 @@
+/* Estrutura: container, seções e grades. Seções alternam cream, paper e forest de forma contida. */
+.container {
+  width: 100%;
+  max-width: calc(var(--mf-container) + 2 * var(--mf-gutter));
+  margin-inline: auto;
+  padding-inline: var(--mf-gutter);
+}
+
+.container--narrow {
+  max-width: calc(780px + 2 * var(--mf-gutter));
+}
+
+.container--text {
+  max-width: calc(720px + 2 * var(--mf-gutter));
+}
+
+.section {
+  padding-block: var(--mf-space-8);
+}
+
+.section--tight {
+  padding-block: var(--mf-space-7);
+}
+
+.section--flush-top {
+  padding-top: 0;
+}
+
+.section--paper {
+  background: var(--mf-paper);
+}
+
+.section--mint {
+  background: var(--mf-mint);
+}
+
+.section--forest {
+  background: var(--mf-forest);
+  color: var(--mf-cream);
+}
+
+.section--forest a:not(.btn) {
+  color: var(--mf-cream);
+}
+
+.section--forest .muted,
+.on-dark .muted {
+  color: var(--mf-cream-on-dark-muted);
+}
+
+@media (max-width: 767px) {
+  .section {
+    padding-block: var(--mf-space-7);
+  }
+  .section--tight {
+    padding-block: var(--mf-space-6);
+  }
+}
+
+.section-head {
+  max-width: 720px;
+  margin-bottom: var(--mf-space-6);
+}
+
+.section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section-head p:last-child {
+  margin-bottom: 0;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 var(--mf-space-3);
+  font-family: var(--mf-font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--mf-forest);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--mf-coral);
+  flex: none;
+}
+
+.section--forest .eyebrow {
+  color: var(--mf-cream);
+}
+
+.lead {
+  font-size: clamp(1.0625rem, 0.4vw + 1rem, 1.25rem);
+  line-height: 1.55;
+  color: var(--mf-ink);
+  max-width: 62ch;
+}
+
+.muted {
+  color: var(--mf-muted);
+}
+
+.small {
+  font-size: 0.9375rem;
+}
+
+.legal-text {
+  font-size: 0.875rem; /* mínimo de 14 px para textos legais */
+  line-height: 1.55;
+  color: var(--mf-muted);
+}
+
+.grid {
+  display: grid;
+  gap: var(--mf-space-4);
+}
+
+.grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1023px) {
+  .grid--3,
+  .grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .grid--2,
+  .grid--3,
+  .grid--4 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: var(--mf-space-7);
+  align-items: center;
+}
+
+.split--top {
+  align-items: start;
+}
+
+.split--wide-left {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+}
+
+@media (max-width: 1023px) {
+  .split,
+  .split--wide-left {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--mf-space-6);
+  }
+}
+
+.stack > * + * {
+  margin-top: var(--mf-space-3);
+}
+
+.stack-lg > * + * {
+  margin-top: var(--mf-space-5);
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mf-space-2);
+  align-items: center;
+}
+
+.page-main {
+  display: block;
+  min-height: 60vh;
+}
+
+.page-main:focus {
+  outline: none;
+}

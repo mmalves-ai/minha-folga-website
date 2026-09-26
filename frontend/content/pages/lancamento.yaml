@@ -1,0 +1,37 @@
+# Página pública de abertura. Marcos operacionais continuam internos em content/launch.yaml.
+revision:
+  version: 3
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+meta:
+  title: Estamos chegando | Minha Folga
+  description: Em breve, novo crédito e possibilidades de aliviar parcelas com uma experiência 100% digital. Entre na fila para a abertura da Minha Folga.
+hero:
+  eyebrow: Em breve
+  title: Sua próxima folga está chegando.
+  lead: Novo empréstimo ou uma parcela mais leve. Estamos preparando uma experiência 100% digital, com IA para buscar opções para o seu perfil e a Bia para explicar.
+  cta: { label: Quero entrar na fila, to: '/avise-me#formulario' }
+  secondary: { label: Conheça a proposta, to: /consignado-privado }
+benefits:
+  title: Para o que você precisa.
+  items:
+    - { icon: layers, title: Novo crédito, text: Opções para quem tem carteira assinada e quer dar o próximo passo. }
+    - { icon: list, title: Parcela mais leve, text: Possibilidades para quem já tem consignado e quer aliviar o mês. }
+    - { icon: chat, title: Ajuda para escolher, text: IA na busca e explicações simples para comparar as propostas. }
+queue:
+  title: A fila já pode começar para você.
+  titleClosed: A abertura está chegando.
+  text: O valor disponível para emprestar será limitado. As chamadas seguirão a ordem de cadastro, conforme a disponibilidade e os critérios de análise.
+  textClosed: Em breve, o cadastro estará disponível. As chamadas para a abertura seguirão a ordem de cadastro e a disponibilidade de crédito.
+  note: Cadastro gratuito. Sem dinheiro reservado ou obrigação de contratar.
+  steps:
+    - { title: Cadastre-se, text: Informe seus dados e os do trabalho para entrar na fila. }
+    - { title: Aguarde a chamada, text: Avisaremos pelo WhatsApp informado quando houver disponibilidade. }
+    - { title: Conheça suas opções, text: 'Na abertura, você poderá comparar as propostas disponíveis para o seu perfil, sujeitas à análise.' }
+notify:
+  title: Quem se cadastra antes entra antes na ordem de chamada.
+  text: Cadastre-se para receber o aviso de abertura. Se os recursos disponíveis se esgotarem, será preciso aguardar nova disponibilidade.
+  cta: { label: Quero entrar na fila, to: '/avise-me#formulario' }
+  preferences: { label: Tire suas dúvidas, to: /ajuda }

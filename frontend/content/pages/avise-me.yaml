@@ -1,0 +1,88 @@
+revision:
+  version: 4
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+meta:
+  title: Minha Folga vem aí | Entre na fila
+  description: Precisa de um empréstimo ou quer aliviar as parcelas? Em breve, nossa IA vai buscar opções para você. O valor disponível é limitado. Cadastre-se grátis.
+hero:
+  breadcrumb: Quero ser avisado
+  eyebrow: A próxima conversa sobre seu dinheiro pode ser mais clara.
+  title: Seu salário merece uma folga. Sua escolha, mais inteligência.
+  lead: Informação clara e inteligência artificial para você entender melhor suas escolhas. Conheça a Minha Folga, converse com a Bia e acompanhe nossa proposta de crédito consignado para quem trabalha com carteira assinada.
+  cta: Quero ser avisado
+  secondary:
+    label: Conhecer a Bia
+    to: /bia
+  steps:
+    title: Como funciona o aviso
+    items:
+      - title: Preencha o cadastro
+        text: Nome, CPF, WhatsApp, empresa e algumas faixas. Sem documentos ou dados bancários.
+      - title: Converse com a Bia
+        text: Pelo WhatsApp oficial, a conversa com a Bia também valida o seu número.
+      - title: Receba o aviso de abertura
+        text: Avisamos quando a análise de propostas estiver disponível.
+    note: Você pode sair da lista quando quiser.
+benefits:
+  title: Clareza em cada etapa da sua escolha.
+  items:
+    - icon: chat
+      title: Tire dúvidas com a Bia
+      text: Entenda desconto em folha, prazo e custo total.
+      link:
+        label: Conheça a Bia
+        to: /bia
+    - icon: calendar
+      title: Receba o aviso de abertura
+      text: Saiba quando a análise de propostas estiver disponível.
+      link:
+        label: Cadastrar meu interesse
+        to: "#formulario"
+    - icon: compass
+      title: Decida no seu tempo
+      text: Cadastro sem obrigação de contratar.
+      link:
+        label: Entenda antes de decidir
+        to: /conteudos
+bia:
+  title: IA que explica. Você que decide.
+  text: A Bia transforma termos difíceis em uma conversa simples. Quando as propostas estiverem disponíveis, ela ajudará você a entender valores, prazo e custo total com base nas informações oficiais da operação.
+  handoff: Se a resposta exigir uma pessoa, a Bia encaminha para o atendimento.
+  demoCta:
+    label: Conheça como a Bia vai ajudar
+    to: /bia
+form:
+  title: Quer saber quando as propostas de crédito estiverem disponíveis?
+  text: Deixe seu contato. A gente avisa quando a análise de propostas estiver disponível.
+  asksTitle: O que pedimos
+  asks:
+    - Nome completo e CPF
+    - WhatsApp com DDD e, se quiser, e-mail
+    - Empresa, tipo de vínculo e tempo no emprego atual
+    - Faixa de salário líquido, com a opção “Prefiro não informar”
+    - Cidade, UF e confirmação de que você tem 18 anos ou mais
+  notAsksTitle: O que não pedimos
+  notAsks: Documentos, fotos, senhas e dados bancários. Nesta fase, não consultamos margem nem geramos proposta.
+launch:
+  title: Estamos preparando os próximos passos.
+  text: Vamos avisar quando houver uma atualização relevante. Você pode sair da lista quando quiser.
+  statusLabels:
+    done: Concluído
+    in_progress: Em andamento
+    pending: Pendente
+  link:
+    label: Acompanhe a abertura financeira
+    to: /lancamento
+faq:
+  title: Dúvidas sobre o cadastro
+  ids:
+    - novo-emprestimo
+    - reduzir-consignado-atual
+    - por-que-cadastrar-agora
+    - ja-libera-emprestimos
+  more:
+    label: Mais dúvidas na Central de ajuda
+    to: /ajuda

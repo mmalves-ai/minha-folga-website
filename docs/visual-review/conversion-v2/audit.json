@@ -1,0 +1,3612 @@
+{
+  "capturedAt": "2026-09-26T22:07:58.496Z",
+  "origin": "https://localhost:8000",
+  "scope": "Revisão local de layout e acessibilidade. O estado recebido é uma fixture visual de history.state; não confirma inscrição nem substitui E2E/API.",
+  "captures": [
+    {
+      "name": "home",
+      "path": "/",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Minha Folga | Seu salário merece uma folga",
+      "h1": "Seu salário mereceuma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todos os conteúdos",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "O que é CET e por que olhar além da taxa",
+          "href": "/conteudos/o-que-e-cet",
+          "download": null
+        },
+        {
+          "label": "Parcela menor significa crédito mais barato?",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como funciona o desconto em folha",
+          "href": "/conteudos/como-funciona-desconto-em-folha",
+          "download": null
+        },
+        {
+          "label": "Ir para a central de ajuda",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Parcela pesada? Entre na fila da Minha Folga",
+      "h1": "Parcela pesada?Seu salário merece uma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todas as perguntas",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Aviso de Privacidade",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-neutra",
+      "path": "/cadastro-confirmado",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro de interesse",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Gerenciar preferências",
+          "href": "/preferencias",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-recebido",
+      "path": "/cadastro-confirmado",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "fixture": "Estado visual recebido inserido somente no history.state; não representa um cadastro real nem teste da API.",
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro recebido.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "fixture": null,
+      "title": "Minha Folga | Seu salário merece uma folga",
+      "h1": "Seu salário mereceuma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todos os conteúdos",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "O que é CET e por que olhar além da taxa",
+          "href": "/conteudos/o-que-e-cet",
+          "download": null
+        },
+        {
+          "label": "Parcela menor significa crédito mais barato?",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como funciona o desconto em folha",
+          "href": "/conteudos/como-funciona-desconto-em-folha",
+          "download": null
+        },
+        {
+          "label": "Ir para a central de ajuda",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "fixture": null,
+      "title": "Parcela pesada? Entre na fila da Minha Folga",
+      "h1": "Parcela pesada?Seu salário merece uma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todas as perguntas",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Aviso de Privacidade",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-neutra",
+      "path": "/cadastro-confirmado",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "fixture": null,
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro de interesse",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Gerenciar preferências",
+          "href": "/preferencias",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-recebido",
+      "path": "/cadastro-confirmado",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "fixture": "Estado visual recebido inserido somente no history.state; não representa um cadastro real nem teste da API.",
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro recebido.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "width": 360,
+      "height": 844,
+      "status": 200,
+      "fixture": null,
+      "title": "Minha Folga | Seu salário merece uma folga",
+      "h1": "Seu salário mereceuma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todos os conteúdos",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "O que é CET e por que olhar além da taxa",
+          "href": "/conteudos/o-que-e-cet",
+          "download": null
+        },
+        {
+          "label": "Parcela menor significa crédito mais barato?",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como funciona o desconto em folha",
+          "href": "/conteudos/como-funciona-desconto-em-folha",
+          "download": null
+        },
+        {
+          "label": "Ir para a central de ajuda",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "width": 360,
+      "height": 844,
+      "status": 200,
+      "fixture": null,
+      "title": "Parcela pesada? Entre na fila da Minha Folga",
+      "h1": "Parcela pesada?Seu salário merece uma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todas as perguntas",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Aviso de Privacidade",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-neutra",
+      "path": "/cadastro-confirmado",
+      "width": 360,
+      "height": 844,
+      "status": 200,
+      "fixture": null,
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro de interesse",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Gerenciar preferências",
+          "href": "/preferencias",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-recebido",
+      "path": "/cadastro-confirmado",
+      "width": 360,
+      "height": 844,
+      "status": 200,
+      "fixture": "Estado visual recebido inserido somente no history.state; não representa um cadastro real nem teste da API.",
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro recebido.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "width": 768,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Minha Folga | Seu salário merece uma folga",
+      "h1": "Seu salário mereceuma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todos os conteúdos",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "O que é CET e por que olhar além da taxa",
+          "href": "/conteudos/o-que-e-cet",
+          "download": null
+        },
+        {
+          "label": "Parcela menor significa crédito mais barato?",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como funciona o desconto em folha",
+          "href": "/conteudos/como-funciona-desconto-em-folha",
+          "download": null
+        },
+        {
+          "label": "Ir para a central de ajuda",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "width": 768,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Parcela pesada? Entre na fila da Minha Folga",
+      "h1": "Parcela pesada?Seu salário merece uma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todas as perguntas",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Aviso de Privacidade",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-neutra",
+      "path": "/cadastro-confirmado",
+      "width": 768,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro de interesse",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Gerenciar preferências",
+          "href": "/preferencias",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-recebido",
+      "path": "/cadastro-confirmado",
+      "width": 768,
+      "height": 1000,
+      "status": 200,
+      "fixture": "Estado visual recebido inserido somente no history.state; não representa um cadastro real nem teste da API.",
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro recebido.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "width": 1024,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Minha Folga | Seu salário merece uma folga",
+      "h1": "Seu salário mereceuma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todos os conteúdos",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "O que é CET e por que olhar além da taxa",
+          "href": "/conteudos/o-que-e-cet",
+          "download": null
+        },
+        {
+          "label": "Parcela menor significa crédito mais barato?",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como funciona o desconto em folha",
+          "href": "/conteudos/como-funciona-desconto-em-folha",
+          "download": null
+        },
+        {
+          "label": "Ir para a central de ajuda",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "width": 1024,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Parcela pesada? Entre na fila da Minha Folga",
+      "h1": "Parcela pesada?Seu salário merece uma folga.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [
+        {
+          "tag": "DIV",
+          "class": "antibot-trap",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "LABEL",
+          "class": "",
+          "text": "Deixe este campo em branco"
+        },
+        {
+          "tag": "INPUT",
+          "class": "",
+          "text": ""
+        }
+      ],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loaded": true
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [
+        {
+          "id": "v-0-fullName",
+          "name": "fullName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-cpf",
+          "name": "cpf",
+          "type": "text"
+        },
+        {
+          "id": "v-0-phone",
+          "name": "phone",
+          "type": "tel"
+        },
+        {
+          "id": "v-0-email",
+          "name": "email",
+          "type": "email"
+        },
+        {
+          "id": "v-0-employerName",
+          "name": "employerName",
+          "type": "text"
+        },
+        {
+          "id": "v-0-employmentType",
+          "name": "employmentType",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-jobTenure",
+          "name": "jobTenure",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-incomeRange",
+          "name": "incomeRange",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-city",
+          "name": "city",
+          "type": "text"
+        },
+        {
+          "id": "v-0-uf",
+          "name": "uf",
+          "type": "select-one"
+        },
+        {
+          "id": "v-0-interestTopic",
+          "name": "interestTopic",
+          "type": "select-one"
+        },
+        {
+          "id": "",
+          "name": "ageConfirmed",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "launch_notice",
+          "type": "checkbox"
+        },
+        {
+          "id": "",
+          "name": "marketing",
+          "type": "checkbox"
+        },
+        {
+          "id": "v-1-trap",
+          "name": "website",
+          "type": "text"
+        }
+      ],
+      "actions": [
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Veja como a Bia explica",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a oportunidade",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Ver a Bia explicando",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me#formulario",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila agora",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Baixar roteiro (PDF)",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "Minha-Folga-roteiro-consignado.pdf"
+        },
+        {
+          "label": "Veja como a Bia pode ajudar",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Entenda a proposta",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "A Minha Folga",
+          "href": "/sobre",
+          "download": null
+        },
+        {
+          "label": "Atendimento",
+          "href": "/atendimento",
+          "download": null
+        },
+        {
+          "label": "Entenda o uso dos seus dados",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Ver todas as perguntas",
+          "href": "/ajuda",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        },
+        {
+          "label": "Conheça a proposta",
+          "href": "/consignado-privado",
+          "download": null
+        },
+        {
+          "label": "Parcela menor e custo total",
+          "href": "/conteudos/parcela-menor-e-custo-total",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Conheça a Bia",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Acompanhe a abertura financeira",
+          "href": "/lancamento",
+          "download": null
+        },
+        {
+          "label": "Aviso de Privacidade",
+          "href": "/privacidade",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como vai funcionar",
+          "href": "/como-funciona",
+          "download": null
+        },
+        {
+          "label": "Como se proteger de golpes",
+          "href": "/seguranca",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "#formulario",
+          "download": null
+        }
+      ],
+      "reasonPresent": true,
+      "reasonText": "Uma oportunidade para se anteciparA fila começa agora.Seu cadastro faz diferença.O valor disponível para os empréstimos é limitado. Por isso, na abertura, as chamadas seguirão a ordem de cadastro, conforme os critérios da operação e a disponibilidade. Cadastre-se agora para entrar nessa ordem.Quero entrar na fila agora Cadastro gratuito, sem obrigação de contratar.O que muda se eu esperar?Quem se cadastrar antes de você estará à frente na ordem de chamada. Se o valor disponível se esgotar, será preciso aguardar nova disponibilidade. Entrar na fila não garante aprovação nem reserva dinheiro.Já pode começar a comparar. Use nosso roteiro gratuito de uma página.Baixar roteiro (PDF)",
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-neutra",
+      "path": "/cadastro-confirmado",
+      "width": 1024,
+      "height": 1000,
+      "status": 200,
+      "fixture": null,
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro de interesse",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Quero entrar na fila",
+          "href": "/avise-me",
+          "download": null
+        },
+        {
+          "label": "Gerenciar preferências",
+          "href": "/preferencias",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "confirmacao-recebido",
+      "path": "/cadastro-confirmado",
+      "width": 1024,
+      "height": 1000,
+      "status": 200,
+      "fixture": "Estado visual recebido inserido somente no history.state; não representa um cadastro real nem teste da API.",
+      "title": "Cadastro de interesse recebido | Minha Folga",
+      "h1": "Cadastro recebido.",
+      "h1Count": 1,
+      "robots": "noindex, nofollow",
+      "overflow": 0,
+      "overflows": [],
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loaded": true
+        }
+      ],
+      "fields": [],
+      "actions": [
+        {
+          "label": "Início",
+          "href": "/",
+          "download": null
+        },
+        {
+          "label": "Baixar meu guia de comparação",
+          "href": "/guias/roteiro-consignado.pdf",
+          "download": "minha-folga-guia-de-comparacao.pdf"
+        },
+        {
+          "label": "Leia os conteúdosEntenda CET, parcela, prazo e desconto em folha antes de decidir.",
+          "href": "/conteudos",
+          "download": null
+        },
+        {
+          "label": "Conheça a BiaNossa assistente de IA explica termos e próximos passos, no seu ritmo.",
+          "href": "/bia",
+          "download": null
+        },
+        {
+          "label": "Ajuste suas preferênciasMude o que você recebe com o link seguro da Bia ou peça a saída das comunicações quando quiser.",
+          "href": "/preferencias",
+          "download": null
+        }
+      ],
+      "reasonPresent": false,
+      "errors": [],
+      "violations": []
+    }
+  ],
+  "anchors": [
+    {
+      "scenario": "CTA principal da home para formulário",
+      "url": "/avise-me#formulario",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 437.625,
+      "fieldBottom": 485.625,
+      "passed": true
+    },
+    {
+      "scenario": "Entrada direta com âncora",
+      "url": "/avise-me#formulario",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 437.625,
+      "fieldBottom": 485.625,
+      "passed": true
+    },
+    {
+      "scenario": "CTA do hero da landing",
+      "url": "/avise-me",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 497.625,
+      "fieldBottom": 545.625,
+      "passed": true
+    },
+    {
+      "scenario": "CTA da explicação da fila na landing",
+      "url": "/avise-me",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 437.625,
+      "fieldBottom": 485.625,
+      "passed": true
+    },
+    {
+      "scenario": "CTA da explicação da fila na home",
+      "url": "/",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 437.828125,
+      "fieldBottom": 485.828125,
+      "passed": true
+    },
+    {
+      "scenario": "CTA do cabeçalho na mesma landing",
+      "url": "/avise-me#formulario",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 497.625,
+      "fieldBottom": 545.625,
+      "passed": true
+    }
+  ],
+  "pdf": {
+    "status": 200,
+    "contentType": "application/pdf",
+    "bytes": 187378,
+    "pdfSignature": "%PDF-",
+    "downloadName": "minha-folga-guia-de-comparacao.pdf",
+    "downloadFailure": null
+  },
+  "links": [
+    {
+      "path": "/avise-me",
+      "status": 200
+    },
+    {
+      "path": "/bia",
+      "status": 200
+    },
+    {
+      "path": "/consignado-privado",
+      "status": 200
+    },
+    {
+      "path": "/guias/roteiro-consignado.pdf",
+      "status": 200
+    },
+    {
+      "path": "/como-funciona",
+      "status": 200
+    },
+    {
+      "path": "/sobre",
+      "status": 200
+    },
+    {
+      "path": "/atendimento",
+      "status": 200
+    },
+    {
+      "path": "/privacidade",
+      "status": 200
+    },
+    {
+      "path": "/conteudos",
+      "status": 200
+    },
+    {
+      "path": "/conteudos/o-que-e-cet",
+      "status": 200
+    },
+    {
+      "path": "/conteudos/parcela-menor-e-custo-total",
+      "status": 200
+    },
+    {
+      "path": "/conteudos/como-funciona-desconto-em-folha",
+      "status": 200
+    },
+    {
+      "path": "/ajuda",
+      "status": 200
+    },
+    {
+      "path": "/lancamento",
+      "status": 200
+    },
+    {
+      "path": "/seguranca",
+      "status": 200
+    },
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/preferencias",
+      "status": 200
+    }
+  ],
+  "anchorsCheckedAt": "2026-09-26T22:09:00.921Z"
+}

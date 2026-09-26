@@ -1,0 +1,63 @@
+{
+  "checkedAt": "2026-09-26T22:09:00.921Z",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "anchors": [
+    {
+      "scenario": "CTA principal da home para formulário",
+      "url": "/avise-me#formulario",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 437.625,
+      "fieldBottom": 485.625,
+      "passed": true
+    },
+    {
+      "scenario": "Entrada direta com âncora",
+      "url": "/avise-me#formulario",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 437.625,
+      "fieldBottom": 485.625,
+      "passed": true
+    },
+    {
+      "scenario": "CTA do hero da landing",
+      "url": "/avise-me",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 497.625,
+      "fieldBottom": 545.625,
+      "passed": true
+    },
+    {
+      "scenario": "CTA da explicação da fila na landing",
+      "url": "/avise-me",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 437.625,
+      "fieldBottom": 485.625,
+      "passed": true
+    },
+    {
+      "scenario": "CTA da explicação da fila na home",
+      "url": "/",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 437.828125,
+      "fieldBottom": 485.828125,
+      "passed": true
+    },
+    {
+      "scenario": "CTA do cabeçalho na mesma landing",
+      "url": "/avise-me#formulario",
+      "activeName": "fullName",
+      "visible": true,
+      "fieldTop": 497.625,
+      "fieldBottom": 545.625,
+      "passed": true
+    }
+  ]
+}

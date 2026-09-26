@@ -1,0 +1,261 @@
+// @vitest-environment jsdom
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
+const { api } = vi.hoisted(() => ({ api: vi.fn() }))
+vi.mock('@/services/api', () => ({ api }))
+const RECEIPT = { status: 'subscribed', subscriptionId: 'test-subscription', unsubscribeToken: 'a'.repeat(64) }
+const CONFIG = { enabled: true, publicKey: btoa('public-key-for-browser-mock'), consentVersion: '1.0' }
+let permission: NotificationPermission
+let requestPermission: ReturnType<typeof vi.fn>
+let register: ReturnType<typeof vi.fn>
+let subscribe = vi.fn<() => Promise<unknown>>()
+let unsubscribe: ReturnType<typeof vi.fn>
+let getSubscription: ReturnType<typeof vi.fn>
+let current: unknown
+beforeEach(() => {
+  vi.resetModules()
+  vi.restoreAllMocks()
+  localStorage.clear()
+  permission = 'default'
+  current = null
+  requestPermission = vi.fn(async () => { permission = 'granted'; return permission })
+  unsubscribe = vi.fn(async () => { current = null; return true })
+  subscribe = vi.fn(async () => {
+    current = { toJSON: () => ({ endpoint: 'https://fcm.googleapis.com/fcm/send/test', keys: { p256dh: 'test', auth: 'test' } }), unsubscribe }
+    return current
+  })
+  getSubscription = vi.fn(async () => current)
+  const registration = { active: { state: 'activated', scriptURL: 'https://localhost/notifications-sw.js' }, pushManager: { subscribe, getSubscription } }
+  register = vi.fn(async () => registration)
+  Object.defineProperty(navigator, 'serviceWorker', { configurable: true, value: { register, getRegistration: vi.fn(async () => registration) } })
+  Object.defineProperty(window, 'isSecureContext', { configurable: true, value: true })
+  Object.defineProperty(window, 'PushManager', { configurable: true, value: class {} })
+  Object.defineProperty(window, 'Notification', { configurable: true, value: { get permission() { return permission }, requestPermission } })
+  window.matchMedia = vi.fn().mockReturnValue({ matches: false })
+  api.mockReset()
+  api.mockImplementation(async (_path: string, options?: { method?: string }) => options?.method === 'POST' ? RECEIPT : options?.method === 'DELETE' ? undefined : CONFIG)
+})
+afterEach(() => { vi.restoreAllMocks() })
+
+describe('notificações do navegador: escolha explícita e sucesso real', () => {
+  it('carregar a página não registra worker, não pede permissão e não inscreve o visitante', async () => {
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    expect(n.supported.value).toBe(true)
+    expect(register).not.toHaveBeenCalled()
+    expect(requestPermission).not.toHaveBeenCalled()
+    expect(subscribe).not.toHaveBeenCalled()
+    expect(n.subscribed.value).toBe(false)
+  })
+  it('não inscreve no servidor quando o visitante recusa', async () => {
+    requestPermission.mockImplementation(async () => { permission = 'denied'; return permission })
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    expect(n.subscribed.value).toBe(false)
+    expect(register).not.toHaveBeenCalled()
+    expect(api.mock.calls.some(c => c[1]?.method === 'POST')).toBe(false)
+    expect(n.message.value).toContain('bloqueados')
+  })
+  it('somente confirma após aceite do servidor e guarda apenas a credencial de cancelamento', async () => {
+    const { useBrowserNotifications, PUSH_STORAGE_KEY } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    expect(register).toHaveBeenCalledWith('/notifications-sw.js', { scope: '/', updateViaCache: 'none' })
+    expect(subscribe).toHaveBeenCalledWith(expect.objectContaining({ userVisibleOnly: true }))
+    expect(n.subscribed.value).toBe(true)
+    expect(JSON.parse(localStorage.getItem(PUSH_STORAGE_KEY)!)).toEqual({ subscriptionId: RECEIPT.subscriptionId, unsubscribeToken: RECEIPT.unsubscribeToken })
+  })
+  it('falha da API desfaz uma assinatura nova do navegador e não mostra ativação', async () => {
+    api.mockImplementation(async (_path: string, options?: { method?: string }) => {
+      if (options?.method === 'POST') throw new Error('offline')
+      return CONFIG
+    })
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    expect(unsubscribe).toHaveBeenCalledOnce()
+    expect(n.subscribed.value).toBe(false)
+    expect(n.failed.value).toBe(true)
+  })
+  it('se não consegue guardar o cancelamento, revoga a inscrição recém-aceita', async () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked') })
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    expect(api).toHaveBeenCalledWith('/notifications/subscriptions', { method: 'DELETE', body: { subscriptionId: RECEIPT.subscriptionId, unsubscribeToken: RECEIPT.unsubscribeToken } })
+    expect(unsubscribe).toHaveBeenCalledOnce()
+    expect(n.subscribed.value).toBe(false)
+  })
+  it('versão de consentimento diferente impede a inscrição com texto antigo', async () => {
+    api.mockResolvedValue({ ...CONFIG, consentVersion: '2.0' })
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    expect(requestPermission).not.toHaveBeenCalled()
+    expect(n.config.value).toBeNull()
+  })
+  it('cancelamento funciona mesmo com envio de notificações desligado', async () => {
+    const { useBrowserNotifications, PUSH_STORAGE_KEY } = await import('./useBrowserNotifications')
+    localStorage.setItem(PUSH_STORAGE_KEY, JSON.stringify({ subscriptionId: RECEIPT.subscriptionId, unsubscribeToken: RECEIPT.unsubscribeToken }))
+    api.mockImplementation(async (_path: string, options?: { method?: string }) => options?.method === 'DELETE' ? undefined : { ...CONFIG, enabled: false })
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.disable()
+    expect(api).toHaveBeenCalledWith('/notifications/subscriptions', { method: 'DELETE', body: { subscriptionId: RECEIPT.subscriptionId, unsubscribeToken: RECEIPT.unsubscribeToken } })
+    expect(localStorage.getItem(PUSH_STORAGE_KEY)).toBeNull()
+    expect(n.subscribed.value).toBe(false)
+    expect(n.message.value).toBe('Avisos desativados neste aparelho.')
+  })
+  it('falha no cancelamento do servidor pausa no aparelho e mantém credencial para tentar de novo', async () => {
+    const { useBrowserNotifications, PUSH_STORAGE_KEY } = await import('./useBrowserNotifications')
+    localStorage.setItem(PUSH_STORAGE_KEY, JSON.stringify({ subscriptionId: RECEIPT.subscriptionId, unsubscribeToken: RECEIPT.unsubscribeToken }))
+    await subscribe()
+    api.mockImplementation(async (_path: string, options?: { method?: string }) => {
+      if (options?.method === 'DELETE') throw new Error('offline')
+      return CONFIG
+    })
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.disable()
+    expect(unsubscribe).toHaveBeenCalledOnce()
+    expect(n.subscribed.value).toBe(false)
+    expect(n.saved.value).not.toBeNull()
+    expect(n.failed.value).toBe(true)
+  })
+
+  it('mantém a credencial e o cancelamento após falha dos dois rollbacks e nova montagem', async () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked') })
+    unsubscribe.mockRejectedValue(new Error('browser_unavailable'))
+    api.mockImplementation(async (_path: string, options?: { method?: string }) => {
+      if (options?.method === 'POST') return RECEIPT
+      if (options?.method === 'DELETE') throw new Error('offline')
+      return CONFIG
+    })
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    expect(n.subscribed.value).toBe(false)
+    expect(n.needsRecovery.value).toBe(true)
+    expect(n.hasBrowserSubscription.value).toBe(true)
+    expect(n.saved.value?.unsubscribeToken).toBe(RECEIPT.unsubscribeToken)
+    expect(n.message.value).toContain('não foi concluída')
+    await n.load(true)
+    expect(n.saved.value?.unsubscribeToken).toBe(RECEIPT.unsubscribeToken)
+    expect(n.needsRecovery.value).toBe(true)
+    expect(n.subscribed.value).toBe(false)
+    expect(api.mock.calls.filter(c => c[1]?.method === 'POST')).toHaveLength(1)
+    api.mockImplementation(async (_path: string, options?: { method?: string }) => options?.method === 'DELETE' ? undefined : CONFIG)
+    unsubscribe.mockImplementation(async () => { current = null; return true })
+    await n.disable()
+    expect(n.saved.value).toBeNull()
+    expect(n.hasBrowserSubscription.value).toBe(false)
+    expect(n.needsRecovery.value).toBe(false)
+    expect(n.failed.value).toBe(false)
+    expect(n.message.value).toBe('Avisos desativados neste aparelho.')
+  })
+  it('informa inscrição interrompida e só cria outra depois do gesto e da revogação anterior', async () => {
+    permission = 'granted'
+    const { useBrowserNotifications, PUSH_STORAGE_KEY } = await import('./useBrowserNotifications')
+    localStorage.setItem(PUSH_STORAGE_KEY, JSON.stringify({ subscriptionId: RECEIPT.subscriptionId, unsubscribeToken: RECEIPT.unsubscribeToken }))
+    const n = useBrowserNotifications()
+    await n.load()
+    expect(n.interrupted.value).toBe(true)
+    expect(n.needsRecovery.value).toBe(true)
+    expect(subscribe).not.toHaveBeenCalled()
+    expect(api.mock.calls.some(c => c[1]?.method === 'POST')).toBe(false)
+    await n.enable()
+    expect(api.mock.calls.filter(c => c[1]?.method).map(c => c[1].method)).toEqual(['DELETE', 'POST'])
+    expect(subscribe).toHaveBeenCalledOnce()
+    expect(n.subscribed.value).toBe(true)
+    expect(n.interrupted.value).toBe(false)
+    expect(n.needsRecovery.value).toBe(false)
+  })
+  it('não cria outra inscrição se não consegue revogar o recibo interrompido', async () => {
+    permission = 'granted'
+    const { useBrowserNotifications, PUSH_STORAGE_KEY } = await import('./useBrowserNotifications')
+    localStorage.setItem(PUSH_STORAGE_KEY, JSON.stringify({ subscriptionId: RECEIPT.subscriptionId, unsubscribeToken: RECEIPT.unsubscribeToken }))
+    api.mockImplementation(async (_path: string, options?: { method?: string }) => {
+      if (options?.method === 'DELETE') throw new Error('offline')
+      return CONFIG
+    })
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    expect(n.interrupted.value).toBe(true)
+    expect(n.saved.value).not.toBeNull()
+    expect(n.subscribed.value).toBe(false)
+    expect(subscribe).not.toHaveBeenCalled()
+    expect(api.mock.calls.some(c => c[1]?.method === 'POST')).toBe(false)
+  })
+  it('permite desativar uma assinatura nativa sem recibo mesmo sem acesso à configuração', async () => {
+    permission = 'granted'
+    await subscribe()
+    api.mockRejectedValue(new Error('offline'))
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    expect(n.config.value).toBeNull()
+    expect(n.hasBrowserSubscription.value).toBe(true)
+    expect(n.saved.value).toBeNull()
+    expect(n.subscribed.value).toBe(false)
+    expect(n.needsRecovery.value).toBe(true)
+    expect(api.mock.calls.some(c => c[1]?.method === 'POST')).toBe(false)
+    await n.disable()
+    expect(unsubscribe).toHaveBeenCalledOnce()
+    expect(n.hasBrowserSubscription.value).toBe(false)
+    expect(n.needsRecovery.value).toBe(false)
+    expect(n.message.value).toBe('Avisos desativados neste aparelho.')
+  })
+  it('não confirma cancelamento sem recibo quando o navegador também falha', async () => {
+    permission = 'granted'
+    await subscribe()
+    unsubscribe.mockRejectedValue(new Error('browser_unavailable'))
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.disable()
+    expect(n.failed.value).toBe(true)
+    expect(n.message.value).toContain('Não conseguimos confirmar')
+    expect(n.hasBrowserSubscription.value).toBe(true)
+    expect(n.needsRecovery.value).toBe(true)
+    expect(api.mock.calls.some(c => c[1]?.method === 'DELETE')).toBe(false)
+  })
+  it('não reenvia uma inscrição já confirmada quando a ativação é chamada novamente', async () => {
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    await n.enable()
+    expect(api.mock.calls.filter(c => c[1]?.method === 'POST')).toHaveLength(1)
+    expect(subscribe).toHaveBeenCalledOnce()
+  })
+  it('mostra reativar e desativar após rollback incompleto, inclusive ao montar o componente', async () => {
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked') })
+    unsubscribe.mockRejectedValue(new Error('browser_unavailable'))
+    api.mockImplementation(async (_path: string, options?: { method?: string }) => {
+      if (options?.method === 'POST') return RECEIPT
+      if (options?.method === 'DELETE') throw new Error('offline')
+      return CONFIG
+    })
+    const { useBrowserNotifications } = await import('./useBrowserNotifications')
+    const n = useBrowserNotifications()
+    await n.load()
+    await n.enable()
+    const { mount, flushPromises } = await import('@vue/test-utils')
+    const { default: BrowserNotifications } = await import('@/components/site/BrowserNotifications.vue')
+    const wrapper = mount(BrowserNotifications, { props: { manage: true }, global: { stubs: { RouterLink: true } } })
+    await flushPromises()
+    expect(wrapper.findAll('button').map(button => button.text())).toEqual(['Desativar avisos neste aparelho', 'Reativar avisos neste aparelho'])
+    expect(wrapper.text()).toContain('Você pode desativar quando quiser.')
+    expect(wrapper.text()).not.toContain('Seus avisos estão ativados')
+    expect(api.mock.calls.filter(c => c[1]?.method === 'POST')).toHaveLength(1)
+    wrapper.unmount()
+  })
+})

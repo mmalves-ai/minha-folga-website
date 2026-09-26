@@ -1,0 +1,172 @@
+# Conteúdo compartilhado do website: navegação, rodapé, textos de disponibilidade financeira,
+# demonstração da Bia e jornada. Campos terminados em _md aceitam Markdown (sem HTML bruto).
+revision:
+  version: 4
+  status: draft # draft | approved
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+brand:
+  name: Minha Folga
+  promise: Crédito mais simples. Mais folga para viver.
+  signature: Seu próximo passo, com mais folga.
+
+nav:
+  primary:
+    - { label: A Minha Folga, to: /sobre }
+    - { label: Soluções, to: /solucoes }
+    - { label: Como funciona, to: /como-funciona }
+    - { label: Bia, to: /bia }
+    - { label: Conteúdos, to: /conteudos }
+    - { label: Ajuda, to: /ajuda }
+  cta: { label: Quero entrar na fila, to: '/avise-me#formulario' }
+  ctaMobileLabel: Entrar na fila
+  closedCta: { label: Acompanhe a abertura, to: /lancamento }
+  closedCtaMobileLabel: Abertura
+  closedCtaTitle: Estamos chegando.
+  closedCtaText: Em breve, uma nova forma de buscar crédito pelo celular. Acompanhe a Minha Folga.
+
+footer:
+  groups:
+    - title: Empresa
+      links:
+        - { label: A Minha Folga, to: /sobre }
+        - { label: Em breve, to: /lancamento }
+        - { label: Segurança, to: /seguranca }
+    - title: Soluções
+      links:
+        - { label: Nossas soluções, to: /solucoes }
+        - { label: Consignado privado, to: /consignado-privado }
+        - { label: 'Bia, nossa IA', to: /bia }
+    - title: Aprenda
+      links:
+        - { label: Conteúdos, to: /conteudos }
+        - { label: Como funciona, to: /como-funciona }
+        - { label: O que é CET, to: /conteudos/o-que-e-cet }
+    - title: Atendimento
+      links:
+        - { label: Central de ajuda, to: /ajuda }
+        - { label: Fale com a gente, to: /atendimento }
+        - { label: Entrar na fila, to: /avise-me }
+        - { label: Preferências de comunicação, to: /preferencias }
+    - title: Informações legais
+      links:
+        - { label: Aviso de Privacidade, to: /privacidade }
+        - { label: Termos de uso, to: /termos }
+        - { label: Política de cookies, to: /cookies }
+
+# Situação da operação de crédito por fase. PILOT e LIVE exigem textos próprios, com a identificação
+# das instituições efetivamente contratadas; enquanto `ready: false`, o build dessas fases é bloqueado.
+availability:
+  PRE_LAUNCH:
+    ready: true
+    badge: Em breve
+    short: Estamos chegando. O cadastro é gratuito; o crédito estará sujeito à análise e à disponibilidade na abertura.
+    footer: "Em breve: crédito 100% digital. Cadastro gratuito. Contratação sujeita à análise e à disponibilidade na abertura."
+    microcopy: Sem compromisso. Sem depósito antecipado.
+  PILOT:
+    ready: false
+  LIVE:
+    ready: false
+
+# Roteiro do painel do hero (seção 6.2). Sempre com rótulo de exemplo visível.
+heroDemo:
+  title: Uma conversa com mais clareza
+  label: Exemplo de conversa
+  note: Demonstração educativa. Não é uma proposta de crédito.
+  messages:
+    - { from: person, text: 'Se a parcela ficar menor, eu economizo?' }
+    - { from: bia, text: 'Pode ajudar no mês, mas precisamos olhar também o prazo e o total a pagar. Uma parcela menor nem sempre significa um crédito mais barato.' }
+    - { from: person, text: 'É isso que eu quero entender.' }
+    - { from: bia, text: 'Vamos por partes. Eu explico os pontos para você decidir com mais segurança.' }
+
+# Três abas educativas da seção 6.4. Sem números de simulação.
+biaExamples:
+  - id: cet
+    tab: Entender o CET
+    messages:
+      - { from: person, text: 'O que é esse tal de CET?' }
+      - { from: bia, text: 'É o Custo Efetivo Total. Ele reúne os juros e os demais encargos e despesas considerados na operação. Por isso ajuda a comparar o custo de um crédito de forma mais completa do que olhar só a taxa de juros.' }
+      - { from: person, text: 'Então é melhor olhar o CET do que a taxa?' }
+      - { from: bia, text: 'Os dois ajudam. Olhe também o valor que você recebe, o prazo e o total a pagar. Se algum custo não estiver claro, vale pedir explicação antes de decidir.' }
+  - id: prazo-parcela
+    tab: Comparar prazo e parcela
+    messages:
+      - { from: person, text: 'Prefiro uma parcela bem pequena. Faz sentido?' }
+      - { from: bia, text: 'Uma parcela menor pode aliviar o mês. Mas, se o prazo ficar maior, o total pago ao longo do contrato pode aumentar.' }
+      - { from: person, text: 'Como eu comparo, então?' }
+      - { from: bia, text: 'Coloque lado a lado: quanto você recebe, a parcela, o número de meses, o CET e o total a pagar. Assim fica mais fácil ver o que muda de verdade.' }
+  - id: proximo-passo
+    tab: Saber o próximo passo
+    messages:
+      - { from: person, text: 'Já posso pedir um empréstimo pela Minha Folga?' }
+      - { from: bia, text: 'Estamos chegando! Você já pode conhecer a proposta e se cadastrar para receber o aviso de abertura.' }
+      - { from: person, text: 'E quando abrir, o que acontece?' }
+      - { from: bia, text: 'Vamos buscar opções para o seu perfil. Você confere o valor, a parcela, o prazo e o custo total antes de decidir. A contratação depende de análise.' }
+biaExamplesNote: Exemplo educativo. Nenhuma mensagem foi enviada ao atendimento.
+
+# Jornada da seção 6.5, reutilizada em Home, Consignado e Como funciona.
+# `currentWhen: waitlist`: a etapa só aparece como disponível com o cadastro aberto no servidor
+# (collection.waitlistEnabled); fechado, aparece como "cadastro em preparação".
+journey:
+  - stage: Agora
+    title: Entre na fila
+    # Decisão D1 (docs/DECISOES.md): o cadastro pede dados pessoais e do emprego; o texto da seção 6.5
+    # ("Deixe seu contato e conte qual é o seu tipo de vínculo.") foi superado.
+    text: Cadastre seus dados e os do trabalho. As chamadas seguirão a ordem de cadastro e a disponibilidade de crédito.
+    currentWhen: waitlist
+  - stage: Na abertura
+    title: Conheça suas opções
+    text: Com sua autorização, nossa IA vai buscar propostas disponíveis para o seu perfil, sujeitas à análise.
+  - stage: Antes de contratar
+    title: Compare com ajuda da Bia
+    text: Entenda quanto recebe, quanto paga por mês e qual é o custo total.
+  - stage: Só depois
+    title: Você decide
+    text: Se a proposta for aprovada e fizer sentido para você, siga para a contratação digital.
+journeyStatus:
+  current: etapa disponível
+  preparing: Em breve
+
+contentCategories:
+  - { id: entenda-o-credito, label: Entenda o crédito }
+  - { id: planejamento, label: Planejamento }
+  - { id: seguranca, label: Segurança }
+
+# Botão flutuante de conversa (decisão D1, docs/DECISOES.md), montado em todas as páginas públicas.
+# O chat do site da Hal-AI é o canal preferencial; o WhatsApp oficial hospedado na Hal-AI é a última
+# alternativa. Cada opção só aparece com o canal configurado; sem nenhum canal, o botão não existe.
+floatingContact:
+  toggle: Conversar
+  # Nome acessível do botão (começa pelo texto visível, critério 2.5.3 da WCAG).
+  toggleLabel: Conversar com a Minha Folga
+  title: Como prefere conversar?
+  intro: Tire dúvidas sobre a Minha Folga, o consignado e o cadastro de interesse.
+  webchat:
+    label: Conversar com a Bia no site
+    text: Chat com a Bia, nossa assistente de IA, sem sair desta página.
+    tag: Recomendado
+  whatsapp:
+    label: WhatsApp
+    # Com a Bia no WhatsApp (channels.biaOnWhatsapp) / só o número oficial.
+    textBia: Converse com a Bia no WhatsApp oficial da Minha Folga.
+    text: WhatsApp oficial da Minha Folga.
+    hint: (abre o WhatsApp em uma nova aba)
+  more: { label: Outros canais de atendimento, to: /atendimento }
+  notice:
+    title: Antes de abrir o chat
+    text: >-
+      O chat do site é operado pela plataforma Hal-AI, que atende a Minha Folga. Ao abrir, o seu navegador carrega o chat dos servidores da Hal-AI, e as mensagens que você enviar são tratadas para responder e, se você pedir, fazer o seu cadastro.
+    care: A Bia é uma inteligência artificial. Não envie senhas, códigos ou dados bancários.
+    privacy: { label: Leia o Aviso de Privacidade, to: /privacidade }
+    confirm: Abrir o chat
+    back: Voltar
+  loading: Conectando ao chat…
+  ready: Chat carregado. A conversa com a Bia continua na janela do chat, nesta página.
+  # Texto da seção 7 ("Canais") para quando o serviço falhar.
+  failed: Não consegui conectar agora. Você pode deixar seu contato ou usar o atendimento.
+  failedActions:
+    waitlist: { label: Fazer meu cadastro, to: /avise-me }
+    support: { label: Ir para o atendimento, to: /atendimento }
+    retry: Tentar de novo

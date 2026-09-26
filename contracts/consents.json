@@ -1,0 +1,40 @@
+{
+  "$comment": "Textos de consentimento e versões dos avisos legais. O frontend exibe exatamente estes textos; o backend registra a versão aceita. Mudança de texto exige nova versão.",
+  "purposes": {
+    "launch_notice": {
+      "version": "launch_notice.2026-09-25.1",
+      "requiredForWaitlist": true,
+      "channel": "whatsapp",
+      "text": "Quero receber pelo WhatsApp o aviso de abertura da operação de crédito da Minha Folga e atualizações sobre esse lançamento. Posso cancelar quando quiser."
+    },
+    "marketing": {
+      "version": "marketing.2026-09-25.1",
+      "requiredForWaitlist": false,
+      "channel": "whatsapp",
+      "text": "Também quero receber conteúdos e novidades da Minha Folga."
+    }
+  },
+  "notices": {
+    "privacy": {
+      "version": "1.3",
+      "status": "draft",
+      "draftedAt": "2026-09-26",
+      "revisedAt": null,
+      "reviewedBy": null
+    },
+    "terms": {
+      "version": "1.2",
+      "status": "draft",
+      "draftedAt": "2026-09-26",
+      "revisedAt": null,
+      "reviewedBy": null
+    },
+    "cookies": {
+      "version": "1.4",
+      "status": "draft",
+      "draftedAt": "2026-09-26",
+      "revisedAt": null,
+      "reviewedBy": null
+    }
+  }
+}

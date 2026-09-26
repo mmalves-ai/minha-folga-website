@@ -1,0 +1,196 @@
+# Textos dos formulários de relacionamento (cadastro de aviso, pedido de saída das comunicações e
+# atendimento). Os textos de consentimento NÃO ficam aqui: vêm de contracts/consents.json,
+# junto com a versão registrada pelo servidor. Textos entre chaves simples ({n}, {max}) são
+# preenchidos pela interface; campos terminados em _mdi aceitam Markdown em linha (links).
+# Decisão D1 (docs/DECISOES.md): cadastro com CPF e empregador, sem confirmação por código.
+revision:
+  version: 4
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+common:
+  requiredNote: Todos os campos são obrigatórios, exceto quando indicado.
+  submitting: Enviando…
+  checkFields: Confira os campos destacados.
+  rateLimited: Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.
+  reload: Recarregar a página
+
+waitlist:
+  steps:
+    label: Etapas do cadastro
+    first: Seus dados
+    second: Trabalho e avisos
+    continue: Continuar para trabalho e avisos
+    back: Voltar aos seus dados
+    firstAnnouncement: Etapa 1 de 2. Confira seus dados de contato.
+    secondAnnouncement: Etapa 2 de 2. Informe seu trabalho e escolha os avisos.
+  groups:
+    person: Seus dados
+    work: Trabalho e renda
+    workHint: Conte um pouco sobre seu trabalho para prepararmos seu atendimento.
+    place: Onde você mora
+  name:
+    label: Nome completo
+    hint: Como está nos seus documentos.
+    required: Informe seu nome completo.
+    tooShort: Informe nome e sobrenome.
+    tooLong: Use até 120 caracteres.
+    invalid: Use só letras no nome, sem números, símbolos ou e-mail.
+  cpf:
+    label: CPF
+    hint: 'Formato: 000.000.000-00.'
+    purposeTitle: Para que usamos o CPF
+    purpose: Para identificar seu cadastro e evitar duplicidade. Quando abrirmos, ele ajudará a verificar as opções para você. Este cadastro ainda não consulta crédito.
+    required: Informe seu CPF.
+    invalid: Confira o CPF.
+  phone:
+    label: WhatsApp com DDD
+    hint: 'Exemplo: (11) 91234-5678.'
+    required: Informe seu WhatsApp com DDD.
+    invalid: Confira o DDD e o número.
+  email:
+    label: E-mail
+    hint: 'Exemplo: nome@exemplo.com.br'
+    invalid: Confira o e-mail.
+    tooLong: Use até 160 caracteres.
+  employer:
+    label: Empresa onde você trabalha
+    hint: Nome da empresa ou da pessoa que paga o seu salário.
+    required: Informe o nome da empresa ou de quem paga o seu salário.
+    tooShort: Use pelo menos 2 caracteres.
+    tooLong: Use até 120 caracteres.
+    invalid: Use só o nome da empresa, sem e-mail ou número de documento.
+  employment:
+    label: Tipo de vínculo de trabalho
+    placeholder: Escolha uma opção
+    required: Escolha a opção que mais combina com o seu vínculo.
+  tenure:
+    label: Tempo no emprego atual
+    placeholder: Escolha uma faixa
+    required: Escolha há quanto tempo você está no emprego atual.
+  income:
+    label: Faixa de salário líquido
+    hint: O valor que cai na sua conta por mês, já com os descontos.
+    placeholder: Escolha uma faixa
+    required: Escolha uma faixa ou “Prefiro não informar”.
+  city:
+    label: Cidade
+    required: Informe sua cidade.
+    tooLong: Use até 80 caracteres.
+    invalid: Use só letras no nome da cidade.
+  uf:
+    label: UF
+    placeholder: Escolha
+    required: Escolha a UF.
+  topic:
+    label: O que você quer entender melhor?
+    none: Prefiro não responder
+  optionalTag: Opcional
+  age:
+    label: Tenho 18 anos ou mais
+    required: Para se cadastrar, confirme que você tem 18 anos ou mais.
+  consents:
+    legend: O que você quer receber pelo WhatsApp
+    requiredTag: Necessário para o aviso
+    optionalTag: Opcional
+    required: Para receber o aviso de abertura, marque esta opção.
+  privacy_mdi: Usaremos seus dados para as finalidades escolhidas e para a futura pré-análise de elegibilidade. Saiba quem cuida deles e como exercer seus direitos no [Aviso de Privacidade](/privacidade).
+  submit: Quero entrar na fila
+  below: O cadastro não garante aprovação nem reserva dinheiro. Não envie documentos, senhas ou dados bancários.
+  consentOutdated: Os textos de consentimento foram atualizados. Recarregue a página para ler a versão atual antes de enviar.
+  formExpired: Não conseguimos concluir o envio agora. Seus dados continuam no formulário. Tente enviar de novo em instantes.
+  unavailable:
+    title: O cadastro de aviso ainda não está aberto
+    text: Por enquanto, este formulário não recebe cadastros e nenhum dado é coletado aqui. Quando o cadastro abrir, ele aparecerá nesta página.
+    meanwhile: 'Enquanto isso, você pode:'
+    links:
+      - { to: /conteudos, label: Ler os conteúdos, text: 'Entenda CET, parcela, prazo e desconto em folha.' }
+      - { to: /bia, label: Conhecer a Bia, text: Veja como nossa assistente de IA explica o crédito. }
+      - { to: /atendimento, label: Falar com o atendimento, text: Tire dúvidas pelos canais oficiais. }
+
+# Campo-armadilha anti-robô: fora da tela e escondido de leitores de tela (pessoas não o veem).
+trap:
+  label: Deixe este campo em branco
+
+# Ações para falar com a Bia (chat do site primeiro; WhatsApp oficial como última alternativa).
+bia:
+  webchat: Conversar com a Bia no site
+  whatsapp: Falar com a Bia no WhatsApp
+  whatsappText: 'Olá, Bia! Quero falar com a Minha Folga.'
+  newTab: (abre o WhatsApp em nova aba)
+  fallback: Conhecer a Bia
+
+# Pedido de saída sem link de preferências (POST /api/preferences/opt-out): resposta sempre genérica.
+optOut:
+  title: Pedir saída das comunicações
+  text: Informe o número que recebe as mensagens. Se ele estiver na nossa lista, deixamos de enviar o aviso de abertura e os conteúdos e novidades para ele.
+  privacy: Por segurança, esta tela não mostra se o número está cadastrado nem exibe dados.
+  submit: Pedir saída
+  done: Pedido registrado. Se este número estiver na nossa lista, ele não vai mais receber o aviso de abertura nem conteúdos e novidades da Minha Folga.
+  another: Pedir saída para outro número
+
+support:
+  requiredNote: Todos os campos são obrigatórios.
+  name:
+    label: Nome
+    hint: Como podemos chamar você.
+    required: Informe seu nome.
+    tooLong: Use até 80 caracteres.
+  method:
+    legend: Como você prefere receber a resposta?
+    emailOnly: Vamos responder pelo e-mail que você informar.
+    required: Escolha como prefere receber a resposta.
+  email:
+    label: E-mail para resposta
+    hint: 'Exemplo: nome@exemplo.com.br'
+    required: Informe seu e-mail.
+    invalid: Confira o e-mail.
+  whatsapp:
+    label: WhatsApp com DDD para resposta
+    hint: 'Exemplo: (11) 91234-5678'
+    required: Informe seu WhatsApp com DDD.
+    invalid: Confira o DDD e o número.
+  subject:
+    label: Assunto
+    placeholder: Escolha um assunto
+    required: Escolha o assunto da sua solicitação.
+  message:
+    label: Mensagem
+    hint: Conte sua dúvida ou solicitação com suas palavras.
+    required: Escreva sua mensagem.
+    tooShort: Escreva pelo menos 10 caracteres para a gente entender sua solicitação.
+    tooLong: A mensagem pode ter até 2000 caracteres.
+    counter: '{n} de {max} caracteres'
+    nearLimit: 'Restam {n} caracteres.'
+  safety: Não envie CPF, documentos, senhas ou dados bancários.
+  attachments:
+    label: Anexos
+    button: Anexar arquivo
+    hint: O envio de arquivos está desativado nesta fase. Se precisar, descreva a situação na mensagem.
+  privacy_mdi: Usaremos seus dados para responder e acompanhar esta solicitação. Enviar esta mensagem não inscreve você em comunicações de marketing. Saiba mais no [Aviso de Privacidade](/privacidade).
+  submit: Enviar solicitação
+  success:
+    title: Recebemos sua solicitação.
+    protocolLabel: Protocolo
+    linkLabel: Link seguro de acompanhamento
+    linkHint: Guarde este link. Ele é a forma segura de acompanhar sua solicitação e não será mostrado de novo.
+    copy: Copiar link
+    copied: Link copiado.
+    copyFailed: Não foi possível copiar automaticamente. Selecione o link e copie.
+    open: Acompanhar agora
+    newTab: (abre em nova aba)
+    nextTitle: Próximos passos
+    replyByEmail: Vamos responder pelo e-mail que você informou.
+    replyByWhatsapp: A equipe vai responder pelo WhatsApp oficial da Minha Folga, no número que você informou.
+    hours: 'Atendimento humano: {hours}.'
+    responseTime: 'Prazo de resposta: {time}.'
+    keepPrivate: Não compartilhe o link de acompanhamento. Ele mostra o andamento da sua solicitação.
+    another: Enviar outra solicitação
+    anotherHint: O link desta solicitação não aparecerá de novo depois que você sair desta tela.
+  unavailable:
+    title: O formulário de atendimento está indisponível no momento
+    text: Não estamos recebendo solicitações por este formulário agora. Use os canais oficiais desta página ou consulte a Central de ajuda.
+    help: { to: /ajuda, label: Ir para a Central de ajuda }
+    security: { to: /seguranca, label: Canais oficiais e segurança }

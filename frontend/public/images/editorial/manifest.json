@@ -1,0 +1,272 @@
+[
+  {
+    "file": "hero-480.avif",
+    "width": 480,
+    "height": 320,
+    "bytes": 7726
+  },
+  {
+    "file": "hero-480.webp",
+    "width": 480,
+    "height": 320,
+    "bytes": 17742
+  },
+  {
+    "file": "hero-480.jpg",
+    "width": 480,
+    "height": 320,
+    "bytes": 24100
+  },
+  {
+    "file": "hero-800.avif",
+    "width": 800,
+    "height": 534,
+    "bytes": 14221
+  },
+  {
+    "file": "hero-800.webp",
+    "width": 800,
+    "height": 534,
+    "bytes": 35344
+  },
+  {
+    "file": "hero-800.jpg",
+    "width": 800,
+    "height": 534,
+    "bytes": 50607
+  },
+  {
+    "file": "hero-1200.avif",
+    "width": 1200,
+    "height": 800,
+    "bytes": 22587
+  },
+  {
+    "file": "hero-1200.webp",
+    "width": 1200,
+    "height": 800,
+    "bytes": 61576
+  },
+  {
+    "file": "hero-1200.jpg",
+    "width": 1200,
+    "height": 800,
+    "bytes": 90548
+  },
+  {
+    "file": "planning-480.avif",
+    "width": 480,
+    "height": 320,
+    "bytes": 7144
+  },
+  {
+    "file": "planning-480.webp",
+    "width": 480,
+    "height": 320,
+    "bytes": 15468
+  },
+  {
+    "file": "planning-480.jpg",
+    "width": 480,
+    "height": 320,
+    "bytes": 22008
+  },
+  {
+    "file": "planning-800.avif",
+    "width": 800,
+    "height": 534,
+    "bytes": 12019
+  },
+  {
+    "file": "planning-800.webp",
+    "width": 800,
+    "height": 534,
+    "bytes": 28668
+  },
+  {
+    "file": "planning-800.jpg",
+    "width": 800,
+    "height": 534,
+    "bytes": 43809
+  },
+  {
+    "file": "planning-1200.avif",
+    "width": 1200,
+    "height": 800,
+    "bytes": 18238
+  },
+  {
+    "file": "planning-1200.webp",
+    "width": 1200,
+    "height": 800,
+    "bytes": 48208
+  },
+  {
+    "file": "planning-1200.jpg",
+    "width": 1200,
+    "height": 800,
+    "bytes": 76105
+  },
+  {
+    "file": "bia-480.avif",
+    "width": 480,
+    "height": 320,
+    "bytes": 11962
+  },
+  {
+    "file": "bia-480.webp",
+    "width": 480,
+    "height": 320,
+    "bytes": 24470
+  },
+  {
+    "file": "bia-480.jpg",
+    "width": 480,
+    "height": 320,
+    "bytes": 31016
+  },
+  {
+    "file": "bia-800.avif",
+    "width": 800,
+    "height": 534,
+    "bytes": 20212
+  },
+  {
+    "file": "bia-800.webp",
+    "width": 800,
+    "height": 534,
+    "bytes": 48302
+  },
+  {
+    "file": "bia-800.jpg",
+    "width": 800,
+    "height": 534,
+    "bytes": 63775
+  },
+  {
+    "file": "bia-1200.avif",
+    "width": 1200,
+    "height": 800,
+    "bytes": 30518
+  },
+  {
+    "file": "bia-1200.webp",
+    "width": 1200,
+    "height": 800,
+    "bytes": 80596
+  },
+  {
+    "file": "bia-1200.jpg",
+    "width": 1200,
+    "height": 800,
+    "bytes": 111566
+  },
+  {
+    "file": "conversation-480.avif",
+    "width": 480,
+    "height": 320,
+    "bytes": 8562
+  },
+  {
+    "file": "conversation-480.webp",
+    "width": 480,
+    "height": 320,
+    "bytes": 18118
+  },
+  {
+    "file": "conversation-480.jpg",
+    "width": 480,
+    "height": 320,
+    "bytes": 24968
+  },
+  {
+    "file": "conversation-800.avif",
+    "width": 800,
+    "height": 534,
+    "bytes": 15741
+  },
+  {
+    "file": "conversation-800.webp",
+    "width": 800,
+    "height": 534,
+    "bytes": 37110
+  },
+  {
+    "file": "conversation-800.jpg",
+    "width": 800,
+    "height": 534,
+    "bytes": 52378
+  },
+  {
+    "file": "conversation-1200.avif",
+    "width": 1200,
+    "height": 800,
+    "bytes": 24699
+  },
+  {
+    "file": "conversation-1200.webp",
+    "width": 1200,
+    "height": 800,
+    "bytes": 64096
+  },
+  {
+    "file": "conversation-1200.jpg",
+    "width": 1200,
+    "height": 800,
+    "bytes": 93737
+  },
+  {
+    "file": "aliviar-parcelas-480.avif",
+    "width": 480,
+    "height": 320,
+    "bytes": 8296
+  },
+  {
+    "file": "aliviar-parcelas-480.webp",
+    "width": 480,
+    "height": 320,
+    "bytes": 17552
+  },
+  {
+    "file": "aliviar-parcelas-480.jpg",
+    "width": 480,
+    "height": 320,
+    "bytes": 24188
+  },
+  {
+    "file": "aliviar-parcelas-800.avif",
+    "width": 800,
+    "height": 534,
+    "bytes": 14094
+  },
+  {
+    "file": "aliviar-parcelas-800.webp",
+    "width": 800,
+    "height": 534,
+    "bytes": 33052
+  },
+  {
+    "file": "aliviar-parcelas-800.jpg",
+    "width": 800,
+    "height": 534,
+    "bytes": 47740
+  },
+  {
+    "file": "aliviar-parcelas-1200.avif",
+    "width": 1200,
+    "height": 800,
+    "bytes": 21510
+  },
+  {
+    "file": "aliviar-parcelas-1200.webp",
+    "width": 1200,
+    "height": 800,
+    "bytes": 54694
+  },
+  {
+    "file": "aliviar-parcelas-1200.jpg",
+    "width": 1200,
+    "height": 800,
+    "bytes": 82722
+  }
+]

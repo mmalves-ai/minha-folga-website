@@ -1,0 +1,965 @@
+{
+  "capturedAt": "2026-09-26T21:33:59.739Z",
+  "origin": "https://localhost:8000",
+  "captures": [
+    {
+      "name": "home",
+      "path": "/",
+      "mode": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "title": "Minha Folga | Mais clareza para suas escolhas",
+      "h1": "Mais clareza para decidir.Mais apoio para você.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 150,
+            "height": 34
+          }
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/hero-800.avif",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loading": "eager",
+          "fetchpriority": "high",
+          "naturalWidth": 580,
+          "loaded": true,
+          "displayed": {
+            "width": 568,
+            "height": 570
+          }
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/planning-800.avif",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 648,
+          "loaded": true,
+          "displayed": {
+            "width": 560,
+            "height": 540
+          }
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "currentSrc": "https://localhost:8000/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 512,
+          "loaded": true,
+          "displayed": {
+            "width": 32,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 37,
+            "height": 33
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 48,
+            "height": 43
+          }
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/conversation-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 380,
+          "loaded": true,
+          "displayed": {
+            "width": 334,
+            "height": 209
+          }
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/planning-800.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 380,
+          "loaded": true,
+          "displayed": {
+            "width": 334,
+            "height": 209
+          }
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/bia-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 380,
+          "loaded": true,
+          "displayed": {
+            "width": 334,
+            "height": 209
+          }
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 168,
+            "height": 38
+          }
+        }
+      ],
+      "bodyWords": 1016,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "mode": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "title": "Quero ser avisado da abertura do consignado | Minha Folga",
+      "h1": "Uma nova opção de consignado.Pensada para você.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 150,
+            "height": 34
+          }
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/hero-800.avif",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loading": "eager",
+          "fetchpriority": "high",
+          "naturalWidth": 580,
+          "loaded": true,
+          "displayed": {
+            "width": 568,
+            "height": 570
+          }
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/planning-800.avif",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 648,
+          "loaded": true,
+          "displayed": {
+            "width": 560,
+            "height": 540
+          }
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "currentSrc": "https://localhost:8000/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 512,
+          "loaded": true,
+          "displayed": {
+            "width": 32,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 37,
+            "height": 33
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 48,
+            "height": 43
+          }
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 168,
+            "height": 38
+          }
+        }
+      ],
+      "bodyWords": 853,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "bia",
+      "path": "/bia",
+      "mode": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "title": "Bia, nossa assistente de IA | Minha Folga",
+      "h1": "Conheça a Bia. Uma conversa mais clara.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 150,
+            "height": 34
+          }
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/bia-800.avif",
+          "alt": "Mulher usando seu celular em uma pausa do dia. Cena ilustrativa gerada por IA.",
+          "loading": "eager",
+          "fetchpriority": "high",
+          "naturalWidth": 691,
+          "loaded": true,
+          "displayed": {
+            "width": 540,
+            "height": 510
+          }
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "currentSrc": "https://localhost:8000/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 512,
+          "loaded": true,
+          "displayed": {
+            "width": 32,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 36,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 36,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 168,
+            "height": 38
+          }
+        }
+      ],
+      "bodyWords": 1135,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "conteudos",
+      "path": "/conteudos",
+      "mode": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "status": 200,
+      "title": "Conteúdos para entender crédito com calma | Minha Folga",
+      "h1": "Informação que abre espaço para boas decisões.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 150,
+            "height": 34
+          }
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/conversation-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 380,
+          "loaded": true,
+          "displayed": {
+            "width": 538,
+            "height": 336
+          }
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/planning-800.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 380,
+          "loaded": true,
+          "displayed": {
+            "width": 538,
+            "height": 336
+          }
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/bia-800.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 380,
+          "loaded": true,
+          "displayed": {
+            "width": 538,
+            "height": 336
+          }
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/conversation-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 380,
+          "loaded": true,
+          "displayed": {
+            "width": 538,
+            "height": 336
+          }
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 168,
+            "height": 38
+          }
+        }
+      ],
+      "bodyWords": 454,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "home",
+      "path": "/",
+      "mode": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Minha Folga | Mais clareza para suas escolhas",
+      "h1": "Mais clareza para decidir.Mais apoio para você.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 140,
+            "height": 31
+          }
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/hero-480.avif",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loading": "eager",
+          "fetchpriority": "high",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 350,
+            "height": 350
+          }
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/planning-480.avif",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 350,
+            "height": 340
+          }
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "currentSrc": "https://localhost:8000/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 512,
+          "loaded": true,
+          "displayed": {
+            "width": 32,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 36,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 36,
+            "height": 32
+          }
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/conversation-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 300,
+            "height": 188
+          }
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/planning-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 300,
+            "height": 188
+          }
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/bia-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 300,
+            "height": 188
+          }
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 168,
+            "height": 38
+          }
+        }
+      ],
+      "bodyWords": 1005,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "avise-me",
+      "path": "/avise-me",
+      "mode": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Quero ser avisado da abertura do consignado | Minha Folga",
+      "h1": "Uma nova opção de consignado.Pensada para você.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 140,
+            "height": 31
+          }
+        },
+        {
+          "src": "/images/editorial/hero-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/hero-480.avif",
+          "alt": "Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.",
+          "loading": "eager",
+          "fetchpriority": "high",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 350,
+            "height": 350
+          }
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/planning-480.avif",
+          "alt": "Homem organizando anotações à mesa com celular. Cena ilustrativa gerada por IA.",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 350,
+            "height": 340
+          }
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "currentSrc": "https://localhost:8000/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 512,
+          "loaded": true,
+          "displayed": {
+            "width": 32,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 36,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 36,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 168,
+            "height": 38
+          }
+        }
+      ],
+      "bodyWords": 842,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "bia",
+      "path": "/bia",
+      "mode": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Bia, nossa assistente de IA | Minha Folga",
+      "h1": "Conheça a Bia. Uma conversa mais clara.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 140,
+            "height": 31
+          }
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/bia-480.avif",
+          "alt": "Mulher usando seu celular em uma pausa do dia. Cena ilustrativa gerada por IA.",
+          "loading": "eager",
+          "fetchpriority": "high",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 350,
+            "height": 360
+          }
+        },
+        {
+          "src": "/brand/hal-ai-logo.png",
+          "currentSrc": "https://localhost:8000/brand/hal-ai-logo.png",
+          "alt": "Hal-AI",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 512,
+          "loaded": true,
+          "displayed": {
+            "width": 32,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 36,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-simbolo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-simbolo.svg",
+          "alt": "",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 167,
+          "loaded": true,
+          "displayed": {
+            "width": 36,
+            "height": 32
+          }
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 168,
+            "height": 38
+          }
+        }
+      ],
+      "bodyWords": 1159,
+      "errors": [],
+      "violations": []
+    },
+    {
+      "name": "conteudos",
+      "path": "/conteudos",
+      "mode": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Conteúdos para entender crédito com calma | Minha Folga",
+      "h1": "Informação que abre espaço para boas decisões.",
+      "overflow": 0,
+      "images": [
+        {
+          "src": "/brand/minha-folga-logo.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 140,
+            "height": 31
+          }
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/conversation-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 300,
+            "height": 188
+          }
+        },
+        {
+          "src": "/images/editorial/planning-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/planning-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 300,
+            "height": 188
+          }
+        },
+        {
+          "src": "/images/editorial/bia-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/bia-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 300,
+            "height": 188
+          }
+        },
+        {
+          "src": "/images/editorial/conversation-800.jpg",
+          "currentSrc": "https://localhost:8000/images/editorial/conversation-480.avif",
+          "alt": "",
+          "loading": "lazy",
+          "fetchpriority": "auto",
+          "naturalWidth": 349,
+          "loaded": true,
+          "displayed": {
+            "width": 300,
+            "height": 188
+          }
+        },
+        {
+          "src": "/brand/minha-folga-logo-reverso.svg",
+          "currentSrc": "https://localhost:8000/brand/minha-folga-logo-reverso.svg",
+          "alt": "Minha Folga",
+          "loading": "auto",
+          "fetchpriority": "auto",
+          "naturalWidth": 300,
+          "loaded": true,
+          "displayed": {
+            "width": 168,
+            "height": 38
+          }
+        }
+      ],
+      "bodyWords": 443,
+      "errors": [],
+      "violations": []
+    }
+  ],
+  "responsive": [
+    {
+      "path": "/",
+      "width": 360,
+      "overflow": 0
+    },
+    {
+      "path": "/",
+      "width": 390,
+      "overflow": 0
+    },
+    {
+      "path": "/",
+      "width": 768,
+      "overflow": 0
+    },
+    {
+      "path": "/",
+      "width": 1024,
+      "overflow": 0
+    },
+    {
+      "path": "/",
+      "width": 1440,
+      "overflow": 0
+    },
+    {
+      "path": "/avise-me",
+      "width": 360,
+      "overflow": 0
+    },
+    {
+      "path": "/avise-me",
+      "width": 390,
+      "overflow": 0
+    },
+    {
+      "path": "/avise-me",
+      "width": 768,
+      "overflow": 0
+    },
+    {
+      "path": "/avise-me",
+      "width": 1024,
+      "overflow": 0
+    },
+    {
+      "path": "/avise-me",
+      "width": 1440,
+      "overflow": 0
+    },
+    {
+      "path": "/bia",
+      "width": 360,
+      "overflow": 0
+    },
+    {
+      "path": "/bia",
+      "width": 390,
+      "overflow": 0
+    },
+    {
+      "path": "/bia",
+      "width": 768,
+      "overflow": 0
+    },
+    {
+      "path": "/bia",
+      "width": 1024,
+      "overflow": 0
+    },
+    {
+      "path": "/bia",
+      "width": 1440,
+      "overflow": 0
+    }
+  ]
+}

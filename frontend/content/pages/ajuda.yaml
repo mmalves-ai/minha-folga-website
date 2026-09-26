@@ -1,0 +1,64 @@
+# Central de ajuda (/ajuda). As perguntas e respostas ficam em content/faq.yaml (base aprovada,
+# também usada pela Bia). Aqui ficam somente os textos da página e a apresentação de cada tema.
+revision:
+  version: 3
+  status: draft
+  draftedAt: 2026-09-26
+  approvedAt: null
+  approvedBy: null
+
+meta:
+  title: Central de ajuda
+  description: Encontre respostas sobre a Minha Folga, o consignado privado, o cadastro de interesse, a Bia e a proteção dos seus dados. Busque por tema ou palavra.
+
+hero:
+  title: Como podemos ajudar?
+  lead: Encontre respostas sobre crédito, cadastro e a Bia. Digite sua dúvida ou escolha um tema.
+
+search:
+  label: Buscar uma dúvida
+  hint: Digite uma palavra ou frase, como cadastro, CET ou golpe.
+  resultsHeading: Resultados da busca
+  # Texto exato da seção 6.14.
+  empty: Não encontramos uma resposta com esses termos. Tente outra palavra ou fale com o atendimento.
+  clear: Limpar busca
+
+topicsNav: Temas
+
+# Apresentação de cada categoria de content/faq.yaml (a chave é o id da categoria).
+topics:
+  sobre:
+    icon: home
+    intro: Conheça a Minha Folga e o que estamos preparando para você.
+    links:
+      - { label: A Minha Folga, to: /sobre }
+      - { label: Nossas soluções, to: /solucoes }
+  consignado:
+    icon: layers
+    intro: Novo empréstimo, parcela menor e como comparar as opções.
+    links:
+      - { label: Consignado privado, to: /consignado-privado }
+      - { label: Em breve, to: /lancamento }
+  cadastro:
+    icon: check-circle
+    intro: Como entrar na fila, receber o aviso e mudar suas escolhas.
+    links:
+      - { label: Entrar na fila, to: /avise-me }
+      - { label: Preferências de comunicação, to: /preferencias }
+  bia:
+    icon: chat
+    intro: Como a Bia vai ajudar você a entender e escolher.
+    links:
+      - { label: Conheça a Bia, to: /bia }
+  dados:
+    icon: shield
+    intro: Dados pedidos no cadastro, canais oficiais e como agir diante de uma mensagem suspeita.
+    links:
+      - { label: Segurança, to: /seguranca }
+      - { label: Aviso de Privacidade, to: /privacidade }
+
+contact:
+  title: Não encontrou o que procurava?
+  text: Envie sua dúvida. Vamos ajudar você a encontrar o próximo passo.
+  primary: { label: Falar com o atendimento, to: /atendimento }
+  secondary: { label: Ver os conteúdos, to: /conteudos }
