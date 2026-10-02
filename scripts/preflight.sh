@@ -359,7 +359,11 @@ if ((${#readable_files[@]})); then
 fi
 if [[ -n "$docroot_hit" ]]; then
   out "raiz_dentro_de_document_root=$docroot_hit"
-  verdict BLOQUEIO "a raiz $MF_ROOT fica dentro do document root de outro site ($docroot_hit); escolha uma pasta que nenhum vhost publique"
+  if [[ "${MINHAFOLGA_ALLOW_HTML_ROOT:-0}" == "1" ]]; then
+    verdict ATENCAO "a raiz $MF_ROOT fica dentro do document root de outro site ($docroot_hit); MINHAFOLGA_ALLOW_HTML_ROOT=1 ativo (bloqueie acessos diretos no Apache)"
+  else
+    verdict BLOQUEIO "a raiz $MF_ROOT fica dentro do document root de outro site ($docroot_hit); escolha uma pasta que nenhum vhost publique ou use MINHAFOLGA_ALLOW_HTML_ROOT=1 se bloqueado no Apache"
+  fi
 fi
 
 # Servidor padrão por endereço:porta. Sem default explícito, o PRIMEIRO server/VirtualHost carregado para a porta

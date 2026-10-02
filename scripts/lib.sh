@@ -84,7 +84,11 @@ mf_resolve_root() {
   # os root/DocumentRoot declarados nos vhosts existentes.
   case "$canonical/" in
     */public_html/* | */htdocs/* | */httpdocs/* | */wwwroot/* | /var/www/html/*)
-      mf_die "MINHAFOLGA_APP_ROOT está dentro de um document root de site ($canonical). Use uma pasta que nenhum servidor web publique, ex.: /srv/minhafolga ou ~/apps/minhafolga."
+      if [[ "${MINHAFOLGA_ALLOW_HTML_ROOT:-0}" == "1" ]]; then
+        mf_warn "MINHAFOLGA_APP_ROOT está dentro de um document root de site ($canonical). Certifique-se de que o Apache bloqueie acesso direto a arquivos privados (.env, backend, backups)."
+      else
+        mf_die "MINHAFOLGA_APP_ROOT está dentro de um document root de site ($canonical). Use uma pasta que nenhum servidor web publique (ex.: /srv/minhafolga ou ~/apps/minhafolga), ou defina MINHAFOLGA_ALLOW_HTML_ROOT=1 se estiver ciente e tiver bloqueado o acesso direto no Apache."
+      fi
       ;;
   esac
   local depth

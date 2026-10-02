@@ -219,7 +219,7 @@ cat <<EOF > "$VHOST_FILE"
         DirectoryIndex index.html
         DirectorySlash Off
 
-        Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         Header always set X-Content-Type-Options "nosniff"
         Header always set X-Frame-Options "DENY"
         Header always set Referrer-Policy "strict-origin-when-cross-origin"

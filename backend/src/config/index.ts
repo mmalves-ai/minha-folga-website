@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { parseEnv } from 'node:util'
 import { parseKeyring, type Keyring } from '../lib/crypto.js'
 import { crossFieldIssues, EnvSchema, identityIssues, OBSOLETE_KEYS, type ConfigIssue, type RawEnv } from './env.js'
@@ -83,7 +83,7 @@ export interface LoadConfigOptions {
 
 export function readEnvSource(options: LoadConfigOptions = {}): Record<string, string | undefined> {
   if (options.source) return options.source
-  const envFile = options.envFile ?? process.env.MF_ENV_FILE
+  const envFile = options.envFile ?? process.env.MF_ENV_FILE ?? (existsSync('.env') ? '.env' : undefined)
   if (envFile) return parseEnv(readFileSync(envFile, 'utf8')) as Record<string, string>
   return process.env
 }
