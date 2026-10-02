@@ -254,7 +254,7 @@ cat <<EOF > "$VHOST_FILE"
 
     # Rotas administrativas (SPA fallback)
     RewriteRule "^/admin/(painel|leads|leads/[A-Za-z0-9_-]{1,64}|atendimentos|atendimentos/[A-Za-z0-9_-]{1,64}|privacidade|auditoria|notificacoes|usuarios|conta)$" /admin.html [L]
-    RewriteRule "^/([^/\\].*?)/+$" /\$1 [R=301,L]
+    RewriteRule "^/([^/\\\\].*?)/+$" /\$1 [R=301,L]
     RewriteRule "^/$" /index.html [L]
 
     # Rotas pré-renderizadas estáticas (/sobre -> sobre.html)
