@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BrandLogo from '@/components/site/BrandLogo.vue'
-import { formatCnpj, formatPhoneBr } from '@/lib/format'
+import { formatPhoneBr } from '@/lib/format'
 import { availability, publicConfig, site } from '@/services/site'
 import type { LinkItem } from '@/types/content'
 
@@ -52,10 +52,6 @@ function openCookieSettings() {
               {{ id.tradeName }} ·
               <span :class="{ 'pending-data': !id.legalName }">{{ id.legalName ?? pending('razão social') }}</span>
             </dd>
-          </div>
-          <div>
-            <dt>CNPJ</dt>
-            <dd :class="{ 'pending-data': !id.cnpj }">{{ id.cnpj ? formatCnpj(id.cnpj) : pending('CNPJ') }}</dd>
           </div>
           <div>
             <dt>Controladora dos dados</dt>

@@ -6,16 +6,13 @@ import Breadcrumbs from '@/components/site/Breadcrumbs.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import {
   extractToc,
-  isNoticeApproved,
   LEGAL_DOCS,
-  noticeVersionLabel,
   splitLegalBlocks,
   type NoticeKey,
 } from '@/components/legal/legal'
-import { publicConfig } from '@/services/site'
 
 /**
- * Layout de documento das páginas legais: cabeçalho com versão real (contracts/consents.json),
+ * Layout de documento das páginas legais: cabeçalho,
  * seletor entre os três documentos, sumário navegável, seções numeradas e links cruzados.
  * Parágrafos `[[nome]]` no Markdown viram slots com o mesmo nome (conteúdo dinâmico da página).
  */
@@ -27,9 +24,6 @@ const props = defineProps<{
 const meta = computed(() => props.doc.meta as { title: string; summary: string; highlights?: string[] })
 const current = computed(() => LEGAL_DOCS.find((d) => d.notice === props.notice)!)
 const others = computed(() => LEGAL_DOCS.filter((d) => d.notice !== props.notice))
-const noticeMeta = computed(() => publicConfig.notices[props.notice])
-const versionLabel = computed(() => noticeVersionLabel(noticeMeta.value))
-const approved = computed(() => isNoticeApproved(noticeMeta.value))
 const toc = computed(() => extractToc(props.doc.html))
 const blocks = computed(() => splitLegalBlocks(props.doc.html))
 const contentId = computed(() => `doc-${props.notice}`)
@@ -44,10 +38,6 @@ const contentId = computed(() => `doc-${props.notice}`)
         <p class="eyebrow">Informações legais</p>
         <h1 id="titulo-pagina">{{ meta.title }}</h1>
         <p class="lead">{{ meta.summary }}</p>
-        <p class="legal-head__version" :class="{ 'legal-head__version--draft': !approved }">
-          <AppIcon :name="approved ? 'check-circle' : 'clock'" />
-          <span>{{ versionLabel }}</span>
-        </p>
       </div>
 
       <nav class="legal-docs" aria-label="Documentos legais">
@@ -74,15 +64,6 @@ const contentId = computed(() => `doc-${props.notice}`)
         </aside>
 
         <article :id="contentId" class="legal-article" aria-labelledby="titulo-pagina">
-          <div v-if="!approved" class="notice notice--pending legal-article__draft" role="note">
-            <AppIcon name="info" />
-            <p>
-              <strong>Texto em revisão.</strong> Este documento descreve o funcionamento atual do site e ainda passará
-              por revisão jurídica. Trechos marcados como pendentes dependem de dados ou decisões da empresa e impedem a
-              publicação até serem preenchidos.
-            </p>
-          </div>
-
           <section v-if="meta.highlights?.length" class="legal-summary" aria-labelledby="resumo-titulo">
             <h2 id="resumo-titulo" class="legal-summary__title">Em resumo</h2>
             <ul>
@@ -138,34 +119,7 @@ const contentId = computed(() => `doc-${props.notice}`)
 }
 
 .legal-head .lead {
-  margin-bottom: var(--mf-space-4);
-}
-
-.legal-head__version {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin: 0;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: var(--mf-mint);
-  color: var(--mf-forest);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.legal-head__version--draft {
-  background: #fff8e6;
-  color: #4d3a00;
-  box-shadow: inset 0 0 0 1px #e9d9a8;
-}
-
-.legal-head__version .icon {
-  flex: none;
-  width: 18px;
-  height: 18px;
-  margin-top: 1px;
+  margin-bottom: 0;
 }
 
 .legal-docs ul {
@@ -246,10 +200,6 @@ const contentId = computed(() => `doc-${props.notice}`)
 .legal-article {
   min-width: 0;
   max-width: 760px;
-}
-
-.legal-article__draft {
-  margin-bottom: var(--mf-space-5);
 }
 
 .legal-summary {
@@ -440,10 +390,6 @@ const contentId = computed(() => `doc-${props.notice}`)
 @media (max-width: 767px) {
   .legal-head {
     padding-block: var(--mf-space-4) var(--mf-space-5);
-  }
-
-  .legal-head__version {
-    border-radius: 14px;
   }
 
   .legal-docs ul {
