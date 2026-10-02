@@ -166,7 +166,7 @@ cat <<EOF > "$VHOST_FILE"
     # Ignora o Let's Encrypt
     RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
     # Redireciona tudo para HTTPS www
-    RewriteRule ^(.*)$ https://www.minhafolga.com.br$1 [R=301,L]
+    RewriteRule ^(.*)$ https://www.minhafolga.com.br\$1 [R=301,L]
 </VirtualHost>
 
 # 2. Domínio raiz HTTPS -> www (301)
@@ -219,7 +219,7 @@ cat <<EOF > "$VHOST_FILE"
         DirectoryIndex index.html
         DirectorySlash Off
 
-        Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net; manifest-src 'self'; worker-src 'self'; frame-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         Header always set X-Content-Type-Options "nosniff"
         Header always set X-Frame-Options "DENY"
         Header always set Referrer-Policy "strict-origin-when-cross-origin"
@@ -254,13 +254,13 @@ cat <<EOF > "$VHOST_FILE"
 
     # Rotas administrativas (SPA fallback)
     RewriteRule "^/admin/(painel|leads|leads/[A-Za-z0-9_-]{1,64}|atendimentos|atendimentos/[A-Za-z0-9_-]{1,64}|privacidade|auditoria|notificacoes|usuarios|conta)$" /admin.html [L]
-    RewriteRule "^/([^/\\].*?)/+$" /$1 [R=301,L]
+    RewriteRule "^/([^/\\].*?)/+$" /\$1 [R=301,L]
     RewriteRule "^/$" /index.html [L]
 
     # Rotas pré-renderizadas estáticas (/sobre -> sobre.html)
     RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
     RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
-    RewriteRule "^/(.+)$" /$1.html [L]
+    RewriteRule "^/(.+)$" /\$1.html [L]
 
     RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
     RewriteRule "^/." - [R=404,L]
