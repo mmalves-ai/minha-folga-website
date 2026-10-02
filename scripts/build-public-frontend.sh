@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Frontend público para deploy-server.sh/update.sh: configuração real, SEO indexável e revisão estrita.
+# Frontend público para deploy-server.sh/update.sh: configuração real e SEO indexável.
+# A revisão editorial estrita é opcional neste fluxo direto (MF_STRICT_RELEASE=1).
 # Pré-requisitos: backend compilado, dependências frontend instaladas e backend/.env de produção.
 # O build ocorre fora de dist; falhas de configuração, conteúdo ou compilação preservam o site atual.
 set -euo pipefail
@@ -9,6 +10,13 @@ ENV_FILE="$APP_DIR/backend/.env"
 RUNTIME="$APP_DIR/scripts/node-runtime.sh"
 EXPORT_CLI="$APP_DIR/backend/dist/cli/export-public-config.js"
 DIST="$APP_DIR/frontend/dist"
+# O deploy direto mantém SEO indexável; a revisão editorial estrita pode ser solicitada.
+# O fluxo scripts/build.sh --release continua exigindo a revisão estrita.
+STRICT_RELEASE="${MF_STRICT_RELEASE:-0}"
+case "$STRICT_RELEASE" in
+  0|1) ;;
+  *) echo "Erro: MF_STRICT_RELEASE deve ser 0 ou 1." >&2; exit 1 ;;
+esac
 
 [[ -f "$ENV_FILE" ]] || { echo "Erro: backend/.env de produção não encontrado." >&2; exit 1; }
 [[ -f "$EXPORT_CLI" ]] || { echo "Erro: compile o backend antes do frontend público." >&2; exit 1; }
@@ -54,7 +62,7 @@ cd "$APP_DIR/frontend"
   VITE_SITE_URL="$SITE_URL" \
   VITE_API_BASE_URL=/api \
   MF_PUBLIC_CONFIG_FILE="$PUBLIC_CONFIG" \
-  MF_STRICT_RELEASE=1 \
+  MF_STRICT_RELEASE="$STRICT_RELEASE" \
   MF_INDEXABLE=1 \
   MF_OUT_DIR="$NEXT_DIST" \
   npm run build
@@ -73,4 +81,4 @@ grep -Fxq "Sitemap: $SITE_URL/sitemap.xml" "$NEXT_DIST/robots.txt" || {
 
 [[ ! -d "$DIST" ]] || mv -- "$DIST" "$PREVIOUS_DIST"
 mv -- "$NEXT_DIST" "$DIST"
-echo "Frontend público validado em frontend/dist (indexação habilitada)."
+echo "Frontend compilado e SEO validado em frontend/dist (indexação habilitada; revisão estrita=$STRICT_RELEASE)."

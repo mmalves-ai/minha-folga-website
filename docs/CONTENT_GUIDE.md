@@ -220,7 +220,12 @@ exportada do backend (`npm run export:public-config`, feito por `scripts/build.s
 
 ## 9. Modo estrito (`MF_STRICT_RELEASE=1`)
 
-Ativado por `scripts/build.sh --release` e `--staging`. A release é **recusada** se houver:
+Ativado por `scripts/build.sh --release` e `--staging`. Nos scripts diretos
+`deploy-server.sh` e `update.sh`, é opcional: use `MF_STRICT_RELEASE=1` para exigir
+esta revisão (o padrão desse fluxo é `0`, independente do SEO indexável; veja
+[SEO.md](SEO.md#build-de-produção)). Isso não altera os status ou datas de aprovação.
+
+Com o modo estrito ativo, a release é **recusada** se houver:
 
 - identidade empresarial incompleta na configuração pública, ou `VITE_SITE_URL` diferente de `PUBLIC_SITE_URL`;
 - aviso legal sem revisão aprovada em `contracts/consents.json` (`status: approved` e `revisedAt`);

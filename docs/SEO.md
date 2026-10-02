@@ -45,7 +45,7 @@ exige ambiente `production`, identidade completa e a origem canônica acima, e d
 
 ```dotenv
 MF_INDEXABLE=1
-MF_STRICT_RELEASE=1
+MF_STRICT_RELEASE=0
 VITE_SITE_URL=https://www.minhafolga.com.br
 ```
 
@@ -54,11 +54,28 @@ em uma pasta temporária dentro de `frontend/.generated/`; `frontend/dist` só �
 substituído após build e verificações bem-sucedidos. Falhas de conteúdo ou configuração
 preservam o frontend anterior. O helper não executa migrações nem reinicia serviços.
 
-Identidade, avisos legais ou revisões editoriais pendentes ainda impedem a release:
-registre os dados/aprovações reais antes de publicar. Não desligue a validação
-estrita para habilitar SEO. Executar somente `npm run build` com a configuração de
-desenvolvimento não gera um site indexável. Commit/push atualiza o repositório; as
-mudanças só chegam ao domínio após a implantação da nova versão.
+No fluxo direto, a indexação é independente da revisão editorial estrita. O padrão
+`MF_STRICT_RELEASE=0` permite compilar com aprovações editoriais pendentes. Elas
+continuam registradas no conteúdo, sem preencher datas ou revisores automaticamente.
+Isso não aprova o conteúdo nem oculta os marcadores de pendência existentes. As
+verificações de configuração de produção, identidade, domínio, SEO, HTML e segredos
+continuam ativas.
+
+No servidor, use o comando habitual após atualizar o repositório:
+
+```bash
+sudo bash scripts/deploy-server.sh
+```
+
+Para exigir também as aprovações editoriais e a ausência de marcadores de pendência,
+use `sudo env MF_STRICT_RELEASE=1 bash scripts/deploy-server.sh`. O helper e o
+`scripts/update.sh` também aceitam essa variável. `scripts/build.sh --release` e
+`scripts/deploy.sh prepare ... --release` continuam estritos por padrão; registre os
+dados e aprovações reais para usar esse fluxo.
+
+Executar somente `npm run build` com a configuração de desenvolvimento não gera um
+site indexável. Commit/push atualiza o repositório; as mudanças só chegam ao domínio
+após a implantação da nova versão.
 
 ## Validar e enviar ao Google
 
