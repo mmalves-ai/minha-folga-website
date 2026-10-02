@@ -168,6 +168,7 @@ desenvolvimento um de cada vez.
 | [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md) | Todas as variáveis de ambiente e de build |
 | [`docs/OPERATIONS.md`](docs/OPERATIONS.md) | Rotina operacional e planos |
 | [`docs/CONTENT_GUIDE.md`](docs/CONTENT_GUIDE.md) | Como editar e aprovar conteúdo |
+| [`docs/SEO.md`](docs/SEO.md) | SEO, sitemap automático, build indexável e envio ao Google Search Console |
 | [`docs/BIA_AGENTE.md`](docs/BIA_AGENTE.md) | Comportamento e integração da Bia com a Hal-AI (ferramentas, contexto, testes) |
 | [`docs/PENDENCIAS_PUBLICACAO.md`](docs/PENDENCIAS_PUBLICACAO.md) | O que falta para abrir a coleta pública |
 | [`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md) | Critérios de aceite e evidências |

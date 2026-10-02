@@ -26,15 +26,15 @@ git reset --hard origin/main
 echo ">>> [2/5] Atualizando dependências e compilando o Backend..."
 (
   cd backend
-  ../scripts/node-runtime.sh exec npm install
+  ../scripts/node-runtime.sh exec npm ci
   ../scripts/node-runtime.sh exec npm run build
 )
 
 echo ">>> [3/5] Atualizando dependências e compilando o Frontend..."
 (
   cd frontend
-  ../scripts/node-runtime.sh exec npm install
-  ../scripts/node-runtime.sh exec npm run build
+  ../scripts/node-runtime.sh exec npm ci
+  bash ../scripts/build-public-frontend.sh
 )
 
 echo ">>> [4/5] Aplicando Migrações do Banco de Dados (se houver)..."

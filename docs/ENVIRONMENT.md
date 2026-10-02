@@ -233,7 +233,7 @@ revisão local e CI.
 | `VITE_API_BASE_URL` | bundle | `/api` | Base das chamadas; mantenha a mesma origem |
 | `MF_PUBLIC_CONFIG_FILE` | build | `frontend/.generated/public-config.json` | Configuração pública exportada pelo backend (padrão: `frontend/config/public-config.dev.json`, só revisão) |
 | `MF_STRICT_RELEASE` | build | `1` | Release pública: falha com pendência de identidade, revisão editorial ou fase com `ready: false` (`docs/CONTENT_GUIDE.md`, seção 9) |
-| `MF_INDEXABLE` | build | `1` | `robots.txt` de produção com `Sitemap:`. Sem ela: `Disallow: /` |
+| `MF_INDEXABLE` | build | `1` | HTML e `robots.txt` indexáveis, com `Sitemap:`; exige configuração pública de produção. Sem ela: HTML `noindex` e `Disallow: /`. `VITE_SITE_INDEXABLE` é derivada automaticamente, não configurar |
 | `MF_OUT_DIR` | build | `<projeto>/.tmp/revisao/dist` | Pasta de saída alternativa (`build.sh` sempre usa `frontend/dist`). Em desenvolvimento, mantenha-a dentro do projeto (`CLAUDE.md`) |
 | `MF_DEV_API_TARGET` | `npm run dev` | `http://127.0.0.1:3170` | Destino do proxy `/api` do servidor de desenvolvimento (porta 5180) |
 | `MF_STATIC_PORT`, `MF_API_TARGET` | `npm run preview:static` | `5190`, `http://127.0.0.1:3170` | Servidor Node de revisão do `dist` com as mesmas regras do Nginx |

@@ -499,8 +499,10 @@ if [[ "$CODE" == 200 && "$CTYPE" == text/plain* ]]; then
   if [[ "$EXPECT" != auto && "$mode" != "$EXPECT" ]]; then fail "robots.txt em modo $mode; esperado $EXPECT"; fi
   if [[ "$mode" == indexable ]]; then
     grep -q "^Sitemap: $SITE_URL/sitemap.xml" "$WORK/body" && ok "robots.txt aponta o sitemap" || fail "robots.txt sem 'Sitemap: $SITE_URL/sitemap.xml'"
-    for p in /admin /preferencias /cadastro-confirmado; do
-      grep -qx "Disallow: $p" "$WORK/body" || fail "robots.txt sem Disallow: $p"
+    for p in /admin /preferencias /cadastro-confirmado /atendimento/acompanhar; do
+      if grep -qx "Disallow: $p" "$WORK/body"; then
+        fail "robots.txt bloqueia $p e impede o buscador de ler noindex"
+      fi
     done
   elif [[ "$EXPECT" == auto ]]; then
     warn "build sem indexação (esperado em homologação; produção usa build.sh --release)"

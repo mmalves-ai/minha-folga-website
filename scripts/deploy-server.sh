@@ -66,7 +66,7 @@ echo ">>> [3/7] Instalando dependências e compilando o Frontend (SSG)..."
 (
   cd "$APP_DIR/frontend"
   "$APP_DIR/scripts/node-runtime.sh" exec npm ci
-  "$APP_DIR/scripts/node-runtime.sh" exec npm run build
+  bash "$APP_DIR/scripts/build-public-frontend.sh"
 )
 
 # ------------------------------------------------------------------------------

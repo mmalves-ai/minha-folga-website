@@ -13,7 +13,8 @@ const backend = fileURLToPath(new URL('../../../backend', import.meta.url))
 rmSync(join(E2E_DIR, 'pgdata'), { recursive: true, force: true })
 // Resto de execuções anteriores à D1 (mensagens gravadas em arquivo): não existe mais.
 rmSync(join(E2E_DIR, 'messages.jsonl'), { force: true })
-const env = { ...process.env, ...backendEnv() }
+// readEnvSource prioriza .env; vazio explícito força o ambiente isolado do teste.
+const env = { ...process.env, ...backendEnv(), MF_ENV_FILE: '' }
 writeFileSync(BACKEND_ENV_FILE, JSON.stringify(env, null, 2), { mode: 0o600 })
 
 const tsx = join(backend, 'node_modules/.bin/tsx')

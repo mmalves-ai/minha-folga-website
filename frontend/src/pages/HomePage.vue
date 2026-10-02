@@ -13,13 +13,13 @@ import HomeValue from '@/components/pages/HomeValue.vue'
 import AcquisitionReason from '@/components/pages/AcquisitionReason.vue'
 import InstitutionalCta from '@/components/pages/InstitutionalCta.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
-import { organizationJsonLd, useSeo } from '@/composables/useSeo'
+import { organizationJsonLd, useSeo, websiteJsonLd } from '@/composables/useSeo'
 import type { FaqBase } from '@/types/content'
 
 // Aquisição integrada ao site corporativo: fotografia, ajuda, Bia, etapas, confiança e cadastro.
 // As páginas de produto e abertura continuam acessíveis pela navegação e pelos links internos.
 const org = organizationJsonLd()
-useSeo({ title: page.meta.title, description: page.meta.description, path: '/', jsonLd: org ? [org] : [] })
+useSeo({ title: page.meta.title, description: page.meta.description, path: '/', jsonLd: [websiteJsonLd(), ...(org ? [org] : [])] })
 
 const faqItems = ['novo-emprestimo', 'reduzir-consignado-atual', 'por-que-cadastrar-agora', 'ja-libera-emprestimos'].flatMap((id) => (faq as FaqBase).items.filter((item) => item.id === id))
 // Somente artigos reais do conteúdo versionado; sem artigos, a seção não é exibida.

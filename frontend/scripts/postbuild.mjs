@@ -1,7 +1,7 @@
 /**
  * Verificações do build estático (executa após `vite-ssg build`):
- * - toda rota pré-renderizada gerou HTML com <h1>, <title> e descrição próprios;
- * - rotas indexáveis têm canonical absoluto; rotas privadas têm noindex;
+ * - páginas públicas têm um único <h1>, título e descrição próprios, canonical e metadados sociais;
+ * - sitemap, robots.txt, canonicals, noindex e dados estruturados são coerentes;
  * - nenhum segredo, marcador de documentação ou texto de preenchimento chegou ao dist;
  * - na release estrita (MF_STRICT_RELEASE=1), nenhum marcador de pendência ("[pendente: …]") no HTML.
  * Falha com código 1 e lista os problemas.
@@ -9,6 +9,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { validateSeoArtifacts } from './seo-validation.mjs'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const dist = process.env.MF_OUT_DIR || join(root, 'dist')
@@ -25,7 +26,7 @@ const articles = readdirSync(join(root, 'content/articles'))
   .map((f) => ({ path: `/conteudos/${f.replace(/\.md$/, '')}`, indexable: true, prerender: true }))
 
 const fileFor = (p) => (p === '/' ? 'index.html' : `${p.slice(1)}.html`)
-const titles = new Map()
+const pages = []
 
 for (const route of [...routes, ...articles].filter((r) => r.prerender)) {
   const file = join(dist, fileFor(route.path))
@@ -33,18 +34,17 @@ for (const route of [...routes, ...articles].filter((r) => r.prerender)) {
     problems.push(`${route.path}: HTML não gerado (${relative(root, file)})`)
     continue
   }
-  const html = readFileSync(file, 'utf8')
-  const title = /<title>([^<]*)<\/title>/.exec(html)?.[1]
-  if (!title) problems.push(`${route.path}: sem <title>`)
-  else if (route.indexable) {
-    if (titles.has(title)) problems.push(`${route.path}: título repetido de ${titles.get(title)} ("${title}")`)
-    titles.set(title, route.path)
-  }
-  if (!/<meta name="description" content="[^"]{30,}"/.test(html)) problems.push(`${route.path}: sem meta description própria`)
-  if (route.path !== '/admin' && !/<h1[\s>]/.test(html)) problems.push(`${route.path}: HTML sem <h1> (conteúdo não pré-renderizado)`)
-  if (route.indexable && !/<link rel="canonical" href="https:\/\/[^"]+"/.test(html)) problems.push(`${route.path}: sem canonical absoluto`)
-  if (!route.indexable && !/<meta name="robots" content="noindex/.test(html)) problems.push(`${route.path}: rota privada sem noindex`)
+  pages.push({ ...route, html: readFileSync(file, 'utf8') })
 }
+
+const readArtifact = (name) => existsSync(join(dist, name)) ? readFileSync(join(dist, name), 'utf8') : null
+problems.push(...validateSeoArtifacts({
+  pages,
+  expectedPaths: [...routes, ...articles].filter((route) => route.indexable).map((route) => route.path),
+  sitemap: readArtifact('sitemap.xml'),
+  robots: readArtifact('robots.txt'),
+  assetExists: (path) => existsSync(join(dist, path)),
+}))
 
 const FORBIDDEN = [
   /lorem ipsum/i,

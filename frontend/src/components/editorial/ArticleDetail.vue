@@ -28,6 +28,13 @@ const path = `/conteudos/${a.slug}`
 const category = (site.contentCategories as { id: string; label: string }[]).find((c) => c.id === a.category)
 const related = a.related.map((slug) => articles.find((x) => x.slug === slug)).filter((x): x is Article => Boolean(x)).slice(0, 2)
 const approved = a.review.status === 'approved' && Boolean(a.review.reviewedAt && a.review.reviewer)
+const image = {
+  path: `/images/editorial/${articlePhoto(a.slug)}-1200.jpg`,
+  alt: 'Cena cotidiana de organização e conversa sobre finanças, ilustrativa e gerada por IA.',
+  width: 1200,
+  height: 800,
+  type: 'image/jpeg',
+}
 const cta = t.cta[a.cta] ?? t.cta.ajuda
 const crumbs: LinkItem[] = [
   { label: 'Conteúdos', to: '/conteudos' },
@@ -40,19 +47,23 @@ useSeo({
   description: a.seo?.description ?? a.summary,
   path,
   type: 'article',
+  image,
   publishedTime: a.publishedAt,
   modifiedTime: approved ? a.review.reviewedAt : null,
   jsonLd: [
     {
       '@type': 'Article',
+      '@id': `${absoluteUrl(path)}#article`,
       headline: a.title,
       description: a.summary,
       inLanguage: 'pt-BR',
       mainEntityOfPage: absoluteUrl(path),
+      image: [absoluteUrl(image.path)],
+      articleSection: category?.label,
       dateCreated: a.draftedAt,
       ...(a.publishedAt ? { datePublished: a.publishedAt } : {}),
       ...(approved ? { dateModified: a.review.reviewedAt } : {}),
-      author: { '@type': 'Organization', name: 'Minha Folga', url: SITE_URL },
+      author: { '@type': 'Organization', name: a.author, url: absoluteUrl('/conteudos') },
       publisher: { '@type': 'Organization', name: 'Minha Folga', url: SITE_URL },
       citation: a.sources.map((s) => s.url),
     },

@@ -2,6 +2,8 @@
 
 interface ImportMetaEnv {
   readonly VITE_SITE_URL: string
+  /** Derivada pelo build de MF_INDEXABLE; não configurar manualmente. */
+  readonly VITE_SITE_INDEXABLE: '0' | '1'
   readonly VITE_API_BASE_URL: string
 }
 
