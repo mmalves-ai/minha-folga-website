@@ -47,7 +47,7 @@ const fallbackCta = byWaitlist(page.closing.contentCta, site.nav.closedCta)
       <span>{{ page.hero.channelPending }}</span>
     </p>
     <template #aside>
-      <figure class="bia-portrait"><PhotoAsset name="bia" alt="Mulher usando seu celular em uma pausa do dia. Cena ilustrativa gerada por IA." priority sizes="(max-width: 767px) calc(100vw - 40px), 48vw" /><figcaption>Cena ilustrativa gerada por IA. A pessoa não representa a Bia.</figcaption><div class="bia-portrait__signature"><img src="/brand/hal-ai-logo.png" alt="Hal-AI" width="32" height="32" /><span>IA de suporte: <strong>Hal-AI</strong></span></div></figure>
+      <figure class="bia-portrait"><PhotoAsset name="bia" alt="Mulher usando seu celular em uma pausa do dia." priority sizes="(max-width: 767px) calc(100vw - 40px), 48vw" /><div class="bia-portrait__signature"><img src="/brand/hal-ai-logo.png" alt="Hal-AI" width="32" height="32" /><span>IA de suporte: <strong>Hal-AI</strong></span></div></figure>
     </template>
   </PageHero>
 
@@ -138,7 +138,6 @@ const fallbackCta = byWaitlist(page.closing.contentCta, site.nav.closedCta)
 .bia-portrait { position: relative; margin: 0; }
 .bia-portrait :deep(picture) { display: block; height: 510px; overflow: hidden; border-radius: 120px 24px 24px 24px; }
 .bia-portrait :deep(picture img) { height: 100%; width: 100%; object-fit: cover; }
-.bia-portrait figcaption { font-size: .6875rem; color: var(--mf-muted); text-align: right; margin-top: 8px; }
 .bia-portrait__signature { position: absolute; bottom: 44px; left: 20px; display: flex; align-items: center; gap: 10px; background: white; border-radius: 999px; padding: 10px 18px 10px 10px; font-size: .8125rem; }
 .bia-demo-examples { display: grid; gap: 32px; }
 @media (max-width: 767px) { .bia-portrait :deep(picture) { height: 360px; } }

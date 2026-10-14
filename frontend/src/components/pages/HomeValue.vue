@@ -32,7 +32,7 @@ const source = () => route.path === '/' ? 'home' : 'avise-me'
           </div>
         </article>
       </div>
-      <p class="home-value__note">{{ t.note }} <span>{{ t.photoCredit }}</span></p>
+      <p class="home-value__note">{{ t.note }}</p>
     </div>
   </section>
 </template>
@@ -53,7 +53,6 @@ const source = () => route.path === '/' ? 'home' : 'avise-me'
 .opportunity p { color: var(--mf-muted); max-width: 48ch; margin-bottom: 8px; }
 .opportunity .link-arrow { margin-top: 4px; font-size: .9375rem; }
 .home-value__note { margin: 20px 0 0; font-size: .875rem; color: var(--mf-muted); max-width: 90ch; }
-.home-value__note span { display: block; font-size: .6875rem; margin-top: 4px; }
 @media (max-width: 767px) {
  .home-value { padding-block: 44px; }
  .home-value__head { margin-bottom: 24px; }

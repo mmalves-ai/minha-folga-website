@@ -20,10 +20,9 @@ hero:
   biaCta: Como a IA vai me ajudar
   whyNow: O dinheiro disponível para emprestar é limitado. Quem se cadastra antes entra antes na fila.
   note: Cadastro grátis. Crédito e redução de parcelas sujeitos à análise.
-  photoAlt: Mulher usando o celular com tranquilidade em casa. Cena ilustrativa gerada por IA.
+  photoAlt: Mulher usando o celular com tranquilidade em casa.
   caption: Sua vida, seus planos.
   captionAccent: "Uma nova aliada: a IA."
-  photoCredit: Imagem ilustrativa gerada por IA.
   valuesLabel: Uma oportunidade para você
   values:
     - icon: phone
@@ -38,11 +37,10 @@ value:
   titleEnd: Ou menos peso nas parcelas.
   intro: A Minha Folga está chegando para ajudar nas duas situações.
   closedCta: Conhecer a novidade
-  photoCredit: Cenas ilustrativas geradas por IA.
   opportunities:
     - id: novo-credito
       photo: planning
-      alt: Homem usando o celular e organizando seus planos à mesa. Cena ilustrativa gerada por IA.
+      alt: Homem usando o celular e organizando seus planos à mesa.
       tag: Para o que você precisa
       title: Quero um empréstimo novo.
       text: Uma necessidade para resolver. Um plano para realizar. Nossa IA vai buscar opções de crédito para você.
@@ -50,7 +48,7 @@ value:
       icon: home
     - id: aliviar-parcelas
       photo: aliviar-parcelas
-      alt: Trabalhadora organizando as contas em casa. Cena ilustrativa gerada por IA.
+      alt: Trabalhadora organizando as contas em casa.
       tag: Para respirar no fim do mês
       title: Quero aliviar minhas parcelas.
       text: Já tem consignado? Vamos buscar uma alternativa para reduzir o peso das parcelas no seu salário.

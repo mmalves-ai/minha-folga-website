@@ -30,7 +30,7 @@ const related = a.related.map((slug) => articles.find((x) => x.slug === slug)).f
 const approved = a.review.status === 'approved' && Boolean(a.review.reviewedAt && a.review.reviewer)
 const image = {
   path: `/images/editorial/${articlePhoto(a.slug)}-1200.jpg`,
-  alt: 'Cena cotidiana de organização e conversa sobre finanças, ilustrativa e gerada por IA.',
+  alt: 'Cena cotidiana de organização e conversa sobre finanças.',
   width: 1200,
   height: 800,
   type: 'image/jpeg',
@@ -151,7 +151,7 @@ function focusSection(id: string) {
         </nav>
 
         <div class="article-body">
-          <figure class="article-illustration"><PhotoAsset :name="articlePhoto(a.slug)" alt="Cena cotidiana de organização e conversa sobre finanças, ilustrativa e gerada por IA." sizes="(max-width: 767px) calc(100vw - 40px), 780px" /><figcaption>Imagem ilustrativa gerada por IA.</figcaption></figure>
+          <figure class="article-illustration"><PhotoAsset :name="articlePhoto(a.slug)" alt="Cena cotidiana de organização e conversa sobre finanças." sizes="(max-width: 767px) calc(100vw - 40px), 780px" /></figure>
           <RichText :html="a.html" class="prose article-prose" />
 
           <div ref="readEnd" class="notice notice--mint article-disclaimer" role="note">
@@ -196,7 +196,6 @@ function focusSection(id: string) {
 <style scoped>
 .article-illustration { margin: 0 0 32px; }
 .article-illustration :deep(picture) { display: block; overflow: hidden; border-radius: 20px; }
-.article-illustration figcaption { font-size: .75rem; color: var(--mf-muted); margin-top: 8px; }
 
 .article-header {
   padding-block: var(--mf-space-5) var(--mf-space-6);

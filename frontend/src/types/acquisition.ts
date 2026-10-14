@@ -20,13 +20,12 @@ export interface AcquisitionContent {
     photoAlt: string
     caption: string
     captionAccent: string
-    photoCredit: string
     valuesLabel: string
     values: { icon: 'phone' | 'spark' | 'list'; text: string }[]
   }
   value: {
     eyebrow: string; title: string; titleEnd: string; intro: string
-    closedCta: string; photoCredit: string; note: string
+    closedCta: string; note: string
     opportunities: { id: string; photo: 'planning' | 'aliviar-parcelas'; alt: string; tag: string; title: string; text: string; link: string; icon: 'home' | 'hand' }[]
   }
   mobileCta: { label: string; text: string; note: string }

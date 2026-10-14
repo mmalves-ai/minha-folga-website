@@ -28,7 +28,6 @@ const collecting = publicConfig.collection.waitlistEnabled
       <figure class="home-hero__visual">
         <PhotoAsset name="hero" :alt="t.photoAlt" priority sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1100px) 48vw, 580px" class="home-hero__photo" />
         <div class="home-hero__caption" aria-hidden="true"><span class="home-hero__caption-icon"><AppIcon name="chat" /></span><span>{{ t.caption }}<br /><strong>{{ t.captionAccent }}</strong></span></div>
-        <figcaption>{{ t.photoCredit }}</figcaption>
       </figure>
     </div>
     <div class="container"><div class="home-hero__values" :aria-label="t.valuesLabel">
@@ -58,7 +57,6 @@ const collecting = publicConfig.collection.waitlistEnabled
 .home-hero__caption { position: absolute; bottom: 56px; left: -24px; display: flex; align-items: center; gap: 14px; background: var(--mf-paper); padding: 18px 24px; border: 1px solid var(--mf-border); border-radius: 16px; box-shadow: var(--mf-shadow-soft); font-size: .9375rem; line-height: 1.5; }
 .home-hero__caption-icon { display: grid; place-items: center; width: 42px; height: 42px; background: var(--mf-mint); color: var(--mf-forest); border-radius: 50%; }
 .home-hero__caption-icon .icon { width: 21px; height: 21px; }
-.home-hero__visual figcaption { position: absolute; right: 4px; bottom: 0; color: var(--mf-muted); font-size: .6875rem; }
 .home-hero__values { display: flex; justify-content: space-between; gap: 20px; margin-top: 28px; padding-block: 20px; border-block: 1px solid var(--mf-border); }
 .home-hero__values span { display: flex; align-items: center; gap: 12px; font-size: .9375rem; }
 .home-hero__values .icon { width: 22px; height: 22px; color: var(--mf-forest); }

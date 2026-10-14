@@ -23,7 +23,7 @@ const closingText = page.closing.text
 <template>
   <PageHero :title="page.hero.title" :lead="page.hero.lead" :eyebrow="page.hero.eyebrow" :breadcrumbs="breadcrumbs">
     <template #aside>
-      <figure class="about-photo"><PhotoAsset name="conversation" alt="Duas pessoas conversando à mesa em casa. Cena ilustrativa gerada por IA, não representa a equipe ou clientes." priority sizes="(max-width: 767px) calc(100vw - 40px), 48vw" /><figcaption>Imagem ilustrativa gerada por IA. Não representa clientes ou equipe.</figcaption></figure>
+      <figure class="about-photo"><PhotoAsset name="conversation" alt="Duas pessoas conversando à mesa em casa." priority sizes="(max-width: 767px) calc(100vw - 40px), 48vw" /></figure>
       <div class="about-promise">
         
         
@@ -94,7 +94,6 @@ const closingText = page.closing.text
 .about-legal[open] summary { margin-bottom: 16px; }
 .about-photo { margin: 0 0 20px; }
 .about-photo :deep(picture) { display: block; border-radius: 24px 100px 24px 24px; overflow: hidden; }
-.about-photo figcaption { font-size: .6875rem; color: var(--mf-muted); margin-top: 8px; }
 
 /* Promessa da marca ao lado do título: símbolo com respiro, sem foto nem história inventada. */
 .about-promise {
